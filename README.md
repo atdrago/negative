@@ -7,3 +7,6 @@
 3. `npm install`
 4. `grunt`
 5. Locate and copy `dist/Negative-darwin-x64/Negative.app` to your `Applications` folder
+
+## Support
+Currently only Mac OS X is supported.

@@ -1,0 +1,20 @@
+#imageContainer {
+	width: 780px;
+	height: 602px;
+	visibility: visible;
+
+	body.negative-on & {
+		background-color: transparent;
+	}
+}
+
+.negative {
+	display: none;
+	opacity: 0.5;
+	-webkit-filter: invert(100%);
+	pointer-events: none;
+
+	body.negative-on & {
+		display: block;
+	}
+}

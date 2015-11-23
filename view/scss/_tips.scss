@@ -1,0 +1,67 @@
+@keyframes fade-in-out {
+    0% { opacity: 0; }
+    #{1s / $tip-duration * 100%} { opacity: 0.6; }
+    #{5s / $tip-duration * 100%} { opacity: 0.6; }
+    #{6s / $tip-duration * 100%} { opacity: 0; }
+    100% { opacity: 0; }
+}
+
+#tips, .tip {
+	position: absolute;
+	left: 0;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	margin: auto;
+}
+
+#tips {
+	height: 110px;
+	width: 90%;
+}
+
+#tips,
+.shortcuts {
+	list-style: none;
+	padding: 0;
+}
+
+.tip {
+	opacity: 0;
+	font: 500 44px 'Helvetica Neue', Helvetica, Arial, sans-serif;
+	color: #fff;
+	text-align: center;
+	animation: fade-in-out #{$tip-duration} ease infinite;
+}
+
+.shortcuts {
+	margin: 0;
+
+	> li {
+		display: inline-block;
+		padding: 0 7px;
+	}
+}
+
+@for $i from 1 through $tip-count {
+	$tip-delay: $tip-duration * (($i - 1) / $tip-count);
+
+	#tip#{$i} {
+		animation-delay: #{$tip-delay};
+	}
+}
+
+body.negative-on,
+body.blur {
+	#tips {
+		display: none;
+		visibility: hidden;
+		width: 0;
+		height: 0;
+		overflow: hidden;
+		left: -10000px;
+	}
+	.tip {
+		animation: none !important;
+	}
+}

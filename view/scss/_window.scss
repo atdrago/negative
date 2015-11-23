@@ -1,0 +1,55 @@
+body {
+	-webkit-user-select: none;
+	-webkit-app-region: drag;
+	cursor: default;
+	display: flex;
+	flex-direction: column;
+
+	&.blur {
+		opacity: 0.6;
+	}
+	&.focus {
+		opacity: 1;
+	}
+	&.capture {
+		display: none;
+	}
+}
+
+.frame {
+	border: 10px solid $frame-color-blur;
+	height: 100%;
+	width: 100%;
+	box-sizing: border-box;
+	overflow: hidden;
+	position: relative;
+	border-radius: 4px 4px 0 0;
+	flex-grow: 1;
+
+	body.focus & {
+		border: 10px solid $frame-color-focus;
+	}
+}
+
+.container {
+	display: flex;
+	flex-direction: column;
+	position: absolute;
+}
+
+.row {
+	display: flex;
+	flex-direction: row;
+
+	&.row-outer {
+		flex-grow: 1;
+	}
+}
+
+.col, .row-outer {
+	background-color: $column-background-color;
+}
+
+.col-outer {
+	flex-grow: 1;
+}

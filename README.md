@@ -24,4 +24,4 @@ Use Negative to visually compare differences between two scenes. Negative is gre
 Currently only Mac OS X is supported.
 
 ## About
-Created by [Adam Drago](http://adamdrago.com). Icon by [Tiffany Wang](wangtiff@gmail.com). Built on [Electron](http://electron.atom.io/).
+Created by [Adam Drago](http://adamdrago.com). Icon by [Tiffany Wang](mailto:wangtiff@gmail.com). Built on [Electron](http://electron.atom.io/).

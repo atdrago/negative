@@ -2,9 +2,20 @@
 
 ## Build Process
 
-1. Open Terminal
-2. `cd` into the project
-3. `npm install`
-4. `grunt`
-5. Open the project in Finder
-6. Within the project, locate and copy `negative/dist/Negative-darwin-x64/Negative.app` to your `Applications` folder
+1. Clone the project.
+    ```
+    git clone https://github.com/atdrago/negative.git
+    ```
+2. Move into the project.
+    ```
+    cd negative
+    ```
+3. Install modules.
+    ```
+    npm install
+    ```
+4. Build the app.
+    ```
+    grunt
+    ```
+5. Locate and copy `dist/Negative-darwin-x64/Negative.app` to your `Applications` folder

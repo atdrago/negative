@@ -22,9 +22,7 @@
     "gulp-changed": "^1.2.1",
     "gulp-concat": "^2.6.0",
     "gulp-minify-css": "^1.2.1",
-    "gulp-pd-log": "http://pubdev.apple.com/tools/lib/gulp-pd-log/tarball/gulp-pd-log-0.1.1.tgz",
     "gulp-sass": "^2.0.4",
-    "gulp-uglify": "^1.5.1",
     "gulp-watch": "^4.3.3",
     "gulp-wrap": "^0.11.0",
     "load-grunt-tasks": "^3.2.0"

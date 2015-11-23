@@ -10,7 +10,6 @@ var changed = require('gulp-changed'),
 
 	sassSrc = 'view/**/*.scss',
 	sassDest = 'view',
-	htmlSrc = 'view/**/*.html',
 	jsSrc = [
 		'view/js/services/negative-undo.js',
 		'view/js/controllers/negative-frame.js',
@@ -26,26 +25,17 @@ gulp.task('sass', function () {
 		.pipe(changed(sassDest, {
 			hasChanged: changed.compareSha1Digest
 		}))
-		.pipe(gulp.dest(sassDest))
-		.pipe(log.out());
+		.pipe(gulp.dest(sassDest));
 });
 
 gulp.task('js', function () {
 	return gulp.src(jsSrc)
 		.pipe(concat('index.js'))
 		.pipe(wrap("(function (window, document, JSON) { \n\n'use strict';\n\n<%= contents %>\n})(window, document, JSON);"))
-		.pipe(uglify({
-			mangle: false,
-			output: {
-				ie_proof: false
-			},
-			compress: false
-		}))
 		.pipe(changed(sassDest, {
 			hasChanged: changed.compareSha1Digest
 		}))
-		.pipe(gulp.dest(jsDest))
-		.pipe(log.out());
+		.pipe(gulp.dest(jsDest));
 });
 
 

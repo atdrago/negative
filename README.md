@@ -2,6 +2,8 @@
 
 Use Negative to visually compare differences between two scenes. Negative is great for web and application development, when trying to match your build to the provided comp.
 
+![Negative Demo](negative-demo.gif)
+
 ## Shortcuts
 - <kbd>&#8984;G</kbd> - Take a screenshot
 - <kbd>&larr;</kbd> <kbd>&uarr;</kbd> <kbd>&rarr;</kbd> <kbd>&darr;</kbd> - Move the window 1px

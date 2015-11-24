@@ -1,10 +1,8 @@
 var changed = require('gulp-changed'),
 	gulp = require('gulp'),
-	log = require('gulp-pd-log'),
 	sass = require('gulp-sass'),
 	watch = require('gulp-watch'),
 	minifyCss = require('gulp-minify-css'),
-	uglify = require('gulp-uglify'),
 	concat = require('gulp-concat'),
 	wrap = require('gulp-wrap'),
 

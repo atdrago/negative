@@ -73,12 +73,16 @@ class NegativeFrame {
             this.currentImage.style.height = newHeight;
             this.imageContainer.style.width = newWidth;
             this.imageContainer.style.height = newHeight;
+
+            window.negative.tabsController.setTabHasContent();
         }
     }
 
     removeImage() {
         document.body.classList.remove('negative-on');
         this.currentImage.setAttribute('src', '');
+
+        window.negative.tabsController.unsetTabHasContent();
     }
 
     unsetFocused() {
@@ -205,7 +209,15 @@ class NegativeTabs {
 		}
 
 		return canSelectPreviousTab;
-		}
+	}
+
+	setTabHasContent() {
+		this.tabsContainer.children[this.tabIndex].classList.add('has-content');
+	}
+
+	unsetTabHasContent() {
+		this.tabsContainer.children[this.tabIndex].classList.remove('has-content');
+	}
 
 	getEmptyModel() {
 		return {

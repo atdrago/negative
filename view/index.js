@@ -96,6 +96,8 @@ let clipboard = require('clipboard'),
 	nativeImage = require('native-image'),
 	ipc = require('electron').ipcRenderer;
 
+const TAB_WIDTH	= 27;
+
 class NegativeTabs {
 	constructor() {
 		this.tabIndex = 0;
@@ -120,6 +122,7 @@ class NegativeTabs {
 		this.tabIndex = this.tabs.length;
 
 		let newTabButton = this.getTabButtonElement(true);
+		this.tabsContainer.style.width = ((this.tabs.length + 1) * TAB_WIDTH) + 'px';
 		this.tabsContainer.appendChild(newTabButton);
 		newTabButton.focus();
 
@@ -141,6 +144,7 @@ class NegativeTabs {
 			}
 		}
 
+		this.tabsContainer.style.width = ((this.tabs.length - 1) * TAB_WIDTH) + 'px';
 		this.tabsContainer.children[closedTabIndex].remove();
 		this.tabs.splice(closedTabIndex, 1);
 		this.selectTabByIndex(this.tabIndex);

@@ -2,14 +2,26 @@ $tab-margin-top: 13px;
 $tab-margin-bottom: 7px;
 $tab-margin-left: 7px;
 
+nav {
+    height: 27px;
+    overflow: hidden;
+}
+
+.wrap {
+    margin: 0 10px 0 70px;
+    overflow-x: scroll;
+    overflow-y: hidden;
+    height: 50px;
+}
+
 .tabs {
-    margin: 0 10px 0 0;
+    margin: 0;
     padding: 0;
-    float: right;
+    height: 100%;
 }
 
 .tab {
-	margin: 0 0 $tab-margin-bottom $tab-margin-left;
+	margin: 1px 0 $tab-margin-bottom $tab-margin-left;
 	background-color: $frame-color-focus;
     float: left;
 	height: 20px;

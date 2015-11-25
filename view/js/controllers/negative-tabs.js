@@ -32,7 +32,7 @@ class NegativeTabs {
 		this.tabsContainer.insertBefore(newTabButton, this.tabsContainer.children[this.tabIndex]);
 		newTabButton.focus();
 
-		this.tabs.push(this.getEmptyModel());
+		this.tabs.splice(this.tabIndex, 0, this.getEmptyModel());
 		window.negative.frameController.removeImage();
 
 		this.refreshMenu();

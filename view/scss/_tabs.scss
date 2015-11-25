@@ -30,17 +30,24 @@ nav {
     width: 20px;
 	outline: none;
 	box-sizing: border-box;
-	border: 3px solid rgba(255, 255, 255, 0.2);
+	border: 0 solid rgba(255, 255, 255, 0.3);
 	transition: border-width 100ms ease, border-color 100ms ease;
 	border-radius: 100%;
+    position: relative;
 
 	&:hover,
-    &:focus,
-    &.selected {
-        border-color: rgba(255, 255, 255, 0.35);
+    &:focus {
+        border-color: rgba(255, 255, 255, 0.5);
 	}
 
 	&.selected {
-		border-color: rgba(255, 255, 255, 0.55);
+		border-color: rgba(255, 255, 255, 0.7);
 	}
+
+    &:hover,
+    &:focus,
+    &.selected,
+    &.has-content {
+        border-width: 3px;
+    }
 }

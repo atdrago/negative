@@ -111,7 +111,15 @@ class NegativeTabs {
 		}
 
 		return canSelectPreviousTab;
-		}
+	}
+
+	setTabHasContent() {
+		this.tabsContainer.children[this.tabIndex].classList.add('has-content');
+	}
+
+	unsetTabHasContent() {
+		this.tabsContainer.children[this.tabIndex].classList.remove('has-content');
+	}
 
 	getEmptyModel() {
 		return {

@@ -30,17 +30,17 @@ nav {
     width: 20px;
 	outline: none;
 	box-sizing: border-box;
-	border: 0 solid rgba(255, 255, 255, 0.3);
+	border: 3px solid rgba(255, 255, 255, 0.2);
 	transition: border-width 100ms ease, border-color 100ms ease;
 	border-radius: 100%;
 
 	&:hover,
     &:focus,
     &.selected {
-		border-width: 3px;
+        border-color: rgba(255, 255, 255, 0.35);
 	}
 
 	&.selected {
-		border-color: rgba(255, 255, 255, 0.5);
+		border-color: rgba(255, 255, 255, 0.55);
 	}
 }

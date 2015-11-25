@@ -25,11 +25,11 @@ class NegativeTabs {
 
 	addTab() {
 		this.deselectTabByIndex(this.tabIndex);
-		this.tabIndex = this.tabs.length;
+		this.tabIndex++;
 
 		let newTabButton = this.getTabButtonElement(true);
 		this.tabsContainer.style.width = ((this.tabs.length + 1) * TAB_WIDTH) + 'px';
-		this.tabsContainer.appendChild(newTabButton);
+		this.tabsContainer.insertBefore(newTabButton, this.tabsContainer.children[this.tabIndex]);
 		newTabButton.focus();
 
 		this.tabs.push(this.getEmptyModel());

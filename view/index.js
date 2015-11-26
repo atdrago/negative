@@ -257,24 +257,30 @@ class NegativeTabs {
 			imageDimensions = undoManagerState.imageDimensions;
 
         if (imageSrc !== null && imageDimensions !== null) {
-            clipboard.writeImage(nativeImage.createFromDataURL(imageSrc));
-            this.refreshMenu();
+			clipboard.write({
+				image: nativeImage.createFromDataURL(imageSrc),
+				text: JSON.stringify(imageDimensions)
+			});
 
-			window.localStorage.setItem('clipboardImageDimensions', JSON.stringify(imageDimensions));
+            this.refreshMenu();
         }
     }
 
 	paste() {
-        let dimensions = JSON.parse(window.localStorage.getItem('clipboardImageDimensions')),
-			image = clipboard.readImage();
+        let image = clipboard.readImage(),
+			imageDimensions = JSON.parse(clipboard.readText() || null);
 
-        if (image !== null && dimensions !== null) {
-			let datauri = image.toDataURL();
+        if (image !== null) {
+			if (!imageDimensions) {
+				imageDimensions = (function (dims) { return [dims.width, dims.height]; })(image.getSize());
+			}
 
-			window.negative.frameController.setImageAndSize(datauri, dimensions[0], dimensions[1]);
+			let imageSrc = image.toDataURL();
+
+			window.negative.frameController.setImageAndSize(imageSrc, imageDimensions[0], imageDimensions[1]);
             this.saveForUndo({
-				imageSrc: datauri,
-                imageDimensions: dimensions
+				imageSrc: imageSrc,
+                imageDimensions: imageDimensions
             });
 			this.refreshMenu();
         }

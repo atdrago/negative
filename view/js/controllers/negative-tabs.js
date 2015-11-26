@@ -188,7 +188,7 @@ class NegativeTabs {
 			// Try to parse text as image dimensions, but this could anything,
 			// such as the image's file name, so prevent the error.
 			imageDimensions = JSON.parse(clipboard.readText() || null);
-		} catch () {}
+		} catch (err) {}
 
         if (image !== null) {
 			if (!imageDimensions) {

@@ -280,7 +280,13 @@ class NegativeTabs {
 
 	paste() {
         let image = clipboard.readImage(),
+			imageDimensions;
+
+		try {
+			// Try to parse text as image dimensions, but this could anything,
+			// such as the image's file name, so prevent the error.
 			imageDimensions = JSON.parse(clipboard.readText() || null);
+		} catch () {}
 
         if (image !== null) {
 			if (!imageDimensions) {

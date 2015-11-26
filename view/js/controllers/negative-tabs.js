@@ -163,7 +163,7 @@ class NegativeTabs {
 			imageDimensions = undoManagerState.imageDimensions;
 
         if (imageSrc !== null && imageDimensions !== null) {
-            clipboard.writeImage(nativeImage.createFromDataUrl(imageSrc));
+            clipboard.writeImage(nativeImage.createFromDataURL(imageSrc));
             this.refreshMenu();
 
 			window.localStorage.setItem('clipboardImageDimensions', JSON.stringify(imageDimensions));

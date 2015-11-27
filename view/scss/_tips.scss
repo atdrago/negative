@@ -6,24 +6,8 @@
     100% { opacity: 0; }
 }
 
-#tips, .tip {
-	position: absolute;
-	left: 0;
-	top: 0;
-	right: 0;
-	bottom: 0;
-	margin: auto;
-}
-
-#tips {
-	height: 110px;
+.tip-list {
 	width: 90%;
-}
-
-#tips,
-.shortcuts {
-	list-style: none;
-	padding: 0;
 }
 
 .tip {
@@ -32,11 +16,26 @@
 	color: #fff;
 	text-align: center;
 	animation: fade-in-out #{$tip-duration} ease infinite;
+    display: flex;
+    flex-direction: column;
+
+    &:after,
+    &:before {
+        content: '';
+        flex-grow: 1;
+    }
 }
 
-.shortcuts {
-	margin: 0;
+.tip-list, .tip {
+	position: absolute;
+	left: 0;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	margin: auto;
+}
 
+.shortcut-list {
 	> li {
 		display: inline-block;
 		padding: 0 7px;
@@ -53,7 +52,7 @@
 
 body.negative-on,
 body.blur {
-	#tips {
+	.tip-list {
 		display: none;
 		visibility: hidden;
 		width: 0;

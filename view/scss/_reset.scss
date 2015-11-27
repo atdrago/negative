@@ -7,7 +7,11 @@ html, body, .container {
 	height: 100%;
 }
 
-html, body, p, .container {
+html, body, p, ul {
 	margin: 0;
 	padding: 0;
+}
+
+ul {
+	list-style: none;
 }

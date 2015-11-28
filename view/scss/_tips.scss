@@ -43,7 +43,7 @@
 }
 
 @for $i from 1 through $tip-count {
-	$tip-delay: $tip-duration * (($i - 1) / $tip-count);
+	$tip-delay: $tip-duration * ($i / $tip-count);
 
 	#tip#{$i} {
 		animation-delay: #{$tip-delay};

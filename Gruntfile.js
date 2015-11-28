@@ -2,7 +2,9 @@
 
 var grunt = require('grunt'),
 	fs = require('fs'),
-	devDependencies = Object.keys(JSON.parse(fs.readFileSync('package.json'))['devDependencies']).join('|');
+	packageJson = JSON.parse(fs.readFileSync('package.json')),
+	version = packageJson['version'],
+	devDependencies = Object.keys(packageJson['devDependencies']).join('|');
 
 require('load-grunt-tasks')(grunt);
 
@@ -21,7 +23,7 @@ grunt.initConfig({
 				asar: true,
 				'app-bundle-id': 'com.adamdrago.negative',
 				'helper-bundle-id': 'com.adamdrago.negative.helper',
-				'app-version': '0.5.0',
+				'app-version': version,
 				prune: true,
 				ignore: `node_modules/(${devDependencies})`
 			}

@@ -12,7 +12,8 @@
 
 .tip {
 	opacity: 0;
-	font: 500 44px 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-size: 44px;
+	font-weight: 500;
 	color: #fff;
 	text-align: center;
 	animation: fade-in-out #{$tip-duration} ease infinite;

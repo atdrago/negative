@@ -1,7 +1,3 @@
-$tab-margin-top: 13px;
-$tab-margin-bottom: 7px;
-$tab-margin-left: 7px;
-
 nav {
     height: 27px;
     overflow: hidden;
@@ -23,7 +19,7 @@ nav {
 }
 
 .tab {
-	margin: 1px 0 $tab-margin-bottom $tab-margin-left;
+	margin: 1px 0 7px 7px;
 	background-color: $frame-color-focus;
     float: left;
 	height: 20px;

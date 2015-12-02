@@ -16,6 +16,7 @@ Use Negative to visually compare differences between two scenes. Negative is gre
 
 ## Build Process
 
+1. [Install Node.js](https://nodejs.org/en/) v4 or greater
 1. `git clone https://github.com/atdrago/negative.git`
 2. `cd negative`
 3. `npm install`

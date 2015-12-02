@@ -17,11 +17,11 @@ Use Negative to visually compare differences between two scenes. Negative is gre
 ## Build Process
 
 1. [Install Node.js](https://nodejs.org/en/) v4 or greater
-1. `git clone https://github.com/atdrago/negative.git`
-2. `cd negative`
-3. `npm install`
-4. `grunt`
-5. Locate and copy `dist/Negative-darwin-x64/Negative.app` to your `Applications` folder
+2. `git clone https://github.com/atdrago/negative.git`
+3. `cd negative`
+4. `npm install`
+5. `grunt`
+6. Locate and copy `dist/Negative-darwin-x64/Negative.app` to your `Applications` folder
 
 ## Support
 Currently only Mac OS X is supported.

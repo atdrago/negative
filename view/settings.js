@@ -14,15 +14,7 @@ class SettingsForm {
 
         ipc.send('get-settings-request');
         ipc.on('get-settings-response', function (evt, settings) {
-            for (let key in settings) {
-                if (settings.hasOwnProperty(key)) {
-                    switch (key) {
-                        case 'shouldShowTips':
-                            this.shouldShowTips.checked = settings[key];
-                            break;
-                    }
-                }
-            }
+            this.shouldShowTips.checked = (settings['shouldShowTips'] !== false);
         }.bind(this));
     }
 }

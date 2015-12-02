@@ -1,6 +1,5 @@
 let clipboard = require('clipboard'),
-	nativeImage = require('native-image'),
-	ipc = require('electron').ipcRenderer;
+	nativeImage = require('native-image');
 
 const TAB_WIDTH	= 27;
 

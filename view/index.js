@@ -51,6 +51,8 @@ class UndoManager {
     }
 }
 
+let ipc = require('electron').ipcRenderer
+
 class NegativeFrame {
     constructor() {
         this.imageContainer = document.getElementById('imageContainer');
@@ -59,6 +61,21 @@ class NegativeFrame {
         this.currentImage.addEventListener('load', function () {
 			document.body.classList.add('negative-on');
 		}, false);
+
+        ipc.send('get-settings-request');
+        ipc.on('get-settings-response', function (evt, settings) {
+            if (settings['shouldShowTips'] === false) {
+                document.body.classList.add('no-tips');
+            }
+        }.bind(this));
+    }
+
+    setShouldShowTips(shouldShowTips) {
+        if (shouldShowTips) {
+            document.body.classList.remove('no-tips');
+        } else {
+            document.body.classList.add('no-tips');
+        }
     }
 
     setImageAndSize(src, width, height) {
@@ -97,8 +114,7 @@ class NegativeFrame {
 }
 
 let clipboard = require('clipboard'),
-	nativeImage = require('native-image'),
-	ipc = require('electron').ipcRenderer;
+	nativeImage = require('native-image');
 
 const TAB_WIDTH	= 27;
 

@@ -1,6 +1,5 @@
 let clipboard = require('clipboard'),
-	nativeImage = require('native-image'),
-	ipc = require('electron').ipcRenderer;
+	nativeImage = require('native-image');
 
 const TAB_WIDTH	= 27;
 
@@ -210,11 +209,19 @@ class NegativeTabs {
 		let undoManager = this.tabs[this.tabIndex].undoManager;
 
 		ipc.send('refresh-menu', {
+			canAddTab: true,
+			canCloseTab: true,
+			canCloseWindow: true,
 			canUndo: undoManager.canUndo(),
 			canRedo: undoManager.canRedo(),
+			canCapture: true,
 			isImageEmpty: undoManager.state.imageSrc === null,
+			canReload: true,
+			canToggleDevTools: true,
 			canSelectPreviousTab: this.canSelectPreviousTab(),
-			canSelectNextTab: this.canSelectNextTab()
+			canSelectNextTab: this.canSelectNextTab(),
+			canMinimize: true,
+            canMove: true
 		});
 	}
 

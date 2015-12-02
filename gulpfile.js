@@ -8,11 +8,15 @@ var changed = require('gulp-changed'),
 
 	sassSrc = 'view/**/*.scss',
 	sassDest = 'view',
-	jsSrc = [
+	jsSrcIndex = [
 		'view/js/services/negative-undo.js',
 		'view/js/controllers/negative-frame.js',
 		'view/js/controllers/negative-tabs.js',
 		'view/js/negative.js'
+	],
+	jsSrcSettings = [
+		'view/js/controllers/settings-form.js',
+		'view/js/settings.js'
 	],
 	jsDest = 'view';
 
@@ -26,24 +30,36 @@ gulp.task('sass', function () {
 		.pipe(gulp.dest(sassDest));
 });
 
-gulp.task('js', function () {
-	return gulp.src(jsSrc)
+gulp.task('js-index', function () {
+	return gulp.src(jsSrcIndex)
 		.pipe(concat('index.js'))
 		.pipe(wrap("(function (window, document, JSON) { \n\n'use strict';\n\n<%= contents %>\n})(window, document, JSON);"))
-		.pipe(changed(sassDest, {
+		.pipe(changed(jsDest, {
 			hasChanged: changed.compareSha1Digest
 		}))
 		.pipe(gulp.dest(jsDest));
 });
 
+gulp.task('js-settings', function () {
+	return gulp.src(jsSrcSettings)
+		.pipe(concat('settings.js'))
+		.pipe(wrap("(function (window, document, JSON) { \n\n'use strict';\n\n<%= contents %>\n})(window, document, JSON);"))
+		.pipe(changed(jsDest, {
+			hasChanged: changed.compareSha1Digest
+		}))
+		.pipe(gulp.dest(jsDest));
+});
 
 gulp.task('watch', function () {
 	watch(sassSrc, function () {
 		gulp.start('sass');
 	});
-	watch(jsSrc, function () {
-		gulp.start('js')
+	watch(jsSrcIndex, function () {
+		gulp.start('js-index');
+	});
+	watch(jsSrcSettings, function () {
+		gulp.start('js-settings');
 	});
 });
 
-gulp.task('default', [ 'js', 'sass', 'watch' ]);
+gulp.task('default', [ 'js-index', 'js-settings', 'sass', 'watch' ]);

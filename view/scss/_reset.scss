@@ -12,6 +12,35 @@ html, body, p, ul {
 	padding: 0;
 }
 
+body {
+	font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+	box-sizing: border-box;
+}
+
 ul {
 	list-style: none;
+}
+
+fieldset {
+	border: 0;
+}
+
+label {
+	font-size: 14px;
+}
+
+input[type=checkbox] {
+	margin: 0;
+	position: relative;
+	top: -1px;
+}
+
+.a11y {
+	position: absolute !important;
+    clip: rect(1px, 1px, 1px, 1px);
+    padding:0 !important;
+    border:0 !important;
+    height: 1px !important;
+    width: 1px !important;
+    overflow: hidden;
 }

@@ -5,6 +5,8 @@ var changed = require('gulp-changed'),
 	minifyCss = require('gulp-minify-css'),
 	concat = require('gulp-concat'),
 	wrap = require('gulp-wrap'),
+	gulpUglify = require('gulp-uglify/minifier'),
+	uglifyJs = require('uglify-js')
 
 	sassSrc = 'view/**/*.scss',
 	sassDest = 'view',
@@ -34,6 +36,7 @@ gulp.task('js-index', function () {
 	return gulp.src(jsSrcIndex)
 		.pipe(concat('index.js'))
 		.pipe(wrap("(function (window, document, JSON) { \n\n'use strict';\n\n<%= contents %>\n})(window, document, JSON);"))
+		// .pipe(gulpUglify({}, uglifyJs).on('error', function (err) { console.log(err) }))
 		.pipe(changed(jsDest, {
 			hasChanged: changed.compareSha1Digest
 		}))
@@ -44,6 +47,7 @@ gulp.task('js-settings', function () {
 	return gulp.src(jsSrcSettings)
 		.pipe(concat('settings.js'))
 		.pipe(wrap("(function (window, document, JSON) { \n\n'use strict';\n\n<%= contents %>\n})(window, document, JSON);"))
+		// .pipe(gulpUglify({}, uglifyJs).on('error', function (err) { console.log(err) }))
 		.pipe(changed(jsDest, {
 			hasChanged: changed.compareSha1Digest
 		}))

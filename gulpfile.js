@@ -21,7 +21,7 @@ var changed = require('gulp-changed'),
 		'view/js/settings.js'
 	],
 	jsDest = 'view',
-
+	
 	buildJs = function (src, dest, filename) {
 		return gulp.src(src)
 			.pipe(concat(filename))
@@ -43,7 +43,9 @@ gulp.task('sass', function () {
 		.pipe(gulp.dest(sassDest));
 });
 
-gulp.task('js-index', => buildJs(jsIndexSrc, jsDest, 'index.js'));
+gulp.task('js-index', function () {
+	return buildJs(jsIndexSrc, jsDest, 'index.js');
+});
 
 gulp.task('js-settings', function () {
 	return buildJs(jsSettingsSrc, jsDest, 'settings.js');

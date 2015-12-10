@@ -10,17 +10,28 @@ var changed = require('gulp-changed'),
 
 	sassSrc = 'view/**/*.scss',
 	sassDest = 'view',
-	jsSrcIndex = [
+	jsIndexSrc = [
 		'view/js/services/negative-undo.js',
 		'view/js/controllers/negative-frame.js',
 		'view/js/controllers/negative-tabs.js',
 		'view/js/negative.js'
 	],
-	jsSrcSettings = [
+	jsSettingsSrc = [
 		'view/js/controllers/settings-form.js',
 		'view/js/settings.js'
 	],
-	jsDest = 'view';
+	jsDest = 'view',
+
+	buildJs = function (src, dest, filename) {
+		return gulp.src(src)
+			.pipe(concat(filename))
+			.pipe(wrap("(function (window, document, JSON) { 'use strict'; <%= contents %> })(window, document, JSON);"))
+			.pipe(gulpUglify({ mangle: false }, uglifyJs).on('error', function (err) { console.log(err) }))
+			.pipe(changed(jsDest, {
+				hasChanged: changed.compareSha1Digest
+			}))
+			.pipe(gulp.dest(dest));
+	};
 
 gulp.task('sass', function () {
 	return gulp.src(sassSrc)
@@ -32,36 +43,20 @@ gulp.task('sass', function () {
 		.pipe(gulp.dest(sassDest));
 });
 
-gulp.task('js-index', function () {
-	return gulp.src(jsSrcIndex)
-		.pipe(concat('index.js'))
-		.pipe(wrap("(function (window, document, JSON) { 'use strict'; <%= contents %> })(window, document, JSON);"))
-		.pipe(gulpUglify({ mangle: false }, uglifyJs).on('error', function (err) { console.log(err) }))
-		.pipe(changed(jsDest, {
-			hasChanged: changed.compareSha1Digest
-		}))
-		.pipe(gulp.dest(jsDest));
-});
+gulp.task('js-index', => buildJs(jsIndexSrc, jsDest, 'index.js'));
 
 gulp.task('js-settings', function () {
-	return gulp.src(jsSrcSettings)
-		.pipe(concat('settings.js'))
-		.pipe(wrap("(function (window, document, JSON) { 'use strict'; <%= contents %> })(window, document, JSON);"))
-		.pipe(gulpUglify({ mangle: false }, uglifyJs).on('error', function (err) { console.log(err) }))
-		.pipe(changed(jsDest, {
-			hasChanged: changed.compareSha1Digest
-		}))
-		.pipe(gulp.dest(jsDest));
+	return buildJs(jsSettingsSrc, jsDest, 'settings.js');
 });
 
 gulp.task('watch', function () {
 	watch(sassSrc, function () {
 		gulp.start('sass');
 	});
-	watch(jsSrcIndex, function () {
+	watch(jsIndexSrc, function () {
 		gulp.start('js-index');
 	});
-	watch(jsSrcSettings, function () {
+	watch(jsSettingsSrc, function () {
 		gulp.start('js-settings');
 	});
 });

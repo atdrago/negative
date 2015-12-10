@@ -35,7 +35,7 @@ gulp.task('sass', function () {
 gulp.task('js-index', function () {
 	return gulp.src(jsSrcIndex)
 		.pipe(concat('index.js'))
-		.pipe(wrap("(function (window, document, JSON) { \n\n'use strict';\n\n<%= contents %>\n})(window, document, JSON);"))
+		.pipe(wrap("(function (window, document, JSON) { 'use strict'; <%= contents %> })(window, document, JSON);"))
 		.pipe(gulpUglify({ mangle: false }, uglifyJs).on('error', function (err) { console.log(err) }))
 		.pipe(changed(jsDest, {
 			hasChanged: changed.compareSha1Digest
@@ -46,7 +46,7 @@ gulp.task('js-index', function () {
 gulp.task('js-settings', function () {
 	return gulp.src(jsSrcSettings)
 		.pipe(concat('settings.js'))
-		.pipe(wrap("(function (window, document, JSON) { \n\n'use strict';\n\n<%= contents %>\n})(window, document, JSON);"))
+		.pipe(wrap("(function (window, document, JSON) { 'use strict'; <%= contents %> })(window, document, JSON);"))
 		.pipe(gulpUglify({ mangle: false }, uglifyJs).on('error', function (err) { console.log(err) }))
 		.pipe(changed(jsDest, {
 			hasChanged: changed.compareSha1Digest

@@ -10,12 +10,13 @@
   },
   "author": "Adam Drago",
   "dependencies": {
-    "datauri": "^0.7.1",
-    "electron-window": "^0.6.0",
+    "datauri": "^0.7.0",
+    "electron-window": "^0.6.2",
     "simple-undo": "^1.0.1"
   },
   "devDependencies": {
-    "electron-prebuilt": "^0.35.2",
+    "electron-prebuilt": "^0.35.5",
+    "electron-rebuild": "^1.0.2",
     "grunt": "^0.4.5",
     "grunt-electron": "^2.0.0",
     "gulp": "^3.9.0",

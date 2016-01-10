@@ -12,6 +12,7 @@
   "dependencies": {
     "datauri": "^0.7.0",
     "electron-window": "^0.6.2",
+    "nodobjc": "^2.1.0",
     "simple-undo": "^1.0.1"
   },
   "devDependencies": {

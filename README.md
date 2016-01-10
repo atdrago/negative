@@ -20,8 +20,9 @@ Use Negative to visually compare differences between two scenes. Negative is gre
 2. `git clone https://github.com/atdrago/negative.git`
 3. `cd negative`
 4. `npm install`
-5. `grunt`
-6. Locate and copy `dist/Negative-darwin-x64/Negative.app` to your `Applications` folder
+5. `./node_modules/.bin/electron-rebuild`
+6. `grunt`
+7. Locate and copy `dist/Negative-darwin-x64/Negative.app` to your `Applications` folder
 
 ## Support
 Currently only Mac OS X is supported.

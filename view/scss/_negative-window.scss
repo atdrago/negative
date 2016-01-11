@@ -6,13 +6,10 @@ body {
 	flex-direction: column;
 
 	&.blur {
-		opacity: 0.6;
+		opacity: 0.5;
 	}
 	&.focus {
 		opacity: 1;
-	}
-	&.capture {
-		display: none;
 	}
 }
 

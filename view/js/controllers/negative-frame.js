@@ -48,6 +48,7 @@ class NegativeFrame {
         this.currentImage.setAttribute('src', '');
 
         window.negative.tabsController.unsetTabHasContent();
+        window.negative.tabsController.setTabLabel('');
     }
 
     unsetFocused() {

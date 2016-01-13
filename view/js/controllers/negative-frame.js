@@ -39,6 +39,7 @@ class NegativeFrame {
             this.imageContainer.style.height = newHeight;
 
             window.negative.tabsController.setTabHasContent();
+            window.negative.tabsController.setTabLabel(width + 'x' + height);
         }
     }
 

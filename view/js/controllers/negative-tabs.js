@@ -1,7 +1,7 @@
 let clipboard = require('clipboard'),
 	nativeImage = require('native-image');
 
-const TAB_WIDTH	= 27;
+// const TAB_WIDTH	= 27;
 
 class NegativeTabs {
 	constructor() {
@@ -12,13 +12,19 @@ class NegativeTabs {
 
 		// tab events
 		this.tabsContainer.addEventListener('click', function (evt) {
-            if (evt.target && evt.target.classList.contains('tab')) {
-				this.deselectTabByIndex(this.tabIndex);
+			let target = evt.target;
 
-				this.tabIndex = Array.from(this.tabsContainer.children).indexOf(evt.target);
+			if (target) {
+				if (target.classList.contains('tab')) {
+					this.deselectTabByIndex(this.tabIndex);
 
-				this.selectTabByIndex(this.tabIndex);
-            }
+					this.tabIndex = Array.from(this.tabsContainer.children).indexOf(target);
+
+					this.selectTabByIndex(this.tabIndex);
+	            } else if (target.classList.contains('close')) {
+					this.closeTab();
+				}
+			}
         }.bind(this), false);
 	}
 
@@ -49,7 +55,7 @@ class NegativeTabs {
 			}
 		}
 
-		this.tabsContainer.style.width = ((this.tabs.length - 1) * TAB_WIDTH) + 'px';
+		// this.tabsContainer.style.width = ((this.tabs.length - 1) * TAB_WIDTH) + 'px';
 		this.tabsContainer.children[closedTabIndex].remove();
 		this.tabs.splice(closedTabIndex, 1);
 		this.selectTabByIndex(this.tabIndex);
@@ -120,6 +126,10 @@ class NegativeTabs {
 		this.tabsContainer.children[this.tabIndex].classList.remove('has-content');
 	}
 
+	setTabLabel(label) {
+		this.tabsContainer.children[this.tabIndex].children[0].textContent = label;
+	}
+
 	getEmptyModel() {
 		return {
 			undoManager: new UndoManager()
@@ -142,6 +152,7 @@ class NegativeTabs {
 
 		closeButton.classList.add('close');
 		closeButton.setAttribute('aria-label', 'close');
+		closeButton.innerHTML = '&times;';
 
 		if (isSelected) {
 			tabDiv.classList.add('selected');

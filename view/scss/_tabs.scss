@@ -36,10 +36,7 @@ nav {
     &.has-content {
         border-width: 3px;
     }*/
-    > button {
-        border: 0;
-        background-color: transparent;
-    }
+
     > .label {
         position: relative;
         z-index: 1;
@@ -48,6 +45,24 @@ nav {
         color: #aaa;
         pointer-events: none;
     }
+    > .close {
+        border: 0;
+        background-color: transparent;
+        color: #aaa;
+        font-size: 14px;
+        font-weight: bold;
+        line-height: 14px;
+        position: absolute;
+        right: -5px;
+        top: 2px;
+        z-index: 1;
+        padding: 5px;
+
+        &:hover {
+            color: #fff;
+        }
+    }
+
     &:before {
         left: -14px;
         border-top-left-radius: 3px;

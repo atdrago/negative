@@ -12,7 +12,7 @@ class NegativeTabs {
 
 		// tab events
 		this.tabsContainer.addEventListener('click', function (evt) {
-            if (evt.target && evt.target.nodeName === 'BUTTON') {
+            if (evt.target && evt.target.classList.contains('tab')) {
 				this.deselectTabByIndex(this.tabIndex);
 
 				this.tabIndex = Array.from(this.tabsContainer.children).indexOf(evt.target);
@@ -27,7 +27,7 @@ class NegativeTabs {
 		this.tabIndex++;
 
 		let newTabButton = this.getTabButtonElement(true);
-		this.tabsContainer.style.width = ((this.tabs.length + 1) * TAB_WIDTH) + 'px';
+		// this.tabsContainer.style.width = ((this.tabs.length + 1) * TAB_WIDTH) + 'px';
 		this.tabsContainer.insertBefore(newTabButton, this.tabsContainer.children[this.tabIndex]);
 		newTabButton.focus();
 
@@ -127,17 +127,31 @@ class NegativeTabs {
 	}
 
 	getTabButtonElement(isSelected) {
-		let newTabButton = document.createElement('button');
+		let tabDiv = document.createElement('div'),
+			labelSpan = document.createElement('span'),
+			closeButton = document.createElement('button');
 
-		newTabButton.classList.add('tab');
-		newTabButton.setAttribute('aria-label', 'tab');
+		// <div class="tab selected" aria-selected="true">
+		// 	<span class="label"></span>
+		// 	<button class="close" aria-label="close"></button>
+		// </div>
+
+		tabDiv.classList.add('tab');
+
+		labelSpan.classList.add('label');
+
+		closeButton.classList.add('close');
+		closeButton.setAttribute('aria-label', 'close');
 
 		if (isSelected) {
-			newTabButton.classList.add('selected');
-			newTabButton.setAttribute('aria-selected', 'true');
+			tabDiv.classList.add('selected');
+			tabDiv.setAttribute('aria-selected', 'true');
 		}
 
-		return newTabButton;
+		tabDiv.appendChild(labelSpan);
+		tabDiv.appendChild(closeButton);
+
+		return tabDiv;
 	}
 
 	saveForUndo(state) {

@@ -20,45 +20,44 @@ nav {
 }
 
 .tab {
-	margin: 1px 20px 0 5px;
+	margin: 1px 20px 0 6px;
     float: left;
 	height: 26px;
     min-width: 100px;
     max-width: 160px;
 	outline: none;
 	box-sizing: border-box;
-	transition: border-width 100ms ease, border-color 100ms ease;
     position: relative;
-    background-color: $frame-color-focus;
-    box-shadow: inset -1px 1px 0 #484848, 4px -4px 4px rgba(0, 0, 0, 0.1);
+    box-shadow: inset -1px 1px 0 #484848;
 
-	&:hover,
-    &:focus {
-	}
-
-	&.selected {
-	}
-
-    &:hover,
+    /*&:hover,
     &:focus,
     &.selected,
     &.has-content {
         border-width: 3px;
-    }
+    }*/
     > button {
         border: 0;
         background-color: transparent;
     }
+    > .label {
+        position: relative;
+        z-index: 1;
+        font-size: 11px;
+        line-height: 26px;
+        color: #aaa;
+        pointer-events: none;
+    }
     &:before {
         left: -14px;
         border-top-left-radius: 3px;
-        box-shadow: inset 1px 1px 0 #484848, -4px 0px 4px rgba(0, 0, 0, 0.1);
+        box-shadow: inset 1px 1px 0 #484848;
         -webkit-transform: skewX(-30deg);
     }
     &:after {
         right: -14px;
         border-top-right-radius: 3px;
-        box-shadow: inset -1px 1px 0 #484848, 4px 0px 4px rgba(0, 0, 0, 0.1);
+        box-shadow: inset -1px 1px 0 #484848;
         -webkit-transform: skewX(30deg);
     }
     &:before, &:after {
@@ -67,6 +66,26 @@ nav {
         top: 0px;
         width: 25px;
         height: 26px;
-        background-color: $frame-color-focus;
     }
+    &, &:before, &:after {
+        /*transition: background-color 100ms ease;*/
+        background-color: $frame-color-blur;
+    }
+
+    &:hover,
+    &:focus {
+	}
+
+	&.selected {
+        background-color: $frame-color-focus;
+        z-index: 9999;
+
+        &, &:before, &:after {
+            background-color: $frame-color-focus;
+        }
+
+        > .label {
+            color: #fff;
+        }
+	}
 }

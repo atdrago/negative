@@ -11,6 +11,7 @@ var changed = require('gulp-changed'),
 	sassSrc = 'view/**/*.scss',
 	sassDest = 'view',
 	jsIndexSrc = [
+		'node_modules/dragula/dist/dragula.js',
 		'view/js/services/negative-undo.js',
 		'view/js/controllers/negative-frame.js',
 		'view/js/controllers/negative-tabs.js',
@@ -21,7 +22,7 @@ var changed = require('gulp-changed'),
 		'view/js/settings.js'
 	],
 	jsDest = 'view',
-	
+
 	buildJs = function (src, dest, filename) {
 		return gulp.src(src)
 			.pipe(concat(filename))

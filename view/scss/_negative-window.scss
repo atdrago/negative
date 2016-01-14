@@ -1,6 +1,4 @@
 body {
-	-webkit-user-select: none;
-	-webkit-app-region: drag;
 	cursor: default;
 	display: flex;
 	flex-direction: column;
@@ -22,6 +20,8 @@ body {
 	position: relative;
 	border-radius: 4px 4px 0 0;
 	flex-grow: 1;
+	-webkit-app-region: drag;
+	-webkit-user-select: none;
 
 	body.focus & {
 		border: 10px solid $frame-color-focus;

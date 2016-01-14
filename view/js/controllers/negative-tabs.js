@@ -10,7 +10,7 @@ class NegativeTabs {
 
 		this.tabsContainer = document.getElementById('tabs');
 
-		window.dragula(this.tabsContainer);
+		window.dragula([this.tabsContainer]);
 
 		// tab events
 		this.tabsContainer.addEventListener('click', function (evt) {

@@ -51,13 +51,21 @@ class NegativeFrame {
         window.negative.tabsController.setTabLabel('');
     }
 
+    setFocused() {
+        document.body.classList.remove('blur');
+        document.body.classList.add('focus');
+    }
+
     unsetFocused() {
         document.body.classList.remove('focus');
         document.body.classList.add('blur');
     }
 
-    setFocused() {
-        document.body.classList.remove('blur');
-        document.body.classList.add('focus');
+    setPrimary() {
+        document.body.classList.add('primary');
+    }
+
+    unsetPrimary() {
+        document.body.classList.remove('primary');
     }
 }

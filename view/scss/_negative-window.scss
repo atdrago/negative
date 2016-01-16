@@ -2,17 +2,15 @@ body {
 	cursor: default;
 	display: flex;
 	flex-direction: column;
+	opacity: 0.5;
 
-	&.blur {
-		opacity: 0.5;
-	}
-	&.focus {
+	&.primary {
 		opacity: 1;
 	}
 }
 
 .frame {
-	border: 10px solid $frame-color-blur;
+	border: 10px solid $frame-color-focus;
 	height: 100%;
 	width: 100%;
 	box-sizing: border-box;
@@ -22,10 +20,6 @@ body {
 	flex-grow: 1;
 	-webkit-app-region: drag;
 	-webkit-user-select: none;
-
-	body.focus & {
-		border: 10px solid $frame-color-focus;
-	}
 }
 
 .container {

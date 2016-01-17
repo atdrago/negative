@@ -1,5 +1,7 @@
 let clipboard = require('clipboard'),
-	nativeImage = require('native-image');
+	nativeImage = require('native-image'),
+	remote = require('electron').remote,
+	BrowserWindow = remote.BrowserWindow;
 
 // const TAB_WIDTH	= 27;
 
@@ -28,6 +30,18 @@ class NegativeTabs {
 				}
 			}
         }.bind(this), false);
+
+		document.getElementById('close').addEventListener('click', function (evt) {
+			BrowserWindow.getFocusedWindow().close();
+		});
+
+		document.getElementById('minimize').addEventListener('click', function (evt) {
+			BrowserWindow.getFocusedWindow().minimize();
+		});
+
+		document.getElementById('maximize').addEventListener('click', function (evt) {
+			BrowserWindow.getFocusedWindow().maximize();
+		});
 	}
 
 	addTab() {
@@ -52,7 +66,7 @@ class NegativeTabs {
 			if (this.canSelectPreviousTab()) {
 				this.tabIndex--;
 			} else {
-				ipc.send('close-window');
+				BrowserWindow.getFocusedWindow().close();
 				return;
 			}
 		}

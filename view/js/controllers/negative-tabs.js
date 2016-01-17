@@ -10,9 +10,8 @@ class NegativeTabs {
 
 		this.tabsContainer = document.getElementById('tabs');
 
-		window.dragula([this.tabsContainer]);
 
-		// tab events
+		// Tab Selecting
 		this.tabsContainer.addEventListener('click', function (evt) {
 			let target = evt.target;
 
@@ -29,6 +28,32 @@ class NegativeTabs {
 			}
         }.bind(this), false);
 
+
+		// Tab Dragging
+		let drake = window.dragula([this.tabsContainer], {
+				direction: 'horizontal'
+			}),
+			drakeSourceIndex = null,
+			drakeDestIndex = null;
+
+		drake.on('drag', function (el, source) {
+			drakeSourceIndex = Array.from(this.tabsContainer.children).indexOf(el);
+		}.bind(this));
+
+		drake.on('drop', function (el, target, source, sibling) {
+			drakeDestIndex = Array.from(this.tabsContainer.children).indexOf(el);
+
+			let sourceTab = this.tabs.splice(drakeSourceIndex, 1)
+
+			this.tabs.splice(drakeDestIndex, 0, sourceTab[0]);
+
+			this.deselectTabByIndex(drakeSourceIndex);
+			this.selectTabByIndex(drakeDestIndex);
+			this.tabIndex = drakeDestIndex;
+		}.bind(this));
+
+
+		// Traffic lights
 		document.getElementById('close').addEventListener('click', function (evt) {
 			BrowserWindow.getFocusedWindow().close();
 		});

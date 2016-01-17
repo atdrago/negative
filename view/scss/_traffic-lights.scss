@@ -20,7 +20,7 @@ $disabled-gray:                 #ddd;
     top: 1px;
     left: 8px;
 
-    body.focus &, &:hover {
+    body.focus &, &:hover, &:active {
         > .traffic-light-close {
             background-color: $close-red;
 

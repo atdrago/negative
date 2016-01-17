@@ -24,21 +24,21 @@ $disabled-gray:                 #ddd;
         > .traffic-light-close {
             background-color: $close-red;
 
-            &:active {
+            &:active:hover {
                 background-color: $close-red-active;
             }
         }
         > .traffic-light-minimize {
             background-color: $minimize-yellow;
 
-            &:active {
+            &:active:hover {
                 background-color: $minimize-yellow-active;
             }
         }
         > .traffic-light-maximize {
             background-color: $maximize-green;
 
-            &:active {
+            &:active:hover {
                 background-color: $maximize-green-active;
             }
         }
@@ -50,7 +50,7 @@ $disabled-gray:                 #ddd;
         }
     }
 
-    &:hover {
+    &:hover, &:active {
         > .traffic-light {
             &:before, &:after {
                 visibility: visible;
@@ -94,7 +94,7 @@ $disabled-gray:                 #ddd;
         &:after {
             transform: rotate(-45deg) translate(0.5px, -0.5px);
         }
-        &:active:before, &:active:after {
+        &:active:hover:before, &:active:hover:after {
             background-color: $close-red-icon-active;
         }
     }
@@ -106,7 +106,7 @@ $disabled-gray:                 #ddd;
             height: 1px;
             transform: translateY(-0.5px);
         }
-        &:active:before {
+        &:active:hover:before {
             background-color: $minimize-yellow-icon-active;
         }
     }
@@ -123,10 +123,10 @@ $disabled-gray:                 #ddd;
             height: 2px;
             transform: rotate(45deg);
         }
-        &:active:before {
+        &:active:hover:before {
             background-color: $maximize-green-icon-active;
         }
-        &:active:after {
+        &:active:hover:after {
             background-color: $maximize-green-active;
         }
     }

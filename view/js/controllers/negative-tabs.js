@@ -23,37 +23,59 @@ class NegativeTabs {
 
 					this.selectTabByIndex(this.tabIndex);
 	            } else if (target.classList.contains('close')) {
+					// TODO: Rethink moving this to a click event
 					this.closeTab();
 				}
 			}
         }.bind(this), false);
 
+		this.tabsContainer.addEventListener('dragstart', function (evt) {
+			let target = evt.target;
 
-		// Tab Dragging
-		let drake = window.dragula([this.tabsContainer], {
-				direction: 'horizontal'
-			}),
-			drakeSourceIndex = null,
-			drakeDestIndex = null;
-
-		drake.on('drag', function (el, source) {
-			drakeSourceIndex = Array.from(this.tabsContainer.children).indexOf(el);
-			if (this.tabIndex != drakeSourceIndex) {
-				this.deselectTabByIndex(this.tabIndex);
-				this.selectTabByIndex(drakeSourceIndex);
+			if (target) {
+				if (target.classList.contains('tab')) {
+					evt.dataTransfer.setData('text/plain', 'asdf');
+					evt.dataTransfer.dropEffect = "copy";
+					console.log('drag start')
+				}
 			}
-			console.log(drakeSourceIndex)
-		}.bind(this));
+		});
 
-		drake.on('drop', function (el, target, source, sibling) {
-			drakeDestIndex = Array.from(this.tabsContainer.children).indexOf(el);
+		this.tabsContainer.addEventListener('dragend', function (evt) {
+			console.log(evt.dataTransfer.getData('text/plain'));
+			console.log('drag end')
+		});
 
-			let sourceTab = this.tabs.splice(drakeSourceIndex, 1)
+		this.tabsContainer.addEventListener('dragover', function (evt) {
+			evt.preventDefault();
+			console.log(evt.dataTransfer.getData('text/plain'));
+			console.log('drag over')
+			return false;
+		});
 
-			this.tabs.splice(drakeDestIndex, 0, sourceTab[0]);
+		this.tabsContainer.addEventListener('dragenter', function (evt) {
+			evt.preventDefault();
+			console.log(evt.dataTransfer.getData('text/plain'));
+			console.log('drag enter')
+			return false;
+		});
 
-			this.tabIndex = drakeDestIndex;
-		}.bind(this));
+		this.tabsContainer.addEventListener('drop', function (evt) {
+			let target = evt.target;
+
+			console.log(evt.dataTransfer.getData('text/plain'));
+			evt.preventDefault();
+
+			console.log(evt)
+
+			if (target) {
+				if (target.classList.contains('tab')) {
+					// evt.dataTransfer.setData('text/plain', 'asdf');
+					console.log('drop')
+				}
+			}
+			// return false;
+		});
 
 
 		// Traffic lights
@@ -187,6 +209,7 @@ class NegativeTabs {
 		// </div>
 
 		tabDiv.classList.add('tab');
+		tabDiv.setAttribute('draggable', 'true');
 
 		labelSpan.classList.add('label');
 

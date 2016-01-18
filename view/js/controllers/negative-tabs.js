@@ -12,7 +12,7 @@ class NegativeTabs {
 
 
 		// Tab Selecting
-		this.tabsContainer.addEventListener('click', function (evt) {
+		this.tabsContainer.addEventListener('mousedown', function (evt) {
 			let target = evt.target;
 
 			if (target) {
@@ -38,6 +38,11 @@ class NegativeTabs {
 
 		drake.on('drag', function (el, source) {
 			drakeSourceIndex = Array.from(this.tabsContainer.children).indexOf(el);
+			if (this.tabIndex != drakeSourceIndex) {
+				this.deselectTabByIndex(this.tabIndex);
+				this.selectTabByIndex(drakeSourceIndex);
+			}
+			console.log(drakeSourceIndex)
 		}.bind(this));
 
 		drake.on('drop', function (el, target, source, sibling) {
@@ -47,8 +52,6 @@ class NegativeTabs {
 
 			this.tabs.splice(drakeDestIndex, 0, sourceTab[0]);
 
-			this.deselectTabByIndex(drakeSourceIndex);
-			this.selectTabByIndex(drakeDestIndex);
 			this.tabIndex = drakeDestIndex;
 		}.bind(this));
 

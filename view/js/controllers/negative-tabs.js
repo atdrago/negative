@@ -43,32 +43,27 @@ class NegativeTabs {
 			}
 		}.bind(this));
 
-		this.tabsContainer.addEventListener('dragend', function (evt) {
-			console.log('drag end')
-		});
-
 		this.tabsContainer.addEventListener('dragover', function (evt) {
 			evt.preventDefault();
 
 			let leftOffset = 70,
 				x = evt.x - leftOffset,
-				y = evt.y,
 				// 126 is the width of a tab
 				// TODO: What is a tab grows?
-				tabIndexUnderMouse = Math.floor(x / 126),
+				toIndex = Math.floor(x / 126),
 				fromIndex = +evt.dataTransfer.getData('from-index');
 
 			for (let i = 0, len = this.tabsContainer.children.length; i < len; i++) {
 				let tab = this.tabsContainer.children[i];
 
 				if (fromIndex > i) {
-					if (tabIndexUnderMouse <= i) {
+					if (toIndex <= i) {
 						tab.classList.add('shift-right');
 					} else {
 						tab.classList.remove('shift-right');
 					}
 				} else if (fromIndex < i) {
-					if (tabIndexUnderMouse >= i) {
+					if (toIndex >= i) {
 						tab.classList.add('shift-left');
 					} else {
 						tab.classList.remove('shift-left');
@@ -77,21 +72,36 @@ class NegativeTabs {
 			}
 		}.bind(this));
 
+		this.tabsContainer.addEventListener('dragend', function (evt) {
+			Array.from(this.tabsContainer.children).forEach(function (tab) {
+				tab.classList.add('shift-none');
+
+				setTimeout(function () {
+					tab.classList.remove('shift-none', 'shift-left', 'shift-right');
+				}, 250);
+			});
+		}.bind(this));
+
 		this.tabsContainer.addEventListener('drop', function (evt) {
 			evt.preventDefault();
 
 			let target = evt.target;
 
-			console.log(evt.dataTransfer.getData('from-index'));
-
 			if (target) {
 				if (target.classList.contains('tab')) {
-					// evt.dataTransfer.setData('text/plain', 'asdf');
-					console.log('drop')
+					let leftOffset = 70,
+						x = evt.x - leftOffset,
+						// 126 is the width of a tab
+						// TODO: What is a tab grows?
+						toIndex = Math.floor(x / 126),
+						fromIndex = +evt.dataTransfer.getData('from-index');
+
+					toIndex = toIndex > fromIndex ? toIndex + 1 : toIndex;
+
+					this.moveTab(fromIndex, toIndex);
 				}
 			}
-			// return false;
-		});
+		}.bind(this));
 
 
 		// Traffic lights
@@ -141,6 +151,10 @@ class NegativeTabs {
 
 	getCurrentTab() {
 		return this.tabsContainer.children[this.tabIndex];
+	}
+
+	moveTab(fromIndex, toIndex) {
+		this.tabsContainer.insertBefore(this.tabsContainer.children[fromIndex], this.tabsContainer.children[toIndex]);
 	}
 
 	canSelectNextTab() {

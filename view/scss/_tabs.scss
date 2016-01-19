@@ -113,4 +113,9 @@ nav {
     &.shift-left {
         transform: translateX(-125px);
     }
+
+    &.shift-none {
+        transition: none;
+        transform: translateX(0);
+    }
 }

@@ -30,6 +30,7 @@ nav {
 	box-sizing: border-box;
     position: relative;
     box-shadow: inset -1px 1px 0 #484848;
+    transition: transform 200ms ease;
 
     /*&:hover,
     &:focus,
@@ -104,4 +105,12 @@ nav {
             color: #fff;
         }
 	}
+
+    &.shift-right {
+        transform: translateX(125px);
+    }
+
+    &.shift-left {
+        transform: translateX(-125px);
+    }
 }

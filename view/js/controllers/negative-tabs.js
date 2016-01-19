@@ -33,40 +33,56 @@ class NegativeTabs {
 			let target = evt.target;
 
 			if (target) {
-				if (target.classList.contains('tab')) {
-					evt.dataTransfer.setData('text/plain', 'asdf');
-					evt.dataTransfer.dropEffect = "copy";
-					console.log('drag start')
+				if (target.classList.contains('tab') && this.tabs.length > 1) {
+					evt.dataTransfer.setData('from-index', `${this.tabIndex}`);
+					evt.dataTransfer.effectAllowed = "move";
+				} else {
+					evt.preventDefault();
+					return false;
 				}
 			}
-		});
+		}.bind(this));
 
 		this.tabsContainer.addEventListener('dragend', function (evt) {
-			console.log(evt.dataTransfer.getData('text/plain'));
 			console.log('drag end')
 		});
 
 		this.tabsContainer.addEventListener('dragover', function (evt) {
 			evt.preventDefault();
-			console.log(evt.dataTransfer.getData('text/plain'));
-			console.log('drag over')
-			return false;
-		});
 
-		this.tabsContainer.addEventListener('dragenter', function (evt) {
-			evt.preventDefault();
-			console.log(evt.dataTransfer.getData('text/plain'));
-			console.log('drag enter')
-			return false;
-		});
+			let leftOffset = 70,
+				x = evt.x - leftOffset,
+				y = evt.y,
+				// 126 is the width of a tab
+				// TODO: What is a tab grows?
+				tabIndexUnderMouse = Math.floor(x / 126),
+				fromIndex = +evt.dataTransfer.getData('from-index');
+
+			for (let i = 0, len = this.tabsContainer.children.length; i < len; i++) {
+				let tab = this.tabsContainer.children[i];
+
+				if (fromIndex > i) {
+					if (tabIndexUnderMouse <= i) {
+						tab.classList.add('shift-right');
+					} else {
+						tab.classList.remove('shift-right');
+					}
+				} else if (fromIndex < i) {
+					if (tabIndexUnderMouse >= i) {
+						tab.classList.add('shift-left');
+					} else {
+						tab.classList.remove('shift-left');
+					}
+				}
+			}
+		}.bind(this));
 
 		this.tabsContainer.addEventListener('drop', function (evt) {
-			let target = evt.target;
-
-			console.log(evt.dataTransfer.getData('text/plain'));
 			evt.preventDefault();
 
-			console.log(evt)
+			let target = evt.target;
+
+			console.log(evt.dataTransfer.getData('from-index'));
 
 			if (target) {
 				if (target.classList.contains('tab')) {
@@ -97,7 +113,7 @@ class NegativeTabs {
 		this.tabIndex++;
 
 		let newTabButton = this.getTabButtonElement(true);
-		this.tabsContainer.insertBefore(newTabButton, this.tabsContainer.children[this.tabIndex]);
+		this.tabsContainer.insertBefore(newTabButton, this.getCurrentTab());
 		newTabButton.focus();
 
 		this.tabs.splice(this.tabIndex, 0, this.getEmptyModel());
@@ -121,6 +137,10 @@ class NegativeTabs {
 		this.tabsContainer.children[closedTabIndex].remove();
 		this.tabs.splice(closedTabIndex, 1);
 		this.selectTabByIndex(this.tabIndex);
+	}
+
+	getCurrentTab() {
+		return this.tabsContainer.children[this.tabIndex];
 	}
 
 	canSelectNextTab() {
@@ -181,15 +201,15 @@ class NegativeTabs {
 	}
 
 	setTabHasContent() {
-		this.tabsContainer.children[this.tabIndex].classList.add('has-content');
+		this.getCurrentTab().classList.add('has-content');
 	}
 
 	unsetTabHasContent() {
-		this.tabsContainer.children[this.tabIndex].classList.remove('has-content');
+		this.getCurrentTab().classList.remove('has-content');
 	}
 
 	setTabLabel(label) {
-		this.tabsContainer.children[this.tabIndex].children[0].textContent = label;
+		this.getCurrentTab().children[0].textContent = label;
 	}
 
 	getEmptyModel() {

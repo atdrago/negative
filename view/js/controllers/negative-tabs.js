@@ -7,9 +7,9 @@ class NegativeTabs {
 	constructor() {
 		this.tabIndex = 0;
 		this.tabs = [this.getEmptyModel()];
-
 		this.tabsContainer = document.getElementById('tabs');
-
+		
+		let dragOverIndex = null;
 
 		// Tab Selecting
 		this.tabsContainer.addEventListener('mousedown', function (evt) {
@@ -35,7 +35,7 @@ class NegativeTabs {
 			if (target) {
 				if (target.classList.contains('tab') && this.tabs.length > 1) {
 					evt.dataTransfer.setData('from-index', `${this.tabIndex}`);
-					evt.dataTransfer.effectAllowed = "move";
+					evt.dataTransfer.effectAllowed = 'move';
 				} else {
 					evt.preventDefault();
 					return false;
@@ -49,9 +49,15 @@ class NegativeTabs {
 			let leftOffset = 70,
 				x = evt.x - leftOffset,
 				// 126 is the width of a tab
-				// TODO: What is a tab grows?
+				// TODO: What if a tab grows?
 				toIndex = Math.floor(x / 126),
 				fromIndex = +evt.dataTransfer.getData('from-index');
+				
+			if (toIndex !== dragOverIndex) {
+				let newTransform = (((toIndex - fromIndex) * 126)) + 'px';
+				this.tabsContainer.children[fromIndex].style.left = newTransform;
+				dragOverIndex = toIndex;
+			}
 
 			for (let i = 0, len = this.tabsContainer.children.length; i < len; i++) {
 				let tab = this.tabsContainer.children[i];
@@ -75,6 +81,9 @@ class NegativeTabs {
 		this.tabsContainer.addEventListener('dragend', function (evt) {
 			Array.from(this.tabsContainer.children).forEach(function (tab) {
 				tab.classList.add('shift-none');
+				tab.style.transform = '';
+				tab.style.left = '';
+				dragOverIndex = null;
 
 				setTimeout(function () {
 					tab.classList.remove('shift-none', 'shift-left', 'shift-right');
@@ -92,13 +101,14 @@ class NegativeTabs {
 					let leftOffset = 70,
 						x = evt.x - leftOffset,
 						// 126 is the width of a tab
-						// TODO: What is a tab grows?
+						// TODO: What if a tab grows?
 						toIndex = Math.floor(x / 126),
 						fromIndex = +evt.dataTransfer.getData('from-index');
 
-					toIndex = toIndex > fromIndex ? toIndex + 1 : toIndex;
-
-					this.moveTab(fromIndex, toIndex);
+					this.moveTab(fromIndex, toIndex > fromIndex ? toIndex + 1 : toIndex);
+					this.tabs.splice(toIndex, 0, this.tabs.splice(fromIndex, 1, null)[0]);
+					this.tabs = this.tabs.filter(function (tab) { return tab !== null; });
+					this.tabIndex = toIndex;
 				}
 			}
 		}.bind(this));

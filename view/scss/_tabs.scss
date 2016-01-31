@@ -18,6 +18,14 @@ nav {
     margin: 0;
     padding: 0;
     height: 100%;
+	
+	&.shift-none {
+		> .tab {
+			left: 0 !important;
+	        transition: none !important;
+	        transform: translateX(0) !important;
+		}
+	}
 }
 
 .tab {
@@ -33,6 +41,7 @@ nav {
     transition: transform 200ms ease, left 200ms ease;
     transform: translateX(0);
     left: 0;
+	backface-visibility: hidden;
 
     /*&:hover,
     &:focus,
@@ -117,6 +126,7 @@ nav {
     }
 
     &.shift-none {
+		left: 0;
         transition: none;
         transform: translateX(0);
     }

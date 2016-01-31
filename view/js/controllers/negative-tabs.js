@@ -79,16 +79,21 @@ class NegativeTabs {
 		}.bind(this));
 
 		this.tabsContainer.addEventListener('dragend', function (evt) {
-			Array.from(this.tabsContainer.children).forEach(function (tab) {
-				tab.classList.add('shift-none');
-				tab.style.transform = '';
-				tab.style.left = '';
-				dragOverIndex = null;
-
-				setTimeout(function () {
-					tab.classList.remove('shift-none', 'shift-left', 'shift-right');
-				}, 250);
-			});
+			// this.tabsContainer.classList.add('shift-none');
+			// setTimeout(function () {
+			// 	this.tabsContainer.classList.remove('shift-none');
+			// }.bind(this), 1000);
+			
+			// Array.from(this.tabsContainer.children).forEach(function (tab) {
+			// 	// tab.classList.add('shift-none');
+			// 	tab.style.transform = '';
+			// 	tab.style.left = '';
+			// 	dragOverIndex = null;
+			// 
+			// 	setTimeout(function () {
+			// 		tab.classList.remove('shift-left', 'shift-right');
+			// 	}.bind(this), 250);
+			// }.bind(this));
 		}.bind(this));
 
 		this.tabsContainer.addEventListener('drop', function (evt) {
@@ -96,20 +101,34 @@ class NegativeTabs {
 
 			let target = evt.target;
 
-			if (target) {
-				if (target.classList.contains('tab')) {
-					let leftOffset = 70,
-						x = evt.x - leftOffset,
-						// 126 is the width of a tab
-						// TODO: What if a tab grows?
-						toIndex = Math.floor(x / 126),
-						fromIndex = +evt.dataTransfer.getData('from-index');
+			if (target && target.classList.contains('tab')) {
+				let leftOffset = 70,
+					x = evt.x - leftOffset,
+					// 126 is the width of a tab
+					// TODO: What if a tab grows?
+					toIndex = Math.floor(x / 126),
+					spliceToIndex = toIndex > fromIndex ? toIndex + 1 : toIndex,
+					fromIndex = +evt.dataTransfer.getData('from-index');
 
-					this.moveTab(fromIndex, toIndex > fromIndex ? toIndex + 1 : toIndex);
-					this.tabs.splice(toIndex, 0, this.tabs.splice(fromIndex, 1, null)[0]);
-					this.tabs = this.tabs.filter(function (tab) { return tab !== null; });
-					this.tabIndex = toIndex;
-				}
+				// this.moveTab(fromIndex, toIndex > fromIndex ? toIndex + 1 : toIndex);
+				this.moveTab(fromIndex, spliceToIndex);
+				this.tabs.splice(spliceToIndex, this.tabs.splice(fromIndex, 1, null)[0]);
+				this.tabs = this.tabs.filter(function (tab) { return tab !== null; });
+				this.tabIndex = toIndex;
+				
+				this.tabsContainer.classList.add('shift-none');
+				setTimeout(function () {
+					this.tabsContainer.classList.remove('shift-none');
+				}.bind(this), 250);
+				Array.from(this.tabsContainer.children).forEach(function (tab) {
+					tab.style.transform = '';
+					tab.style.left = '';
+					dragOverIndex = null;
+				
+					setTimeout(function () {
+						tab.classList.remove('shift-left', 'shift-right');
+					}.bind(this), 250);
+				}.bind(this));
 			}
 		}.bind(this));
 

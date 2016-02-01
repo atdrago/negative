@@ -26,6 +26,13 @@ nav {
 	        transform: translateX(0) !important;
 		}
 	}
+	
+	&.shift-reset {
+		> .tab {
+			left: 0 !important;
+			transform: translateX(0) !important;
+		}
+	}
 }
 
 .tab {
@@ -41,7 +48,6 @@ nav {
     transition: transform 200ms ease, left 200ms ease;
     transform: translateX(0);
     left: 0;
-	backface-visibility: hidden;
 
     /*&:hover,
     &:focus,
@@ -124,10 +130,6 @@ nav {
     &.shift-left {
         transform: translateX(-126px);
     }
-
-    &.shift-none {
-		left: 0;
-        transition: none;
-        transform: translateX(0);
-    }
+	
+	
 }

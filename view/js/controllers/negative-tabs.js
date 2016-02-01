@@ -107,12 +107,11 @@ class NegativeTabs {
 					// 126 is the width of a tab
 					// TODO: What if a tab grows?
 					toIndex = Math.floor(x / 126),
-					spliceToIndex = toIndex > fromIndex ? toIndex + 1 : toIndex,
-					fromIndex = +evt.dataTransfer.getData('from-index');
+					fromIndex = +evt.dataTransfer.getData('from-index'),
+					spliceToIndex = toIndex > fromIndex ? toIndex + 1 : toIndex;
 
-				// this.moveTab(fromIndex, toIndex > fromIndex ? toIndex + 1 : toIndex);
 				this.moveTab(fromIndex, spliceToIndex);
-				this.tabs.splice(spliceToIndex, this.tabs.splice(fromIndex, 1, null)[0]);
+				this.tabs.splice(spliceToIndex, 0, this.tabs.splice(fromIndex, 1, null)[0]);
 				this.tabs = this.tabs.filter(function (tab) { return tab !== null; });
 				this.tabIndex = toIndex;
 				
@@ -120,6 +119,7 @@ class NegativeTabs {
 				setTimeout(function () {
 					this.tabsContainer.classList.remove('shift-none');
 				}.bind(this), 250);
+				
 				Array.from(this.tabsContainer.children).forEach(function (tab) {
 					tab.style.transform = '';
 					tab.style.left = '';
@@ -127,8 +127,9 @@ class NegativeTabs {
 				
 					setTimeout(function () {
 						tab.classList.remove('shift-left', 'shift-right');
-					}.bind(this), 250);
+					}, 250);
 				}.bind(this));
+				
 			}
 		}.bind(this));
 

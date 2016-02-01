@@ -1,3 +1,5 @@
+'use strict';
+
 var changed = require('gulp-changed'),
 	gulp = require('gulp'),
 	sass = require('gulp-sass'),
@@ -6,7 +8,7 @@ var changed = require('gulp-changed'),
 	concat = require('gulp-concat'),
 	wrap = require('gulp-wrap'),
 	gulpUglify = require('gulp-uglify/minifier'),
-	uglifyJs = require('uglify-js')
+	uglifyJs = require('uglify-js'),
 
 	sassSrc = 'view/**/*.scss',
 	sassDest = 'view',
@@ -21,7 +23,7 @@ var changed = require('gulp-changed'),
 		'view/js/settings.js'
 	],
 	jsDest = 'view',
-	
+
 	buildJs = function (src, dest, filename) {
 		return gulp.src(src)
 			.pipe(concat(filename))

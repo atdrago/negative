@@ -1,31 +1,143 @@
 let clipboard = require('clipboard'),
-	nativeImage = require('native-image');
-
-// const TAB_WIDTH	= 27;
+	nativeImage = require('native-image'),
+	remote = require('electron').remote,
+	BrowserWindow = remote.BrowserWindow;
 
 class NegativeTabs {
 	constructor() {
 		this.tabIndex = 0;
 		this.tabs = [this.getEmptyModel()];
-
 		this.tabsContainer = document.getElementById('tabs');
+		
+		let dragOverIndex = null,
+			
+			mouseDown = function (evt) {
+				let target = evt.target;
 
-		// tab events
-		this.tabsContainer.addEventListener('click', function (evt) {
-			let target = evt.target;
+				if (target) {
+					if (target.classList.contains('tab')) {
+						this.deselectTabByIndex(this.tabIndex);
 
-			if (target) {
-				if (target.classList.contains('tab')) {
-					this.deselectTabByIndex(this.tabIndex);
+						this.tabIndex = Array.from(this.tabsContainer.children).indexOf(target);
 
-					this.tabIndex = Array.from(this.tabsContainer.children).indexOf(target);
-
-					this.selectTabByIndex(this.tabIndex);
-	            } else if (target.classList.contains('close')) {
-					this.closeTab();
+						this.selectTabByIndex(this.tabIndex);
+		            } else if (target.classList.contains('close')) {
+						// TODO: Rethink moving this to a click event
+						this.closeTab();
+					}
 				}
-			}
-        }.bind(this), false);
+	        }.bind(this),
+			
+			dragStart = function (evt) {
+				let target = evt.target;
+
+				if (target) {
+					if (target.classList.contains('tab') && this.tabs.length > 1) {
+						evt.dataTransfer.setData('from-index', `${this.tabIndex}`);
+						evt.dataTransfer.effectAllowed = 'move';
+					} else {
+						evt.preventDefault();
+						return false;
+					}
+				}
+			}.bind(this),
+			
+			dragOver = function (evt) {
+				evt.preventDefault();
+
+				let leftOffset = 70,
+					x = evt.x - leftOffset,
+					// 126 is the width of a tab
+					// TODO: What if a tab grows?
+					toIndex = Math.floor(x / 126),
+					fromIndex = +evt.dataTransfer.getData('from-index');
+					
+				if (toIndex !== dragOverIndex) {
+					let newTransform = (((toIndex - fromIndex) * 126)) + 'px';
+					this.tabsContainer.children[fromIndex].style.left = newTransform;
+					dragOverIndex = toIndex;
+				}
+
+				for (let i = 0, len = this.tabsContainer.children.length; i < len; i++) {
+					let tab = this.tabsContainer.children[i];
+
+					if (fromIndex > i) {
+						if (toIndex <= i) {
+							tab.classList.add('shift-right');
+						} else {
+							tab.classList.remove('shift-right');
+						}
+					} else if (fromIndex < i) {
+						if (toIndex >= i) {
+							tab.classList.add('shift-left');
+						} else {
+							tab.classList.remove('shift-left');
+						}
+					}
+				}
+			}.bind(this),
+			
+			dragResetStyles = function () {
+				this.tabsContainer.classList.add('shift-none');
+				setTimeout(function () {
+					this.tabsContainer.classList.remove('shift-none');
+				}.bind(this), 250);
+				
+				Array.from(this.tabsContainer.children).forEach(function (tab) {
+					tab.style.transform = '';
+					tab.style.left = '';
+					dragOverIndex = null;
+				
+					setTimeout(function () {
+						tab.classList.remove('shift-left', 'shift-right');
+					}, 250);
+				}.bind(this));
+			}.bind(this),
+			
+			drop = function (evt) {
+				evt.preventDefault();
+
+				let target = evt.target;
+
+				if (target && target.classList.contains('tab')) {
+					let leftOffset = 70,
+						x = evt.x - leftOffset,
+						// 126 is the width of a tab
+						// TODO: What if a tab grows?
+						toIndex = Math.floor(x / 126),
+						fromIndex = +evt.dataTransfer.getData('from-index'),
+						spliceToIndex = toIndex > fromIndex ? toIndex + 1 : toIndex;
+						
+					this.moveTab(fromIndex, spliceToIndex);
+					this.tabs.splice(spliceToIndex, 0, this.tabs.splice(fromIndex, 1, null)[0]);
+					this.tabs = this.tabs.filter(function (tab) { return tab !== null; });
+					this.tabIndex = toIndex;
+					
+					dragResetStyles();
+				}
+			}.bind(this);
+
+		// Tab Selecting
+		this.tabsContainer.addEventListener('mousedown', mouseDown, false);
+
+		// Tab Dragging
+		this.tabsContainer.addEventListener('dragstart', dragStart, false);
+		this.tabsContainer.addEventListener('dragover', dragOver, false);
+		this.tabsContainer.addEventListener('dragend', dragResetStyles, false);
+		this.tabsContainer.addEventListener('drop', drop, false);
+
+		// Traffic lights
+		document.getElementById('close').addEventListener('click', function (evt) {
+			BrowserWindow.getFocusedWindow().close();
+		});
+
+		document.getElementById('minimize').addEventListener('click', function (evt) {
+			BrowserWindow.getFocusedWindow().minimize();
+		});
+
+		document.getElementById('maximize').addEventListener('click', function (evt) {
+			BrowserWindow.getFocusedWindow().maximize();
+		});
 	}
 
 	addTab() {
@@ -33,8 +145,7 @@ class NegativeTabs {
 		this.tabIndex++;
 
 		let newTabButton = this.getTabButtonElement(true);
-		// this.tabsContainer.style.width = ((this.tabs.length + 1) * TAB_WIDTH) + 'px';
-		this.tabsContainer.insertBefore(newTabButton, this.tabsContainer.children[this.tabIndex]);
+		this.tabsContainer.insertBefore(newTabButton, this.getCurrentTab());
 		newTabButton.focus();
 
 		this.tabs.splice(this.tabIndex, 0, this.getEmptyModel());
@@ -50,15 +161,22 @@ class NegativeTabs {
 			if (this.canSelectPreviousTab()) {
 				this.tabIndex--;
 			} else {
-				ipc.send('close-window');
+				BrowserWindow.getFocusedWindow().close();
 				return;
 			}
 		}
 
-		// this.tabsContainer.style.width = ((this.tabs.length - 1) * TAB_WIDTH) + 'px';
 		this.tabsContainer.children[closedTabIndex].remove();
 		this.tabs.splice(closedTabIndex, 1);
 		this.selectTabByIndex(this.tabIndex);
+	}
+
+	getCurrentTab() {
+		return this.tabsContainer.children[this.tabIndex];
+	}
+
+	moveTab(fromIndex, toIndex) {
+		this.tabsContainer.insertBefore(this.tabsContainer.children[fromIndex], this.tabsContainer.children[toIndex]);
 	}
 
 	canSelectNextTab() {
@@ -119,15 +237,15 @@ class NegativeTabs {
 	}
 
 	setTabHasContent() {
-		this.tabsContainer.children[this.tabIndex].classList.add('has-content');
+		this.getCurrentTab().classList.add('has-content');
 	}
 
 	unsetTabHasContent() {
-		this.tabsContainer.children[this.tabIndex].classList.remove('has-content');
+		this.getCurrentTab().classList.remove('has-content');
 	}
 
 	setTabLabel(label) {
-		this.tabsContainer.children[this.tabIndex].children[0].textContent = label;
+		this.getCurrentTab().children[0].textContent = label;
 	}
 
 	getEmptyModel() {
@@ -147,6 +265,7 @@ class NegativeTabs {
 		// </div>
 
 		tabDiv.classList.add('tab');
+		tabDiv.setAttribute('draggable', 'true');
 
 		labelSpan.classList.add('label');
 

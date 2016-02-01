@@ -6,9 +6,14 @@
 	</head>
 	<body>
 		<nav>
+			<div class="traffic-lights">
+				<button class="traffic-light traffic-light-close" id="close"></button>
+				<button class="traffic-light traffic-light-minimize" id="minimize"></button>
+				<button class="traffic-light traffic-light-maximize" id="maximize"></button>
+			</div>
 			<div class="wrap">
 				<div id="tabs" class="tabs">
-					<div class="tab selected" aria-selected="true">
+					<div class="tab selected" aria-selected="true" draggable="true">
 						<span class="label"></span>
 						<button class="close" aria-label="close">&times;</button>
 					</div>

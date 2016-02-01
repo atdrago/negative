@@ -9,112 +9,75 @@ class NegativeTabs {
 		this.tabs = [this.getEmptyModel()];
 		this.tabsContainer = document.getElementById('tabs');
 		
-		let dragOverIndex = null;
-
-		// Tab Selecting
-		this.tabsContainer.addEventListener('mousedown', function (evt) {
-			let target = evt.target;
-
-			if (target) {
-				if (target.classList.contains('tab')) {
-					this.deselectTabByIndex(this.tabIndex);
-
-					this.tabIndex = Array.from(this.tabsContainer.children).indexOf(target);
-
-					this.selectTabByIndex(this.tabIndex);
-	            } else if (target.classList.contains('close')) {
-					// TODO: Rethink moving this to a click event
-					this.closeTab();
-				}
-			}
-        }.bind(this), false);
-
-		this.tabsContainer.addEventListener('dragstart', function (evt) {
-			let target = evt.target;
-
-			if (target) {
-				if (target.classList.contains('tab') && this.tabs.length > 1) {
-					evt.dataTransfer.setData('from-index', `${this.tabIndex}`);
-					evt.dataTransfer.effectAllowed = 'move';
-				} else {
-					evt.preventDefault();
-					return false;
-				}
-			}
-		}.bind(this));
-
-		this.tabsContainer.addEventListener('dragover', function (evt) {
-			evt.preventDefault();
-
-			let leftOffset = 70,
-				x = evt.x - leftOffset,
-				// 126 is the width of a tab
-				// TODO: What if a tab grows?
-				toIndex = Math.floor(x / 126),
-				fromIndex = +evt.dataTransfer.getData('from-index');
-				
-			if (toIndex !== dragOverIndex) {
-				let newTransform = (((toIndex - fromIndex) * 126)) + 'px';
-				this.tabsContainer.children[fromIndex].style.left = newTransform;
-				dragOverIndex = toIndex;
-			}
-
-			for (let i = 0, len = this.tabsContainer.children.length; i < len; i++) {
-				let tab = this.tabsContainer.children[i];
-
-				if (fromIndex > i) {
-					if (toIndex <= i) {
-						tab.classList.add('shift-right');
-					} else {
-						tab.classList.remove('shift-right');
-					}
-				} else if (fromIndex < i) {
-					if (toIndex >= i) {
-						tab.classList.add('shift-left');
-					} else {
-						tab.classList.remove('shift-left');
-					}
-				}
-			}
-		}.bind(this));
-
-		this.tabsContainer.addEventListener('dragend', function (evt) {
-			// this.tabsContainer.classList.add('shift-none');
-			// setTimeout(function () {
-			// 	this.tabsContainer.classList.remove('shift-none');
-			// }.bind(this), 1000);
+		let dragOverIndex = null,
 			
-			// Array.from(this.tabsContainer.children).forEach(function (tab) {
-			// 	// tab.classList.add('shift-none');
-			// 	tab.style.transform = '';
-			// 	tab.style.left = '';
-			// 	dragOverIndex = null;
-			// 
-			// 	setTimeout(function () {
-			// 		tab.classList.remove('shift-left', 'shift-right');
-			// 	}.bind(this), 250);
-			// }.bind(this));
-		}.bind(this));
+			mouseDown = function (evt) {
+				let target = evt.target;
 
-		this.tabsContainer.addEventListener('drop', function (evt) {
-			evt.preventDefault();
+				if (target) {
+					if (target.classList.contains('tab')) {
+						this.deselectTabByIndex(this.tabIndex);
 
-			let target = evt.target;
+						this.tabIndex = Array.from(this.tabsContainer.children).indexOf(target);
 
-			if (target && target.classList.contains('tab')) {
+						this.selectTabByIndex(this.tabIndex);
+		            } else if (target.classList.contains('close')) {
+						// TODO: Rethink moving this to a click event
+						this.closeTab();
+					}
+				}
+	        }.bind(this),
+			
+			dragStart = function (evt) {
+				let target = evt.target;
+
+				if (target) {
+					if (target.classList.contains('tab') && this.tabs.length > 1) {
+						evt.dataTransfer.setData('from-index', `${this.tabIndex}`);
+						evt.dataTransfer.effectAllowed = 'move';
+					} else {
+						evt.preventDefault();
+						return false;
+					}
+				}
+			}.bind(this),
+			
+			dragOver = function (evt) {
+				evt.preventDefault();
+
 				let leftOffset = 70,
 					x = evt.x - leftOffset,
 					// 126 is the width of a tab
 					// TODO: What if a tab grows?
 					toIndex = Math.floor(x / 126),
-					fromIndex = +evt.dataTransfer.getData('from-index'),
-					spliceToIndex = toIndex > fromIndex ? toIndex + 1 : toIndex;
+					fromIndex = +evt.dataTransfer.getData('from-index');
+					
+				if (toIndex !== dragOverIndex) {
+					let newTransform = (((toIndex - fromIndex) * 126)) + 'px';
+					this.tabsContainer.children[fromIndex].style.left = newTransform;
+					dragOverIndex = toIndex;
+				}
 
-				this.moveTab(fromIndex, spliceToIndex);
-				this.tabs.splice(spliceToIndex, 0, this.tabs.splice(fromIndex, 1, null)[0]);
-				this.tabs = this.tabs.filter(function (tab) { return tab !== null; });
-				this.tabIndex = toIndex;
-				
+				for (let i = 0, len = this.tabsContainer.children.length; i < len; i++) {
+					let tab = this.tabsContainer.children[i];
+
+					if (fromIndex > i) {
+						if (toIndex <= i) {
+							tab.classList.add('shift-right');
+						} else {
+							tab.classList.remove('shift-right');
+						}
+					} else if (fromIndex < i) {
+						if (toIndex >= i) {
+							tab.classList.add('shift-left');
+						} else {
+							tab.classList.remove('shift-left');
+						}
+					}
+				}
+			}.bind(this),
+			
+			dragResetStyles = function () {
 				this.tabsContainer.classList.add('shift-none');
 				setTimeout(function () {
 					this.tabsContainer.classList.remove('shift-none');
@@ -129,10 +92,39 @@ class NegativeTabs {
 						tab.classList.remove('shift-left', 'shift-right');
 					}, 250);
 				}.bind(this));
-				
-			}
-		}.bind(this));
+			}.bind(this),
+			
+			drop = function (evt) {
+				evt.preventDefault();
 
+				let target = evt.target;
+
+				if (target && target.classList.contains('tab')) {
+					let leftOffset = 70,
+						x = evt.x - leftOffset,
+						// 126 is the width of a tab
+						// TODO: What if a tab grows?
+						toIndex = Math.floor(x / 126),
+						fromIndex = +evt.dataTransfer.getData('from-index'),
+						spliceToIndex = toIndex > fromIndex ? toIndex + 1 : toIndex;
+						
+					this.moveTab(fromIndex, spliceToIndex);
+					this.tabs.splice(spliceToIndex, 0, this.tabs.splice(fromIndex, 1, null)[0]);
+					this.tabs = this.tabs.filter(function (tab) { return tab !== null; });
+					this.tabIndex = toIndex;
+					
+					dragResetStyles();
+				}
+			}.bind(this);
+
+		// Tab Selecting
+		this.tabsContainer.addEventListener('mousedown', mouseDown, false);
+
+		// Tab Dragging
+		this.tabsContainer.addEventListener('dragstart', dragStart, false);
+		this.tabsContainer.addEventListener('dragover', dragOver, false);
+		this.tabsContainer.addEventListener('dragend', dragResetStyles, false);
+		this.tabsContainer.addEventListener('drop', drop, false);
 
 		// Traffic lights
 		document.getElementById('close').addEventListener('click', function (evt) {

@@ -18,11 +18,12 @@ Use Negative to visually compare differences between two scenes. Negative is gre
 
 1. [Install Node.js](https://nodejs.org/en/) v4 or greater
 2. `git clone https://github.com/atdrago/negative.git`
-3. `cd negative`
-4. `npm install`
-5. `./node_modules/.bin/electron-rebuild`
-6. `grunt`
-7. Locate and copy `dist/Negative-darwin-x64/Negative.app` to your `Applications` folder
+3. `git checkout tags/v0.6.0`
+4. `cd negative`
+5. `npm install`
+6. `./node_modules/.bin/electron-rebuild`
+7. `grunt`
+8. Locate and copy `dist/Negative-darwin-x64/Negative.app` to your `Applications` folder
 
 ## Support
 Currently only Mac OS X is supported.

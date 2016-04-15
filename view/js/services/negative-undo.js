@@ -1,4 +1,4 @@
-let SimpleUndo = require('simple-undo');
+const SimpleUndo = require('simple-undo');
 
 class UndoManager {
     constructor() {
@@ -9,24 +9,21 @@ class UndoManager {
 
         this.history = new SimpleUndo({
             maxLength: 10,
-            provider: function(done) {
-                return done(JSON.stringify(this.state));
-            }.bind(this)
+            provider: (done) => done(JSON.stringify(this.state))
         });
         this.history.initialize(JSON.stringify(this.state));
 
-        this.unserializer = function(serialized) {
+        this.unserializer = (serialized) => {
             this.state = JSON.parse(serialized);
-
-            let imageDimensions = this.state.imageDimensions,
-                imageSrc = this.state.imageSrc;
+            
+            const { imageDimensions, imageSrc } = this.state;
 
             if (imageSrc != null) {
                 window.negative.frameController.setImageAndSize(imageSrc, imageDimensions[0], imageDimensions[1]);
             } else {
                 window.negative.frameController.removeImage();
             }
-        }.bind(this);
+        };
     }
 
     save(state) {

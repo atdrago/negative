@@ -1,16 +1,16 @@
-let ipc = require('electron').ipcRenderer;
+const { ipcRenderer } = require('electron');
 
 class SettingsForm {
     constructor() {
         this.shouldShowTips = document.getElementById('shouldShowTips');
 
         this.shouldShowTips.addEventListener('change', function (evt) {
-            ipc.send('set-settings-request', { shouldShowTips: evt.target.checked });
+            ipcRenderer.send('set-settings-request', { shouldShowTips: evt.target.checked });
         });
 
-        ipc.send('get-settings-request');
-        ipc.on('get-settings-response', function (evt, settings) {
+        ipcRenderer.send('get-settings-request');
+        ipcRenderer.on('get-settings-response', (evt, settings) => {
             this.shouldShowTips.checked = (settings['shouldShowTips'] !== false);
-        }.bind(this));
+        });
     }
 }

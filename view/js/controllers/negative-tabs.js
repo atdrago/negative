@@ -1,143 +1,144 @@
-let clipboard = require('clipboard'),
-	nativeImage = require('native-image'),
-	remote = require('electron').remote,
-	BrowserWindow = remote.BrowserWindow;
+const {
+	clipboard,
+	nativeImage,
+	remote
+} = require('electron');
+
+const { BrowserWindow } = remote;
+
+const LEFT_OFFSET = 70;
+const TAB_WIDTH   = 126; // @TODO - What is the tab grows?
 
 class NegativeTabs {
 	constructor() {
-		this.tabIndex = 0;
-		this.tabs = [this.getEmptyModel()];
-		this.tabsContainer = document.getElementById('tabs');
+		let dragOverIndex = null;
 		
-		let dragOverIndex = null,
+		this.tabIndex      = 0;
+		this.tabs          = [ this.getEmptyModel() ];
+		this.tabsContainer = document.getElementById('tabs');
 			
-			mouseDown = function (evt) {
-				let target = evt.target;
-
-				if (target) {
-					if (target.classList.contains('tab')) {
-						this.deselectTabByIndex(this.tabIndex);
-
-						this.tabIndex = Array.from(this.tabsContainer.children).indexOf(target);
-
-						this.selectTabByIndex(this.tabIndex);
-					} else if (target.classList.contains('close')) {
-						// TODO: Rethink moving this to a click event
-						this.closeTab();
-					}
-				}
-			}.bind(this),
-			
-			dragStart = function (evt) {
-				let target = evt.target;
-
-				if (target) {
-					if (target.classList.contains('tab') && this.tabs.length > 1) {
-						evt.dataTransfer.setData('from-index', `${this.tabIndex}`);
-						evt.dataTransfer.effectAllowed = 'move';
-					} else {
-						evt.preventDefault();
-						return false;
-					}
-				}
-			}.bind(this),
-			
-			dragOver = function (evt) {
-				evt.preventDefault();
-
-				let leftOffset = 70,
-					x = evt.x - leftOffset,
-					// 126 is the width of a tab
-					// TODO: What if a tab grows?
-					toIndex = Math.floor(x / 126),
-					fromIndex = +evt.dataTransfer.getData('from-index');
-					
-				if (toIndex !== dragOverIndex) {
-					let newTransform = (((toIndex - fromIndex) * 126)) + 'px';
-					this.tabsContainer.children[fromIndex].style.left = newTransform;
-					dragOverIndex = toIndex;
-				}
-
-				for (let i = 0, len = this.tabsContainer.children.length; i < len; i++) {
-					let tab = this.tabsContainer.children[i];
-
-					if (fromIndex > i) {
-						if (toIndex <= i) {
-							tab.classList.add('shift-right');
-						} else {
-							tab.classList.remove('shift-right');
-						}
-					} else if (fromIndex < i) {
-						if (toIndex >= i) {
-							tab.classList.add('shift-left');
-						} else {
-							tab.classList.remove('shift-left');
-						}
-					}
-				}
-			}.bind(this),
-			
-			dragResetStyles = function () {
-				this.tabsContainer.classList.add('shift-none');
-				setTimeout(function () {
-					this.tabsContainer.classList.remove('shift-none');
-				}.bind(this), 250);
-				
-				Array.from(this.tabsContainer.children).forEach(function (tab) {
-					tab.style.transform = '';
-					tab.style.left = '';
-					dragOverIndex = null;
-				
-					setTimeout(function () {
-						tab.classList.remove('shift-left', 'shift-right');
-					}, 250);
-				}.bind(this));
-			}.bind(this),
-			
-			drop = function (evt) {
-				evt.preventDefault();
-
-				let target = evt.target;
-
-				if (target && target.classList.contains('tab')) {
-					let leftOffset = 70,
-						x = evt.x - leftOffset,
-						// 126 is the width of a tab
-						// TODO: What if a tab grows?
-						toIndex = Math.floor(x / 126),
-						fromIndex = +evt.dataTransfer.getData('from-index'),
-						spliceToIndex = toIndex > fromIndex ? toIndex + 1 : toIndex;
-						
-					this.moveTab(fromIndex, spliceToIndex);
-					this.tabs.splice(spliceToIndex, 0, this.tabs.splice(fromIndex, 1, null)[0]);
-					this.tabs = this.tabs.filter(function (tab) { return tab !== null; });
-					this.tabIndex = toIndex;
-					
-					dragResetStyles();
-				}
-			}.bind(this);
-
 		// Tab Selecting
-		this.tabsContainer.addEventListener('mousedown', mouseDown, false);
+		this.tabsContainer.addEventListener('mousedown', this._mouseDown, false);
 
 		// Tab Dragging
-		this.tabsContainer.addEventListener('dragstart', dragStart, false);
-		this.tabsContainer.addEventListener('dragover', dragOver, false);
-		this.tabsContainer.addEventListener('dragend', dragResetStyles, false);
-		this.tabsContainer.addEventListener('drop', drop, false);
+		this.tabsContainer.addEventListener('dragstart', this._dragStart, false);
+		this.tabsContainer.addEventListener('dragover', this._dragOver, false);
+		this.tabsContainer.addEventListener('dragend', this._dragResetStyles, false);
+		this.tabsContainer.addEventListener('drop', this._drop, false);
 
 		// Traffic lights
-		document.getElementById('close').addEventListener('click', function (evt) {
+		// @TODO - These have nothing to do with tabs. Move to negative-traffic-lights.js
+		document.getElementById('close').addEventListener('click', (evt) => {
 			BrowserWindow.getFocusedWindow().close();
 		});
 
-		document.getElementById('minimize').addEventListener('click', function (evt) {
+		document.getElementById('minimize').addEventListener('click', (evt) => {
 			BrowserWindow.getFocusedWindow().minimize();
 		});
 
-		document.getElementById('maximize').addEventListener('click', function (evt) {
+		document.getElementById('maximize').addEventListener('click', (evt) => {
 			BrowserWindow.getFocusedWindow().maximize();
 		});
+	}
+	
+	_mouseDown(evt) {
+		const { target } = evt;
+
+		if (target) {
+			if (target.classList.contains('tab')) {
+				this.deselectTabByIndex(this.tabIndex);
+
+				this.tabIndex = Array.from(this.tabsContainer.children).indexOf(target);
+
+				this.selectTabByIndex(this.tabIndex);
+			} else if (target.classList.contains('close')) {
+				// @TODO: Rethink moving this to a click event
+				this.closeTab();
+			}
+		}
+	}
+	
+	_dragStart(evt) {
+		const { target } = evt;
+
+		if (target) {
+			if (target.classList.contains('tab') && this.tabs.length > 1) {
+				evt.dataTransfer.setData('from-index', `${this.tabIndex}`);
+				evt.dataTransfer.effectAllowed = 'move';
+			} else {
+				evt.preventDefault();
+				return false;
+			}
+		}
+	}
+	
+	_dragOver(evt) {
+		evt.preventDefault();
+
+		const x         = evt.x - LEFT_OFFSET;
+		const toIndex   = Math.floor(x / TAB_WIDTH);
+		const fromIndex = +evt.dataTransfer.getData('from-index');
+			
+		if (toIndex !== dragOverIndex) {
+			let newTransform = (((toIndex - fromIndex) * TAB_WIDTH)) + 'px';
+			this.tabsContainer.children[fromIndex].style.left = newTransform;
+			dragOverIndex = toIndex;
+		}
+
+		for (let i = 0, len = this.tabsContainer.children.length; i < len; i++) {
+			let tab = this.tabsContainer.children[i];
+
+			if (fromIndex > i) {
+				if (toIndex <= i) {
+					tab.classList.add('shift-right');
+				} else {
+					tab.classList.remove('shift-right');
+				}
+			} else if (fromIndex < i) {
+				if (toIndex >= i) {
+					tab.classList.add('shift-left');
+				} else {
+					tab.classList.remove('shift-left');
+				}
+			}
+		}
+	}
+	
+	_dragResetStyles() {
+		this.tabsContainer.classList.add('shift-none');
+		setTimeout(() => {
+			this.tabsContainer.classList.remove('shift-none');
+		}, 250);
+		
+		Array.from(this.tabsContainer.children).forEach((tab) => {
+			tab.style.transform = '';
+			tab.style.left = '';
+			dragOverIndex = null;
+		
+			setTimeout(() => {
+				tab.classList.remove('shift-left', 'shift-right');
+			}, 250);
+		});
+	}
+	
+	_drop(evt) {
+		evt.preventDefault();
+
+		const { target } = evt;
+
+		if (target && target.classList.contains('tab')) {
+			const x             = evt.x - LEFT_OFFSET;
+			const toIndex       = Math.floor(x / TAB_WIDTH);
+			const fromIndex     = +evt.dataTransfer.getData('from-index');
+			const spliceToIndex = toIndex > fromIndex ? toIndex + 1 : toIndex;
+				
+			this.moveTab(fromIndex, spliceToIndex);
+			this.tabs.splice(spliceToIndex, 0, this.tabs.splice(fromIndex, 1, null)[0]);
+			this.tabs = this.tabs.filter(function (tab) { return tab !== null; });
+			this.tabIndex = toIndex;
+			
+			this._dragResetStyles();
+		}
 	}
 
 	addTab() {
@@ -145,9 +146,10 @@ class NegativeTabs {
 		this.tabIndex++;
 		this.tabs.splice(this.tabIndex, 0, this.getEmptyModel());
 
-		let newTabButton = this.getTabButtonElement(true);
+		const newTabButton = this.getTabButtonElement(true);
+		
 		this.tabsContainer.insertBefore(newTabButton, this.getCurrentTab());
-		this.tabsContainer.style.width = `${this.tabs.length * 126}px`;
+		this.tabsContainer.style.width = `${this.tabs.length * TAB_WIDTH}px`;
 		newTabButton.focus();
 
 		window.negative.frameController.removeImage();
@@ -156,7 +158,7 @@ class NegativeTabs {
 	}
 
 	closeTab() {
-		let closedTabIndex = this.tabIndex;
+		const closedTabIndex = this.tabIndex;
 
 		if (!this.canSelectNextTab()) {
 			if (this.canSelectPreviousTab()) {
@@ -169,7 +171,7 @@ class NegativeTabs {
 		this.tabs.splice(closedTabIndex, 1);
 
 		this.tabsContainer.children[closedTabIndex].remove();
-		this.tabsContainer.style.width = `${this.tabs.length * 126}px`;
+		this.tabsContainer.style.width = `${this.tabs.length * TAB_WIDTH}px`;
 		this.selectTabByIndex(this.tabIndex);
 	}
 
@@ -190,10 +192,10 @@ class NegativeTabs {
 	}
 
 	selectTabByIndex(index) {
-		let newTab = this.tabs[index].undoManager.state,
-			newTabButton = this.tabsContainer.children[index],
-			imageSrc = newTab.imageSrc,
-			imageDimensions = newTab.imageDimensions;
+		const newTab          = this.tabs[index].undoManager.state;
+		const newTabButton    = this.tabsContainer.children[index];
+		const imageDimensions = newTab.imageDimensions;
+		const imageSrc        = newTab.imageSrc;
 
 		newTabButton.classList.add('selected');
 		newTabButton.setAttribute('aria-selected', 'true');
@@ -209,13 +211,14 @@ class NegativeTabs {
 	}
 
 	deselectTabByIndex(index) {
-		let oldTab = this.tabsContainer.children[index];
+		const oldTab = this.tabsContainer.children[index];
+		
 		oldTab.classList.remove('selected');
 		oldTab.setAttribute('aria-selected', 'false');
 	}
 
 	selectNextTab() {
-		let canSelectNextTab = this.canSelectNextTab();
+		const canSelectNextTab = this.canSelectNextTab();
 
 		if (canSelectNextTab) {
 			this.deselectTabByIndex(this.tabIndex);
@@ -227,7 +230,7 @@ class NegativeTabs {
 	}
 
 	selectPreviousTab() {
-		let canSelectPreviousTab = this.canSelectPreviousTab();
+		const canSelectPreviousTab = this.canSelectPreviousTab();
 
 		if (canSelectPreviousTab) {
 			this.deselectTabByIndex(this.tabIndex);
@@ -256,15 +259,19 @@ class NegativeTabs {
 		};
 	}
 
+	/**
+	 * Returns a DOM Node representing the tab, with the structure:
+	 * <div class="tab selected" aria-selected="true">
+	 *     <span class="label"></span>
+	 *     <button class="close" aria-label="close"></button>
+	 * </div>
+	 * @param  {Boolean} isSelected Adds `selected` class and `aria-selected=true`
+	 * @return {Node}
+	 */
 	getTabButtonElement(isSelected) {
-		let tabDiv = document.createElement('div'),
-			labelSpan = document.createElement('span'),
-			closeButton = document.createElement('button');
-
-		// <div class="tab selected" aria-selected="true">
-		// 	<span class="label"></span>
-		// 	<button class="close" aria-label="close"></button>
-		// </div>
+		const tabDiv      = document.createElement('div');
+		const labelSpan   = document.createElement('span');
+		const closeButton = document.createElement('button');
 
 		tabDiv.classList.add('tab');
 		tabDiv.setAttribute('draggable', 'true');
@@ -287,7 +294,7 @@ class NegativeTabs {
 	}
 
 	saveForUndo(state) {
-		let undoManager = this.tabs[this.tabIndex].undoManager;
+		const undoManager = this.tabs[this.tabIndex].undoManager;
 
 		undoManager.save(state);
 
@@ -295,7 +302,7 @@ class NegativeTabs {
 	}
 
 	undo() {
-		let undoManager = this.tabs[this.tabIndex].undoManager;
+		const undoManager = this.tabs[this.tabIndex].undoManager;
 
 		undoManager.undo();
 
@@ -303,7 +310,7 @@ class NegativeTabs {
 	}
 
 	redo() {
-		let undoManager = this.tabs[this.tabIndex].undoManager;
+		const undoManager = this.tabs[this.tabIndex].undoManager;
 
 		undoManager.redo();
 
@@ -311,9 +318,9 @@ class NegativeTabs {
 	}
 
 	copy() {
-		let undoManagerState = this.tabs[this.tabIndex].undoManager.state,
-			imageSrc = undoManagerState.imageSrc,
-			imageDimensions = undoManagerState.imageDimensions;
+		const undoManagerState = this.tabs[this.tabIndex].undoManager.state;
+		const imageDimensions  = undoManagerState.imageDimensions;
+		const imageSrc         = undoManagerState.imageSrc;
 
 		if (imageSrc !== null && imageDimensions !== null) {
 			clipboard.write({
@@ -326,35 +333,39 @@ class NegativeTabs {
 	}
 
 	paste() {
-		let image = clipboard.readImage(),
-			imageDimensions;
+		const image = clipboard.readImage()
+		
+		let imageDimensions;
 
 		try {
 			// Try to parse text as image dimensions, but this could anything,
 			// such as the image's file name, so prevent the error.
 			imageDimensions = JSON.parse(clipboard.readText() || null);
-		} catch (err) {}
+		} catch (err) {
+			// @TODO - Should this throw?
+			// throw err;
+		}
 
 		if (image !== null) {
 			if (!imageDimensions) {
 				imageDimensions = (function (dims) { return [dims.width, dims.height]; })(image.getSize());
 			}
 
-			let imageSrc = image.toDataURL();
+			const imageSrc = image.toDataURL();
 
 			window.negative.frameController.setImageAndSize(imageSrc, imageDimensions[0], imageDimensions[1]);
 			this.saveForUndo({
-				imageSrc: imageSrc,
-				imageDimensions: imageDimensions
+				imageDimensions: imageDimensions,
+				imageSrc: imageSrc
 			});
 			this.refreshMenu();
 		}
 	}
 
 	refreshMenu() {
-		let undoManager = this.tabs[this.tabIndex].undoManager;
+		const undoManager = this.tabs[this.tabIndex].undoManager;
 
-		ipc.send('refresh-menu', {
+		ipcRenderer.send('refresh-menu', {
 			canAddTab: true,
 			canCloseTab: true,
 			canCloseWindow: true,
@@ -372,8 +383,8 @@ class NegativeTabs {
 	}
 
 	fitWindowToImage() {
-		let undoManagerState = this.tabs[this.tabIndex].undoManager.state;
+		const undoManagerState = this.tabs[this.tabIndex].undoManager.state;
 
-		ipc.send('fit-window-to-image', undoManagerState.imageDimensions);
+		ipcRenderer.send('fit-window-to-image', undoManagerState.imageDimensions);
 	}
 }

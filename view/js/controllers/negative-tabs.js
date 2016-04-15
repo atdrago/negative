@@ -21,12 +21,12 @@ class NegativeTabs {
 						this.tabIndex = Array.from(this.tabsContainer.children).indexOf(target);
 
 						this.selectTabByIndex(this.tabIndex);
-		            } else if (target.classList.contains('close')) {
+					} else if (target.classList.contains('close')) {
 						// TODO: Rethink moving this to a click event
 						this.closeTab();
 					}
 				}
-	        }.bind(this),
+			}.bind(this),
 			
 			dragStart = function (evt) {
 				let target = evt.target;
@@ -143,12 +143,13 @@ class NegativeTabs {
 	addTab() {
 		this.deselectTabByIndex(this.tabIndex);
 		this.tabIndex++;
+		this.tabs.splice(this.tabIndex, 0, this.getEmptyModel());
 
 		let newTabButton = this.getTabButtonElement(true);
 		this.tabsContainer.insertBefore(newTabButton, this.getCurrentTab());
+		this.tabsContainer.style.width = `${this.tabs.length * 126}px`;
 		newTabButton.focus();
 
-		this.tabs.splice(this.tabIndex, 0, this.getEmptyModel());
 		window.negative.frameController.removeImage();
 
 		this.refreshMenu();
@@ -165,9 +166,10 @@ class NegativeTabs {
 				return;
 			}
 		}
+		this.tabs.splice(closedTabIndex, 1);
 
 		this.tabsContainer.children[closedTabIndex].remove();
-		this.tabs.splice(closedTabIndex, 1);
+		this.tabsContainer.style.width = `${this.tabs.length * 126}px`;
 		this.selectTabByIndex(this.tabIndex);
 	}
 
@@ -309,22 +311,22 @@ class NegativeTabs {
 	}
 
 	copy() {
-        let undoManagerState = this.tabs[this.tabIndex].undoManager.state,
+		let undoManagerState = this.tabs[this.tabIndex].undoManager.state,
 			imageSrc = undoManagerState.imageSrc,
 			imageDimensions = undoManagerState.imageDimensions;
 
-        if (imageSrc !== null && imageDimensions !== null) {
+		if (imageSrc !== null && imageDimensions !== null) {
 			clipboard.write({
 				image: nativeImage.createFromDataURL(imageSrc),
 				text: JSON.stringify(imageDimensions)
 			});
 
-            this.refreshMenu();
-        }
-    }
+			this.refreshMenu();
+		}
+	}
 
 	paste() {
-        let image = clipboard.readImage(),
+		let image = clipboard.readImage(),
 			imageDimensions;
 
 		try {
@@ -333,7 +335,7 @@ class NegativeTabs {
 			imageDimensions = JSON.parse(clipboard.readText() || null);
 		} catch (err) {}
 
-        if (image !== null) {
+		if (image !== null) {
 			if (!imageDimensions) {
 				imageDimensions = (function (dims) { return [dims.width, dims.height]; })(image.getSize());
 			}
@@ -341,13 +343,13 @@ class NegativeTabs {
 			let imageSrc = image.toDataURL();
 
 			window.negative.frameController.setImageAndSize(imageSrc, imageDimensions[0], imageDimensions[1]);
-            this.saveForUndo({
+			this.saveForUndo({
 				imageSrc: imageSrc,
-                imageDimensions: imageDimensions
-            });
+				imageDimensions: imageDimensions
+			});
 			this.refreshMenu();
-        }
-    }
+		}
+	}
 
 	refreshMenu() {
 		let undoManager = this.tabs[this.tabIndex].undoManager;
@@ -365,7 +367,7 @@ class NegativeTabs {
 			canSelectPreviousTab: this.canSelectPreviousTab(),
 			canSelectNextTab: this.canSelectNextTab(),
 			canMinimize: true,
-            canMove: true
+			canMove: true
 		});
 	}
 

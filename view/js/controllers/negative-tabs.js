@@ -7,7 +7,7 @@ const {
 const { BrowserWindow } = remote;
 
 const LEFT_OFFSET = 70;
-const TAB_WIDTH   = 126; // @TODO - What is the tab grows?
+const TAB_WIDTH   = 126; // @TODO - What if the tab grows?
 
 class NegativeTabs {
 	constructor() {
@@ -145,9 +145,10 @@ class NegativeTabs {
 		this.tabs.splice(this.tabIndex, 0, this.getEmptyModel());
 
 		const newTabButton = this.getTabButtonElement(true);
+		const newTabContainerWidth = this.tabs.length * TAB_WIDTH;
 		
 		this.tabsContainer.insertBefore(newTabButton, this.getCurrentTab());
-		this.tabsContainer.style.width = `${this.tabs.length * TAB_WIDTH}px`;
+		this.tabsContainer.style.width = `${newTabContainerWidth}px`;
 		newTabButton.focus();
 
 		window.negative.frameController.removeImage();
@@ -167,9 +168,11 @@ class NegativeTabs {
 			}
 		}
 		this.tabs.splice(closedTabIndex, 1);
+		
+		const newTabContainerWidth = this.tabs.length * TAB_WIDTH;
 
 		this.tabsContainer.children[closedTabIndex].remove();
-		this.tabsContainer.style.width = `${this.tabs.length * TAB_WIDTH}px`;
+		this.tabsContainer.style.width = `${newTabContainerWidth}px`;
 		this.selectTabByIndex(this.tabIndex);
 	}
 
@@ -190,8 +193,8 @@ class NegativeTabs {
 	}
 
 	selectTabByIndex(index) {
-		const newTab          = this.tabs[index].undoManager.state;
-		const newTabButton    = this.tabsContainer.children[index];
+		const newTab       = this.tabs[index].undoManager.state;
+		const newTabButton = this.tabsContainer.children[index];
 		const {
 			imageDimensions,
 			imageSrc

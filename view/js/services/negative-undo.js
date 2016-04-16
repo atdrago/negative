@@ -16,7 +16,10 @@ class UndoManager {
 		this.unserializer = (serialized) => {
 			this.state = JSON.parse(serialized);
 			
-			const { imageDimensions, imageSrc } = this.state;
+			const { 
+				imageDimensions, 
+				imageSrc 
+			} = this.state;
 
 			if (imageSrc != null) {
 				window.negative.frameController.setImageAndSize(imageSrc, imageDimensions[0], imageDimensions[1]);

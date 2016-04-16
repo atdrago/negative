@@ -79,14 +79,13 @@ class NegativeTabs {
 		const fromIndex = +evt.dataTransfer.getData('from-index');
 			
 		if (toIndex !== this.dragOverIndex) {
-			let newTransform = (((toIndex - fromIndex) * TAB_WIDTH)) + 'px';
+			const newTransform = (((toIndex - fromIndex) * TAB_WIDTH)) + 'px';
+			
 			this.tabsContainer.children[fromIndex].style.left = newTransform;
 			this.dragOverIndex = toIndex;
 		}
-
-		for (let i = 0, len = this.tabsContainer.children.length; i < len; i++) {
-			let tab = this.tabsContainer.children[i];
-
+		
+		Array.from(this.tabsContainer.children).forEach((tab, i) => {
 			if (fromIndex > i) {
 				if (toIndex <= i) {
 					tab.classList.add('shift-right');
@@ -100,7 +99,7 @@ class NegativeTabs {
 					tab.classList.remove('shift-left');
 				}
 			}
-		}
+		});
 	}
 	
 	_dragResetStyles() {
@@ -193,8 +192,10 @@ class NegativeTabs {
 	selectTabByIndex(index) {
 		const newTab          = this.tabs[index].undoManager.state;
 		const newTabButton    = this.tabsContainer.children[index];
-		const imageDimensions = newTab.imageDimensions;
-		const imageSrc        = newTab.imageSrc;
+		const {
+			imageDimensions,
+			imageSrc
+		} = newTab;
 
 		newTabButton.classList.add('selected');
 		newTabButton.setAttribute('aria-selected', 'true');
@@ -318,8 +319,10 @@ class NegativeTabs {
 
 	copy() {
 		const undoManagerState = this.tabs[this.tabIndex].undoManager.state;
-		const imageDimensions  = undoManagerState.imageDimensions;
-		const imageSrc         = undoManagerState.imageSrc;
+		const {
+			imageDimensions,
+			imageSrc
+		} = undoManagerState;
 
 		if (imageSrc !== null && imageDimensions !== null) {
 			clipboard.write({

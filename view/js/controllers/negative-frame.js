@@ -10,11 +10,11 @@ class NegativeFrame {
 		}, false);
 
 		ipcRenderer.send('get-settings-request');
-		ipcRenderer.on('get-settings-response', function (evt, settings) {
+		ipcRenderer.on('get-settings-response', (evt, settings) => {
 			if (settings['shouldShowTips'] === false) {
 				document.body.classList.add('no-tips');
 			}
-		}.bind(this));
+		});
 	}
 
 	setShouldShowTips(shouldShowTips) {
@@ -30,8 +30,8 @@ class NegativeFrame {
 			document.body.classList.add('negative-on');
 			this.currentImage.setAttribute('src', src);
 
-			let newHeight = `${height}px`;
-			let newWidth  = `${width}px`;
+			const newHeight = `${height}px`;
+			const newWidth  = `${width}px`;
 
 			this.currentImage.style.width = newWidth;
 			this.currentImage.style.height = newHeight;

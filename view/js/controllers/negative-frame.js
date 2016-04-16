@@ -1,16 +1,16 @@
-let ipc = require('electron').ipcRenderer
+const { ipcRenderer } = require('electron');
 
 class NegativeFrame {
     constructor() {
+        this.currentImage   = document.getElementById('negativeImage');
         this.imageContainer = document.getElementById('imageContainer');
-        this.currentImage = document.getElementById('negativeImage');
 
         this.currentImage.addEventListener('load', function () {
 			document.body.classList.add('negative-on');
 		}, false);
 
-        ipc.send('get-settings-request');
-        ipc.on('get-settings-response', function (evt, settings) {
+        ipcRenderer.send('get-settings-request');
+        ipcRenderer.on('get-settings-response', function (evt, settings) {
             if (settings['shouldShowTips'] === false) {
                 document.body.classList.add('no-tips');
             }
@@ -30,8 +30,8 @@ class NegativeFrame {
             document.body.classList.add('negative-on');
             this.currentImage.setAttribute('src', src);
 
-            let newWidth = width + 'px',
-                newHeight = height + 'px';
+            let newHeight = `${height}px`;
+            let newWidth  = `${width}px`;
 
             this.currentImage.style.width = newWidth;
             this.currentImage.style.height = newHeight;
@@ -39,7 +39,7 @@ class NegativeFrame {
             this.imageContainer.style.height = newHeight;
 
             window.negative.tabsController.setTabHasContent();
-            window.negative.tabsController.setTabLabel(width + 'x' + height);
+            window.negative.tabsController.setTabLabel(`${width}x${height}`);
         }
     }
 

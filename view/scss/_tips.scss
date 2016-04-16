@@ -1,9 +1,9 @@
 @keyframes fade-in-out {
-    0% { opacity: 0; }
-    #{1s / $tip-duration * 100%} { opacity: 0.6; }
-    #{5s / $tip-duration * 100%} { opacity: 0.6; }
-    #{6s / $tip-duration * 100%} { opacity: 0; }
-    100% { opacity: 0; }
+	0% { opacity: 0; }
+	#{1s / $tip-duration * 100%} { opacity: 0.6; }
+	#{5s / $tip-duration * 100%} { opacity: 0.6; }
+	#{6s / $tip-duration * 100%} { opacity: 0; }
+	100% { opacity: 0; }
 }
 
 .tip-list {
@@ -12,19 +12,19 @@
 
 .tip {
 	opacity: 0;
-    font-size: 44px;
+	font-size: 44px;
 	font-weight: 500;
 	color: #fff;
 	text-align: center;
 	animation: fade-in-out #{$tip-duration} ease infinite;
-    display: flex;
-    flex-direction: column;
+	display: flex;
+	flex-direction: column;
 
-    &:after,
-    &:before {
-        content: '';
-        flex-grow: 1;
-    }
+	&:after,
+	&:before {
+		content: '';
+		flex-grow: 1;
+	}
 }
 
 .tip-list, .tip {

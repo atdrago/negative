@@ -1,9 +1,9 @@
 document.addEventListener('DOMContentLoaded', () => {
-    const settingsForm = new SettingsForm();
+	const settingsForm = new SettingsForm();
 	const cancelEvent  = (evt) => { 
-        evt.preventDefault(); 
-        return false; 
-    };
+		evt.preventDefault(); 
+		return false; 
+	};
 
 	document.body.addEventListener('dragend', 	cancelEvent, false);
 	document.body.addEventListener('dragleave', cancelEvent, false);

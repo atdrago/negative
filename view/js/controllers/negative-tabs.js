@@ -11,20 +11,19 @@ const TAB_WIDTH   = 126; // @TODO - What is the tab grows?
 
 class NegativeTabs {
 	constructor() {
-		let dragOverIndex = null;
-		
+		this.dragOverIndex = null;
 		this.tabIndex      = 0;
 		this.tabs          = [ this.getEmptyModel() ];
 		this.tabsContainer = document.getElementById('tabs');
 			
 		// Tab Selecting
-		this.tabsContainer.addEventListener('mousedown', this._mouseDown, false);
+		this.tabsContainer.addEventListener('mousedown', this._mouseDown.bind(this), false);
 
 		// Tab Dragging
-		this.tabsContainer.addEventListener('dragstart', this._dragStart, false);
-		this.tabsContainer.addEventListener('dragover', this._dragOver, false);
-		this.tabsContainer.addEventListener('dragend', this._dragResetStyles, false);
-		this.tabsContainer.addEventListener('drop', this._drop, false);
+		this.tabsContainer.addEventListener('dragstart', this._dragStart.bind(this), false);
+		this.tabsContainer.addEventListener('dragover', this._dragOver.bind(this), false);
+		this.tabsContainer.addEventListener('dragend', this._dragResetStyles.bind(this), false);
+		this.tabsContainer.addEventListener('drop', this._drop.bind(this), false);
 
 		// Traffic lights
 		// @TODO - These have nothing to do with tabs. Move to negative-traffic-lights.js
@@ -79,10 +78,10 @@ class NegativeTabs {
 		const toIndex   = Math.floor(x / TAB_WIDTH);
 		const fromIndex = +evt.dataTransfer.getData('from-index');
 			
-		if (toIndex !== dragOverIndex) {
+		if (toIndex !== this.dragOverIndex) {
 			let newTransform = (((toIndex - fromIndex) * TAB_WIDTH)) + 'px';
 			this.tabsContainer.children[fromIndex].style.left = newTransform;
-			dragOverIndex = toIndex;
+			this.dragOverIndex = toIndex;
 		}
 
 		for (let i = 0, len = this.tabsContainer.children.length; i < len; i++) {
@@ -113,7 +112,7 @@ class NegativeTabs {
 		Array.from(this.tabsContainer.children).forEach((tab) => {
 			tab.style.transform = '';
 			tab.style.left = '';
-			dragOverIndex = null;
+			this.dragOverIndex = null;
 		
 			setTimeout(() => {
 				tab.classList.remove('shift-left', 'shift-right');

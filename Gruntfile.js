@@ -1,10 +1,10 @@
 'use strict';
 
-var grunt = require('grunt'),
-	fs = require('fs'),
-	packageJson = JSON.parse(fs.readFileSync('package.json')),
-	version = packageJson['version'],
-	devDependencies = Object.keys(packageJson['devDependencies']).join('|');
+const grunt   = require('grunt');
+const fs      = require('fs');
+const config  = JSON.parse(fs.readFileSync('package.json'));
+const version = config['version'];
+const devDeps = Object.keys(config['devDependencies']).join('|');
 
 require('load-grunt-tasks')(grunt);
 
@@ -25,7 +25,7 @@ grunt.initConfig({
 				'helper-bundle-id': 'com.adamdrago.negative.helper',
 				'app-version': version,
 				prune: true,
-				ignore: `node_modules/(${devDependencies})`
+				ignore: `node_modules/(${devDeps})`
 			}
 		}
 	}

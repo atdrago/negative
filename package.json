@@ -6,7 +6,8 @@
   "repository": "https://github.com/atdrago/negative.git",
   "license": "MIT",
   "scripts": {
-    "start": "electron ."
+    "start": "electron .",
+    "build": "npm install && ./node_modules/.bin/electron-rebuild && grunt"
   },
   "author": "Adam Drago",
   "dependencies": {

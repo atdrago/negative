@@ -26,7 +26,7 @@ const sassDest      = 'view';
 function buildJs(src, dest, filename) {
 	return gulp.src(src)
 		.pipe(concat(filename))
-		.pipe(wrap("(function (window, document, JSON) { 'use strict'; <%= contents %> })(window, document, JSON);"))
+		.pipe(wrap("(function (window, document, JSON) { <%= contents %> })(window, document, JSON);"))
 		.pipe(gulpUglify({}, uglifyJs).on('error', (err) => console.log(err)))
 		.pipe(changed(jsDest, {
 			hasChanged: changed.compareSha1Digest

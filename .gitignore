@@ -32,3 +32,6 @@ node_modules
 
 # Built app
 dist
+
+# Release folder
+release

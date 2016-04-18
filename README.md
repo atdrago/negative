@@ -1,6 +1,6 @@
 # Negative
 
-Use Negative to visually compare differences between two scenes. Negative is great for web and application development, when trying to match your build to the provided comp.
+> An app for making visual comparison.
 
 ![Negative Demo](negative-demo.gif)
 
@@ -14,7 +14,9 @@ Use Negative to visually compare differences between two scenes. Negative is gre
 - <kbd>&#8997;&#8984;}</kbd> <kbd>&#8997;&#8984;{</kbd> - Select next or previous tab + fit window to image
 - <kbd>&#8963;&#8984;H</kbd> - Hide or show Negative (from any app)
 
-## Build Process
+## Build Negative.app
+
+Currently only Mac OS X is supported.
 
 1. [Install Node.js](https://nodejs.org/en/) v4 or greater
 2. `git clone https://github.com/atdrago/negative.git`
@@ -23,8 +25,9 @@ Use Negative to visually compare differences between two scenes. Negative is gre
 5. `npm run build`
 6. Locate and copy `dist/Negative-darwin-x64/Negative.app` to your `Applications` folder
 
-## Support
-Currently only Mac OS X is supported.
+## Making changes locally
+- `gulp` - Files in the renderer process are combined and minified, so you'll need to be running gulp to see your changes. This isn't necessary for files in the main process.
+- `npm start` - This opens the app.
 
 ## About
 Created by [Adam Drago](http://adamdrago.com). Icon by [Tiffany Wang](mailto:wangtiff@gmail.com). Built on [Electron](http://electron.atom.io/).

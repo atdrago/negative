@@ -49,8 +49,6 @@ gulp.task('sass', () => {
 gulp.task('js-index',    () => buildJs(jsIndexSrc, jsDest, 'index.js'));
 gulp.task('js-settings', () => buildJs(jsSettingsSrc, jsDest, 'settings.js'));
 
-
-
 gulp.task('watch', () => {
 	watch(sassSrc,       () => gulp.start('sass'));
 	watch(jsIndexSrc,    () => gulp.start('js-index'));

@@ -163,14 +163,13 @@ window.NegativeTabs = (function () {
 		closeTab() {
 			const closedTabIndex = this.tabIndex;
 
-			if (!this.canSelectNextTab()) {
-				if (this.canSelectPreviousTab()) {
-					this.tabIndex--;
-				} else {
-					BrowserWindow.getFocusedWindow().close();
-					return;
-				}
+			if (this.tabs.length === 1) {
+				BrowserWindow.getFocusedWindow().close();
+				return;
+			} else {
+				this.tabIndex--;
 			}
+			
 			this.tabs.splice(closedTabIndex, 1);
 			
 			const newTabContainerWidth = this.tabs.length * TAB_WIDTH;
@@ -186,14 +185,6 @@ window.NegativeTabs = (function () {
 
 		moveTab(fromIndex, toIndex) {
 			this.tabsContainer.insertBefore(this.tabsContainer.children[fromIndex], this.tabsContainer.children[toIndex]);
-		}
-
-		canSelectNextTab() {
-			return this.tabIndex + 1 < this.tabs.length;
-		}
-
-		canSelectPreviousTab() {
-			return this.tabIndex > 0;
 		}
 
 		selectTabByIndex(index) {
@@ -225,27 +216,27 @@ window.NegativeTabs = (function () {
 		}
 
 		selectNextTab() {
-			const canSelectNextTab = this.canSelectNextTab();
+			this.deselectTabByIndex(this.tabIndex);
 
-			if (canSelectNextTab) {
-				this.deselectTabByIndex(this.tabIndex);
+			if (this.tabIndex + 1 < this.tabs.length) {
 				this.tabIndex++;
-				this.selectTabByIndex(this.tabIndex);
+			} else {
+				this.tabIndex = 0;
 			}
 
-			return canSelectNextTab;
+			this.selectTabByIndex(this.tabIndex);
 		}
 
 		selectPreviousTab() {
-			const canSelectPreviousTab = this.canSelectPreviousTab();
-
-			if (canSelectPreviousTab) {
-				this.deselectTabByIndex(this.tabIndex);
+			this.deselectTabByIndex(this.tabIndex);
+			
+			if (this.tabIndex > 0) {
 				this.tabIndex--;
-				this.selectTabByIndex(this.tabIndex);
+			} else {
+				this.tabIndex = this.tabs.length - 1;
 			}
 
-			return canSelectPreviousTab;
+			this.selectTabByIndex(this.tabIndex);
 		}
 
 		setTabHasContent() {
@@ -385,8 +376,6 @@ window.NegativeTabs = (function () {
 				isImageEmpty: undoManager.state.imageSrc === null,
 				canReload: true,
 				canToggleDevTools: true,
-				canSelectPreviousTab: this.canSelectPreviousTab(),
-				canSelectNextTab: this.canSelectNextTab(),
 				canMinimize: true,
 				canMove: true
 			});

@@ -35,3 +35,7 @@ dist
 
 # Release folder
 release
+
+# Generated files
+view/*.css
+view/*.js

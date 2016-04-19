@@ -7,7 +7,7 @@
   "license": "MIT",
   "scripts": {
     "start": "electron .",
-    "build": "npm install && ./node_modules/.bin/electron-rebuild && grunt"
+    "build": "npm install && ./node_modules/.bin/electron-rebuild && gulp release && grunt"
   },
   "author": "Adam Drago",
   "dependencies": {
@@ -17,10 +17,11 @@
     "simple-undo": "^1.0.1"
   },
   "devDependencies": {
+    "del": "^2.2.0",
     "electron-prebuilt": "^0.37.5",
     "electron-rebuild": "^1.0.2",
     "grunt": "^0.4.5",
-    "grunt-electron": "^2.0.0",
+    "grunt-electron": "^3.0.0",
     "gulp": "^3.9.0",
     "gulp-changed": "^1.2.1",
     "gulp-concat": "^2.6.0",
@@ -30,6 +31,7 @@
     "gulp-watch": "^4.3.3",
     "gulp-wrap": "^0.11.0",
     "load-grunt-tasks": "^3.2.0",
+    "run-sequence": "^1.1.5",
     "uglify-js": "mishoo/UglifyJS2.git#harmony"
   }
 }

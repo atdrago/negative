@@ -18,14 +18,13 @@ grunt.initConfig({
 				version: '0.37.5',
 				platform: 'darwin',
 				out: 'dist',
-				dir: '.',
+				dir: 'release',
 				overwrite: true,
 				asar: true,
 				'app-bundle-id': 'com.adamdrago.negative',
 				'helper-bundle-id': 'com.adamdrago.negative.helper',
 				'app-version': version,
-				prune: true,
-				ignore: `node_modules/(${devDeps})`
+				prune: true
 			}
 		}
 	}

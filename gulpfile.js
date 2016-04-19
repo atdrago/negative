@@ -1,14 +1,16 @@
 'use strict';
 
 const changed       = require('gulp-changed');
-const gulp          = require('gulp');
-const sass          = require('gulp-sass');
-const watch         = require('gulp-watch');
-const minifyCss     = require('gulp-minify-css');
 const concat        = require('gulp-concat');
-const wrap          = require('gulp-wrap');
+const del           = require('del');
+const gulp          = require('gulp');
 const gulpUglify    = require('gulp-uglify/minifier');
+const minifyCss     = require('gulp-minify-css');
+const runSequence   = require('run-sequence');
+const sass          = require('gulp-sass');
 const uglifyJs      = require('uglify-js');
+const watch         = require('gulp-watch');
+const wrap          = require('gulp-wrap');
 const jsDest        = 'view';
 const jsIndexSrc    = [
 	'view/js/services/negative-undo.js',
@@ -54,3 +56,38 @@ gulp.task('watch', () => {
 });
 
 gulp.task('default', [ 'js-index', 'js-settings', 'sass', 'watch' ]);
+
+gulp.task('release:clean', () => {
+	return del(['release']);
+})
+
+gulp.task('release:root', () => {
+	return gulp.src([
+		'negative.icns',
+		'package.json'
+	]).pipe(gulp.dest('release'));
+});
+
+gulp.task('release:node_modules', () => {
+	return gulp.src([
+		'node_modules/**/*.*'
+	], { dot: true }).pipe(gulp.dest('release/node_modules'));
+});
+
+gulp.task('release:view', () => {
+	return gulp.src([
+		'view/*.html',
+		'view/*.css',
+		'view/*.js'
+	]).pipe(gulp.dest('release/view'));
+});
+
+gulp.task('release:lib', () => {
+	return gulp.src([
+		'lib/**/*.js'
+	]).pipe(gulp.dest('release/lib'));
+});
+
+gulp.task('release', () => {
+	return runSequence('release:clean', ['release:node_modules', 'release:root', 'release:view', 'release:lib'])
+});

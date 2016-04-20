@@ -12,6 +12,10 @@ nav {
 	overflow-x: scroll;
 	overflow-y: hidden;
 	height: 50px;
+	
+	&::-webkit-scrollbar {
+		display: none;
+	}
 }
 
 .tabs {
@@ -49,13 +53,6 @@ nav {
 	transition: transform 200ms ease, left 200ms ease;
 	transform: translateX(0);
 	left: 0;
-
-	/*&:hover,
-	&:focus,
-	&.selected,
-	&.has-content {
-		border-width: 3px;
-	}*/
 
 	> .label {
 		position: relative;
@@ -103,7 +100,6 @@ nav {
 		height: 26px;
 	}
 	&, &:before, &:after {
-		/*transition: background-color 100ms ease;*/
 		background-color: $frame-color-blur;
 	}
 

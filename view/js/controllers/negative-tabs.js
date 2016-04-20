@@ -168,7 +168,8 @@ window.NegativeTabs = (function () {
 				BrowserWindow.getFocusedWindow().close();
 				return;
 			} else {
-				this.tabIndex--;
+				const newTabIndex = this.tabIndex - 1;
+				this.tabIndex = newTabIndex > 0 ? newTabIndex : 0;
 			}
 			
 			this.tabs.splice(closedTabIndex, 1);

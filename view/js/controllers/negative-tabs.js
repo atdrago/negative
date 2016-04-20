@@ -10,14 +10,14 @@ window.NegativeTabs = (function () {
 
 	const { BrowserWindow } = remote;
 
-	const LEFT_OFFSET = 70;
-	const TAB_WIDTH   = 126; // @TODO - What if the tab grows?
-
+	const LEFT_OFFSET   = 70;
+	
 	class NegativeTabs {
 		constructor() {
 			this.dragOverIndex = null;
 			this.tabIndex      = 0;
 			this.tabs          = [ this.getEmptyModel() ];
+			
 			this.tabsContainer = document.getElementById('tabs');
 				
 			// Tab Selecting
@@ -78,12 +78,14 @@ window.NegativeTabs = (function () {
 		_dragOver(evt) {
 			evt.preventDefault();
 
-			const x         = evt.x - LEFT_OFFSET;
-			const toIndex   = Math.floor(x / TAB_WIDTH);
-			const fromIndex = +evt.dataTransfer.getData('from-index');
-				
+			const x                  = evt.x - LEFT_OFFSET;
+			const fromIndex          = +evt.dataTransfer.getData('from-index');
+			const deselectedTabWidth = this.tabsContainer.children[Math.abs(fromIndex-1)].getBoundingClientRect().width + 26;
+			const toIndex            = Math.floor(x / deselectedTabWidth);
+			const selectedTabWidth   = this.tabsContainer.children[fromIndex].getBoundingClientRect().width + 26;
+			
 			if (toIndex !== this.dragOverIndex) {
-				const newTransform = (((toIndex - fromIndex) * TAB_WIDTH)) + 'px';
+				const newTransform = (((toIndex - fromIndex) * deselectedTabWidth)) + 'px';
 				
 				this.tabsContainer.children[fromIndex].style.left = newTransform;
 				this.dragOverIndex = toIndex;
@@ -92,15 +94,15 @@ window.NegativeTabs = (function () {
 			Array.from(this.tabsContainer.children).forEach((tab, i) => {
 				if (fromIndex > i) {
 					if (toIndex <= i) {
-						tab.classList.add('shift-right');
+						tab.style.transform = `translateX(${selectedTabWidth}px)`;
 					} else {
-						tab.classList.remove('shift-right');
+						tab.style.transform = '';
 					}
 				} else if (fromIndex < i) {
 					if (toIndex >= i) {
-						tab.classList.add('shift-left');
+						tab.style.transform = `translateX(-${selectedTabWidth}px)`;
 					} else {
-						tab.classList.remove('shift-left');
+						tab.style.transform = '';
 					}
 				}
 			});
@@ -130,8 +132,9 @@ window.NegativeTabs = (function () {
 
 			if (target && target.classList.contains('tab')) {
 				const x             = evt.x - LEFT_OFFSET;
-				const toIndex       = Math.floor(x / TAB_WIDTH);
 				const fromIndex     = +evt.dataTransfer.getData('from-index');
+				const tabWidth      = this.tabsContainer.children[Math.abs(fromIndex-1)].getBoundingClientRect().width + 26;
+				const toIndex       = Math.floor(x / tabWidth);
 				const spliceToIndex = toIndex > fromIndex ? toIndex + 1 : toIndex;
 					
 				this.moveTab(fromIndex, spliceToIndex);
@@ -147,12 +150,10 @@ window.NegativeTabs = (function () {
 			this.deselectTabByIndex(this.tabIndex);
 			this.tabIndex++;
 			this.tabs.splice(this.tabIndex, 0, this.getEmptyModel());
-
-			const newTabButton = this.getTabButtonElement(true);
-			const newTabContainerWidth = this.tabs.length * TAB_WIDTH;
 			
+			const newTabButton = this.getTabButtonElement(true);
+
 			this.tabsContainer.insertBefore(newTabButton, this.getCurrentTab());
-			this.tabsContainer.style.width = `${newTabContainerWidth}px`;
 			newTabButton.focus();
 
 			window.negative.frameController.removeImage();
@@ -172,10 +173,7 @@ window.NegativeTabs = (function () {
 			
 			this.tabs.splice(closedTabIndex, 1);
 			
-			const newTabContainerWidth = this.tabs.length * TAB_WIDTH;
-
 			this.tabsContainer.children[closedTabIndex].remove();
-			this.tabsContainer.style.width = `${newTabContainerWidth}px`;
 			this.selectTabByIndex(this.tabIndex);
 		}
 

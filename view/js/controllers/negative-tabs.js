@@ -403,8 +403,7 @@ window.NegativeTabs = (function () {
 				// such as the image's file name, so prevent the error.
 				imageDimensions = JSON.parse(clipboard.readText() || null);
 			} catch (err) {
-				// @TODO - Should this throw?
-				// throw err;
+				console.error(err);
 			}
 
 			if (image !== null) {

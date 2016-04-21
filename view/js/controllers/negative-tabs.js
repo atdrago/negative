@@ -10,7 +10,11 @@ window.NegativeTabs = (function () {
 
 	const { BrowserWindow } = remote;
 
-	const LEFT_OFFSET   = 70;
+	const TAB_BAR_MARGIN_LEFT = 70;
+	const TAB_BAR_PADDING_LEFT = 16;
+	const TAB_MARGIN_LEFT = 6;
+	const TAB_MARGIN_RIGHT = 20;
+	const TAB_MARGIN_HORIZ = TAB_MARGIN_LEFT + TAB_MARGIN_RIGHT;
 	
 	class NegativeTabs {
 		constructor() {
@@ -18,6 +22,7 @@ window.NegativeTabs = (function () {
 			this.tabIndex      = 0;
 			this.tabs          = [ this.getEmptyModel() ];
 			
+			this.tabBar        = document.getElementById('tabbar');
 			this.tabsContainer = document.getElementById('tabs');
 				
 			// Tab Selecting
@@ -42,6 +47,14 @@ window.NegativeTabs = (function () {
 			document.getElementById('maximize').addEventListener('click', (evt) => {
 				BrowserWindow.getFocusedWindow().maximize();
 			});
+		}
+		
+		getSiblingTabIndex(index) {
+			return Math.abs(index - 1);
+		}
+		
+		get siblingTabIndex() {
+			return Math.abs(this.tabIndex - 1);
 		}
 		
 		_mouseDown(evt) {
@@ -78,11 +91,11 @@ window.NegativeTabs = (function () {
 		_dragOver(evt) {
 			evt.preventDefault();
 
-			const x                  = evt.x - LEFT_OFFSET;
+			const x                  = evt.x - TAB_BAR_MARGIN_LEFT;
 			const fromIndex          = +evt.dataTransfer.getData('from-index');
-			const deselectedTabWidth = this.tabsContainer.children[Math.abs(fromIndex-1)].getBoundingClientRect().width + 26;
+			const deselectedTabWidth = this.getTabWidth(this.siblingTabIndex);
 			const toIndex            = Math.floor(x / deselectedTabWidth);
-			const selectedTabWidth   = this.tabsContainer.children[fromIndex].getBoundingClientRect().width + 26;
+			const selectedTabWidth   = this.getTabWidth(fromIndex);
 			
 			if (toIndex !== this.dragOverIndex) {
 				const newTransform = (((toIndex - fromIndex) * deselectedTabWidth)) + 'px';
@@ -131,9 +144,9 @@ window.NegativeTabs = (function () {
 			const { target } = evt;
 
 			if (target && target.classList.contains('tab')) {
-				const x             = evt.x - LEFT_OFFSET;
+				const x             = evt.x - TAB_BAR_MARGIN_LEFT;
 				const fromIndex     = +evt.dataTransfer.getData('from-index');
-				const tabWidth      = this.tabsContainer.children[Math.abs(fromIndex-1)].getBoundingClientRect().width + 26;
+				const tabWidth      = this.getTabWidth(this.getSiblingTabIndex(fromIndex));
 				const toIndex       = Math.floor(x / tabWidth);
 				const spliceToIndex = toIndex > fromIndex ? toIndex + 1 : toIndex;
 					
@@ -145,6 +158,51 @@ window.NegativeTabs = (function () {
 				this._dragResetStyles();
 			}
 		}
+		
+		getTabWidth(tabIndex) {
+			if (tabIndex >= 0 && tabIndex < this.tabsContainer.children.length) {
+				return this.tabsContainer.children[tabIndex].getBoundingClientRect().width + TAB_MARGIN_HORIZ;
+			}
+		}
+		
+		getTabOffsetLeft(tabIndex) {
+			if (tabIndex >= 0 && tabIndex < this.tabsContainer.children.length) {
+				const leftOffset = TAB_BAR_MARGIN_LEFT + TAB_BAR_PADDING_LEFT + TAB_MARGIN_LEFT;
+				
+				return this.tabsContainer.children[tabIndex].getBoundingClientRect().left - leftOffset;
+			}
+		}
+		
+		getWidthOfAllTabs() {
+			let width = 0;
+			
+			for (let i in this.tabs) {
+				width += this.getTabWidth(i);
+			}
+			
+			return Math.ceil(width);
+		}
+		
+		updateTabBarScrollPosition() {
+			const siblingTabWidth = this.getTabWidth(this.siblingTabIndex);
+			const tabBarWidth     = this.tabsContainer.getBoundingClientRect().width;
+			const tabWidth        = this.getTabWidth(this.tabIndex);
+			
+			const tabOffsetLeft   = this.getTabOffsetLeft(this.tabIndex);
+			const tabOffsetRight  = tabOffsetLeft + tabWidth;
+			const isLeftOfView    = tabOffsetLeft < 0;
+			const isRightOfView   = tabOffsetRight > tabBarWidth;
+			
+			const tabChildOffsetLeft = this.tabIndex * siblingTabWidth;
+			const tabChildOffsetRight = tabChildOffsetLeft + tabWidth;
+			
+			if (isLeftOfView) {
+				this.tabBar.scrollLeft = tabChildOffsetLeft;
+			} else if (isRightOfView) {
+				this.tabBar.scrollLeft = (tabOffsetLeft - tabBarWidth) + this.tabBar.scrollLeft + tabWidth;
+			}
+			
+		}
 
 		addTab() {
 			this.deselectTabByIndex(this.tabIndex);
@@ -155,10 +213,12 @@ window.NegativeTabs = (function () {
 
 			this.tabsContainer.insertBefore(newTabButton, this.getCurrentTab());
 			newTabButton.focus();
-
+			
 			window.negative.frameController.removeImage();
 
 			this.refreshMenu();
+			
+			this.updateTabBarScrollPosition();
 		}
 
 		closeTab() {
@@ -224,6 +284,7 @@ window.NegativeTabs = (function () {
 			}
 
 			this.selectTabByIndex(this.tabIndex);
+			this.updateTabBarScrollPosition();
 		}
 
 		selectPreviousTab() {
@@ -236,6 +297,7 @@ window.NegativeTabs = (function () {
 			}
 
 			this.selectTabByIndex(this.tabIndex);
+			this.updateTabBarScrollPosition();
 		}
 
 		setTabHasContent() {

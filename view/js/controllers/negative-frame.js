@@ -2,9 +2,15 @@ window.NegativeFrame = (function () {
 	'use strict';
 	
 	const { ipcRenderer } = require('electron');
+	
+	const ZOOM_DELTA = 0.25;
+	const ZOOM_MAX = 2;
+	const ZOOM_MIN = 0.5;
 
 	class NegativeFrame {
 		constructor() {
+			this.zoomLevel = 1;
+			
 			this.currentImage   = document.getElementById('negativeImage');
 			this.imageContainer = document.getElementById('imageContainer');
 
@@ -70,6 +76,34 @@ window.NegativeFrame = (function () {
 
 		unsetPrimary() {
 			document.body.classList.remove('primary');
+		}
+		
+		canZoomIn() {
+			return this.zoomLevel < 2;
+		}
+		
+		canZoomOut() {
+			return this.zoomLevel > 0.5;
+		}
+		
+		zoomIn() {
+			this.zoomTo(this.zoomLevel + ZOOM_DELTA);
+		}
+		
+		zoomOut() {
+			this.zoomTo(this.zoomLevel - ZOOM_DELTA);
+		}
+		
+		zoomTo(zoomLevel) {
+			zoomLevel = Math.max(zoomLevel, ZOOM_MIN);
+			zoomLevel = Math.min(zoomLevel, ZOOM_MAX);
+			
+			if (zoomLevel !== this.zoomLevel) {
+				this.currentImage.style.transform = `scale(${zoomLevel})`;
+				
+				this.zoomLevel = zoomLevel;
+				window.negative.refreshMenu();
+			}
 		}
 	}
 	

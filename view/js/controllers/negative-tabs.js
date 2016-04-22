@@ -216,7 +216,7 @@ window.NegativeTabs = (function () {
 			
 			window.negative.frameController.removeImage();
 
-			this.refreshMenu();
+			window.negative.refreshMenu();
 			
 			this.updateTabBarScrollPosition();
 		}
@@ -264,7 +264,7 @@ window.NegativeTabs = (function () {
 				window.negative.frameController.removeImage();
 			}
 
-			this.refreshMenu();
+			window.negative.refreshMenu();
 		}
 
 		deselectTabByIndex(index) {
@@ -357,7 +357,7 @@ window.NegativeTabs = (function () {
 
 			undoManager.save(state);
 
-			this.refreshMenu();
+			window.negative.refreshMenu();
 		}
 
 		undo() {
@@ -365,7 +365,7 @@ window.NegativeTabs = (function () {
 
 			undoManager.undo();
 
-			this.refreshMenu();
+			window.negative.refreshMenu();
 		}
 
 		redo() {
@@ -373,7 +373,7 @@ window.NegativeTabs = (function () {
 
 			undoManager.redo();
 
-			this.refreshMenu();
+			window.negative.refreshMenu();
 		}
 
 		copy() {
@@ -389,7 +389,7 @@ window.NegativeTabs = (function () {
 					text: JSON.stringify(imageDimensions)
 				});
 
-				this.refreshMenu();
+				window.negative.refreshMenu();
 			}
 		}
 
@@ -419,32 +419,18 @@ window.NegativeTabs = (function () {
 					imageDimensions: imageDimensions,
 					imageSrc: imageSrc
 				});
-				this.refreshMenu();
+				window.negative.refreshMenu();
 			}
-		}
-
-		refreshMenu() {
-			const undoManager = this.tabs[this.tabIndex].undoManager;
-
-			ipcRenderer.send('refresh-menu', {
-				canAddTab: true,
-				canCloseTab: true,
-				canCloseWindow: true,
-				canUndo: undoManager.canUndo(),
-				canRedo: undoManager.canRedo(),
-				canCapture: true,
-				isImageEmpty: undoManager.state.imageSrc === null,
-				canReload: true,
-				canToggleDevTools: true,
-				canMinimize: true,
-				canMove: true
-			});
 		}
 
 		fitWindowToImage() {
 			const undoManagerState = this.tabs[this.tabIndex].undoManager.state;
 
 			ipcRenderer.send('fit-window-to-image', undoManagerState.imageDimensions);
+		}
+		
+		getUndoManager() {
+			return this.tabs[this.tabIndex].undoManager;
 		}
 	}
 	

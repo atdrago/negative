@@ -353,7 +353,7 @@ window.NegativeTabs = (function () {
 		}
 
 		saveForUndo(state) {
-			const undoManager = this.tabs[this.tabIndex].undoManager;
+			const undoManager = this.getUndoManager();
 
 			undoManager.save(state);
 
@@ -361,7 +361,7 @@ window.NegativeTabs = (function () {
 		}
 
 		undo() {
-			const undoManager = this.tabs[this.tabIndex].undoManager;
+			const undoManager = this.getUndoManager();
 
 			undoManager.undo();
 
@@ -369,7 +369,7 @@ window.NegativeTabs = (function () {
 		}
 
 		redo() {
-			const undoManager = this.tabs[this.tabIndex].undoManager;
+			const undoManager = this.getUndoManager();
 
 			undoManager.redo();
 
@@ -377,7 +377,7 @@ window.NegativeTabs = (function () {
 		}
 
 		copy() {
-			const undoManagerState = this.tabs[this.tabIndex].undoManager.state;
+			const undoManagerState = this.getUndoManager().state;
 			const {
 				imageDimensions,
 				imageSrc
@@ -424,7 +424,7 @@ window.NegativeTabs = (function () {
 		}
 
 		fitWindowToImage() {
-			const undoManagerState = this.tabs[this.tabIndex].undoManager.state;
+			const undoManagerState = this.getUndoManager().state;
 
 			ipcRenderer.send('fit-window-to-image', undoManagerState.imageDimensions);
 		}

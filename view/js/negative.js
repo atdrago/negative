@@ -10,12 +10,17 @@
 			trafficLightsController: new NegativeTrafficLights(),
 			
 			refreshMenu: function () {
-				const undoManager  = this.tabsController.getUndoManager();
-				const isImageEmpty = undoManager.state.imageSrc === null;
+				const {
+					canUndo,
+					canRedo,
+					state
+				} = this.tabsController.undoManager;
+				
+				const isImageEmpty = (state.imageSrc === null);
 
 				ipcRenderer.send('refresh-menu', {
-					canUndo: undoManager.canUndo(),
-					canRedo: undoManager.canRedo(),
+					canUndo: canUndo,
+					canRedo: canRedo,
 					isImageEmpty: isImageEmpty,
 					canZoomIn: !isImageEmpty && this.frameController.canZoomIn(),
 					canZoomOut: !isImageEmpty && this.frameController.canZoomOut()

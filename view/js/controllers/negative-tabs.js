@@ -17,6 +17,18 @@ window.NegativeTabs = (function () {
 	const TAB_MARGIN_HORIZ = TAB_MARGIN_LEFT + TAB_MARGIN_RIGHT;
 	
 	class NegativeTabs {
+		get siblingTabIndex() {
+			return this.getSiblingTabIndex(this.tabIndex);
+		}
+		
+		get selectedTab() {
+			return this.tabsContainer.children[this.tabIndex];
+		}
+		
+		get undoManager() {
+			return this.tabs[this.tabIndex].undoManager;
+		}
+		
 		constructor() {
 			this.dragOverIndex = null;
 			this.tabIndex      = 0;
@@ -37,10 +49,6 @@ window.NegativeTabs = (function () {
 		
 		getSiblingTabIndex(index) {
 			return Math.abs(index - 1);
-		}
-		
-		get siblingTabIndex() {
-			return Math.abs(this.tabIndex - 1);
 		}
 		
 		_mouseDown(evt) {
@@ -159,16 +167,6 @@ window.NegativeTabs = (function () {
 			}
 		}
 		
-		getWidthOfAllTabs() {
-			let width = 0;
-			
-			for (let i in this.tabs) {
-				width += this.getTabWidth(i);
-			}
-			
-			return Math.ceil(width);
-		}
-		
 		updateTabBarScrollPosition() {
 			const siblingTabWidth = this.getTabWidth(this.siblingTabIndex);
 			const tabBarWidth     = this.tabsContainer.getBoundingClientRect().width;
@@ -187,7 +185,6 @@ window.NegativeTabs = (function () {
 			} else if (isRightOfView) {
 				this.tabBar.scrollLeft = (tabOffsetLeft - tabBarWidth) + this.tabBar.scrollLeft + tabWidth;
 			}
-			
 		}
 
 		addTab() {
@@ -197,7 +194,7 @@ window.NegativeTabs = (function () {
 			
 			const newTabButton = this.getTabButtonElement(true);
 
-			this.tabsContainer.insertBefore(newTabButton, this.getCurrentTab());
+			this.tabsContainer.insertBefore(newTabButton, this.selectedTab);
 			newTabButton.focus();
 			
 			window.negative.frameController.removeImage();
@@ -222,10 +219,6 @@ window.NegativeTabs = (function () {
 			
 			this.tabsContainer.children[closedTabIndex].remove();
 			this.selectTabByIndex(this.tabIndex);
-		}
-
-		getCurrentTab() {
-			return this.tabsContainer.children[this.tabIndex];
 		}
 
 		moveTab(fromIndex, toIndex) {
@@ -287,15 +280,15 @@ window.NegativeTabs = (function () {
 		}
 
 		setTabHasContent() {
-			this.getCurrentTab().classList.add('has-content');
+			this.selectedTab.classList.add('has-content');
 		}
 
 		unsetTabHasContent() {
-			this.getCurrentTab().classList.remove('has-content');
+			this.selectedTab.classList.remove('has-content');
 		}
 
 		setTabLabel(label) {
-			this.getCurrentTab().children[0].textContent = label;
+			this.selectedTab.children[0].textContent = label;
 		}
 
 		getEmptyModel() {
@@ -339,35 +332,25 @@ window.NegativeTabs = (function () {
 		}
 
 		saveForUndo(state) {
-			const undoManager = this.getUndoManager();
-
-			undoManager.save(state);
-
+			this.undoManager.save(state);
 			window.negative.refreshMenu();
 		}
 
 		undo() {
-			const undoManager = this.getUndoManager();
-
-			undoManager.undo();
-
+			this.undoManager.undo();
 			window.negative.refreshMenu();
 		}
 
 		redo() {
-			const undoManager = this.getUndoManager();
-
-			undoManager.redo();
-
+			this.undoManager.redo();
 			window.negative.refreshMenu();
 		}
 
 		copy() {
-			const undoManagerState = this.getUndoManager().state;
 			const {
 				imageDimensions,
 				imageSrc
-			} = undoManagerState;
+			} = this.undoManager.state;
 
 			if (imageSrc !== null && imageDimensions !== null) {
 				clipboard.write({
@@ -410,13 +393,9 @@ window.NegativeTabs = (function () {
 		}
 
 		fitWindowToImage() {
-			const undoManagerState = this.getUndoManager().state;
+			const { imageDimensions } = this.undoManager.state;
 
-			ipcRenderer.send('fit-window-to-image', undoManagerState.imageDimensions);
-		}
-		
-		getUndoManager() {
-			return this.tabs[this.tabIndex].undoManager;
+			ipcRenderer.send('fit-window-to-image', imageDimensions);
 		}
 	}
 	

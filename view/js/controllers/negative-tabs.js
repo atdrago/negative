@@ -33,20 +33,6 @@ window.NegativeTabs = (function () {
 			this.tabsContainer.addEventListener('dragover', this._dragOver.bind(this), false);
 			this.tabsContainer.addEventListener('dragend', this._dragResetStyles.bind(this), false);
 			this.tabsContainer.addEventListener('drop', this._drop.bind(this), false);
-
-			// Traffic lights
-			// @TODO - These have nothing to do with tabs. Move to negative-traffic-lights.js
-			document.getElementById('close').addEventListener('click', (evt) => {
-				BrowserWindow.getFocusedWindow().close();
-			});
-
-			document.getElementById('minimize').addEventListener('click', (evt) => {
-				BrowserWindow.getFocusedWindow().minimize();
-			});
-
-			document.getElementById('maximize').addEventListener('click', (evt) => {
-				BrowserWindow.getFocusedWindow().maximize();
-			});
 		}
 		
 		getSiblingTabIndex(index) {

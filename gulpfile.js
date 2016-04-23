@@ -16,6 +16,7 @@ const jsIndexSrc    = [
 	'view/js/services/negative-undo.js',
 	'view/js/controllers/negative-frame.js',
 	'view/js/controllers/negative-tabs.js',
+	'view/js/controllers/negative-traffic-lights.js',
 	'view/js/negative.js'
 ];
 const jsSettingsSrc = [

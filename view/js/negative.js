@@ -7,6 +7,7 @@
 		window.negative = {
 			frameController: new NegativeFrame(),
 			tabsController: new NegativeTabs(),
+			trafficLightsController: new NegativeTrafficLights(),
 			
 			refreshMenu: function () {
 				const undoManager  = this.tabsController.getUndoManager();

@@ -16,14 +16,19 @@
 					state
 				} = this.tabsController.undoManager;
 				
+				const {
+					canZoomIn,
+					canZoomOut
+				} = this.frameController;
+				
 				const isImageEmpty = (state.imageSrc === null);
 
 				ipcRenderer.send('refresh-menu', {
 					canUndo: canUndo,
 					canRedo: canRedo,
 					isImageEmpty: isImageEmpty,
-					canZoomIn: !isImageEmpty && this.frameController.canZoomIn(),
-					canZoomOut: !isImageEmpty && this.frameController.canZoomOut()
+					canZoomIn: !isImageEmpty && canZoomIn,
+					canZoomOut: !isImageEmpty && canZoomOut
 				});
 			}
 		};

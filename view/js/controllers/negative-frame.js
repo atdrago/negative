@@ -36,20 +36,27 @@ window.NegativeFrame = (function () {
 
 		setImageAndSize(src, width, height) {
 			if (src) {
+				this.imageWidth = width;
+				this.imageHeight = height;
+				
 				document.body.classList.add('negative-on');
 				this.currentImage.setAttribute('src', src);
-
-				const newHeight = `${height}px`;
-				const newWidth  = `${width}px`;
-
-				this.currentImage.style.width = newWidth;
-				this.currentImage.style.height = newHeight;
-				this.imageContainer.style.width = newWidth;
-				this.imageContainer.style.height = newHeight;
+				
+				this.setElementSize(width, height);
 
 				window.negative.tabsController.setTabHasContent();
 				window.negative.tabsController.setTabLabel(`${width}x${height}`);
 			}
+		}
+		
+		setElementSize(width, height) {
+			const newHeight = `${height}px`;
+			const newWidth  = `${width}px`;
+			
+			this.currentImage.style.width = newWidth;
+			this.currentImage.style.height = newHeight;
+			this.imageContainer.style.width = newWidth;
+			this.imageContainer.style.height = newHeight;
 		}
 
 		removeImage() {
@@ -99,7 +106,7 @@ window.NegativeFrame = (function () {
 			zoomLevel = Math.min(zoomLevel, ZOOM_MAX);
 			
 			if (zoomLevel !== this.zoomLevel) {
-				this.currentImage.style.transform = `scale(${zoomLevel})`;
+				this.setElementSize(this.imageWidth * zoomLevel, this.imageHeight * zoomLevel);
 				
 				this.zoomLevel = zoomLevel;
 				window.negative.refreshMenu();

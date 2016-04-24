@@ -7,17 +7,20 @@
 		const undoManagers = [];
 		
 		window.negative = {
-			
 			frameController: new NegativeFrame(),
 			tabsController: new NegativeTabs(),
 			trafficLightsController: new NegativeTrafficLights(),
 			
-			refreshMenu: function () {
+			get currentUndoManager() {
+				return undoManagers[this.tabsController.tabIndex];
+			},
+			
+			refreshMenu() {
 				const {
 					canUndo,
 					canRedo,
 					state
-				} = this.tabsController.undoManager;
+				} = this.currentUndoManager;
 				
 				const {
 					canZoomIn,
@@ -35,35 +38,34 @@
 				});
 			},
 			
-			getUndoManagerAt: function (index) {
+			getUndoManagerAt(index) {
 				return undoManagers[index];
 			},
 			
-			insertUndoManagerAt: function (index) {
+			insertUndoManagerAt(index) {
 				undoManagers.splice(index, 0, new UndoManager());
 			},
 			
-			removeUndoManagerAt: function (index) {
+			removeUndoManagerAt(index) {
 				undoManagers.splice(index, 1);
 			},
 			
-			swapUndoManagersAt: function (indexA, indexB) {
-				undoManagers.splice(spliceToIndex, 0, undoManagers.splice(fromIndex, 1, null)[0]);
-				undoManagers = undoManagers.filter((tab) => tab !== null);
+			moveUndoManager(fromIndex, toIndex) {
+				undoManagers.splice(toIndex, 0, undoManagers.splice(fromIndex, 1)[0]);
 			},
 			
-			saveForUndo: function (index, state) {
-				undoManagers[index].save(state);
+			saveForUndo(state) {
+				this.currentUndoManager.save(state);
 				this.refreshMenu();
 			},
 			
-			undo(index) {
-				undoManagers[index].undo();
+			undo() {
+				this.currentUndoManager.undo();
 				this.refreshMenu();
 			},
 
-			redo(index) {
-				undoManagers[index].redo();
+			redo() {
+				this.currentUndoManager.redo();
 				this.refreshMenu();
 			}
 		};

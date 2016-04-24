@@ -25,14 +25,15 @@ window.NegativeTabs = (function () {
 			return this.tabsContainer.children[this.tabIndex];
 		}
 		
-		get undoManager() {
-			return this.tabs[this.tabIndex].undoManager;
-		}
+		// get undoManager() {
+		// 	return this.tabs[this.tabIndex].undoManager;
+		// }
 		
 		constructor() {
 			this.dragOverIndex = null;
 			this.tabIndex      = 0;
-			this.tabs          = [ this.getEmptyModel() ];
+			// this.tabs          = [ this.getEmptyModel() ];
+			this.count = 1;
 			
 			this.tabBar        = document.getElementById('tabbar');
 			this.tabsContainer = document.getElementById('tabs');
@@ -72,7 +73,7 @@ window.NegativeTabs = (function () {
 			const { target } = evt;
 
 			if (target) {
-				if (target.classList.contains('tab') && this.tabs.length > 1) {
+				if (target.classList.contains('tab') && this.count > 1) {
 					evt.dataTransfer.setData('from-index', `${this.tabIndex}`);
 					evt.dataTransfer.effectAllowed = 'move';
 				} else {
@@ -145,8 +146,9 @@ window.NegativeTabs = (function () {
 				const spliceToIndex = toIndex > fromIndex ? toIndex + 1 : toIndex;
 					
 				this.moveTab(fromIndex, spliceToIndex);
-				this.tabs.splice(spliceToIndex, 0, this.tabs.splice(fromIndex, 1, null)[0]);
-				this.tabs = this.tabs.filter((tab) => tab !== null);
+				// this.tabs.splice(spliceToIndex, 0, this.tabs.splice(fromIndex, 1, null)[0]);
+				// this.tabs = this.tabs.filter((tab) => tab !== null);
+				window.negative.swapUndoManagersAt(fromIndex, spliceToIndex);
 				this.tabIndex = toIndex;
 				
 				this._dragResetStyles();
@@ -190,7 +192,9 @@ window.NegativeTabs = (function () {
 		addTab() {
 			this.deselectTabByIndex(this.tabIndex);
 			this.tabIndex++;
-			this.tabs.splice(this.tabIndex, 0, this.getEmptyModel());
+			this.count++;
+			// this.tabs.splice(this.tabIndex, 0, this.getEmptyModel());
+			window.negative.insertUndoManagerAt(this.tabIndex);
 			
 			const newTabButton = this.getTabButtonElement(true);
 
@@ -207,7 +211,7 @@ window.NegativeTabs = (function () {
 		closeTab() {
 			const closedTabIndex = this.tabIndex;
 
-			if (this.tabs.length === 1) {
+			if (this.count === 1) {
 				BrowserWindow.getFocusedWindow().close();
 				return;
 			} else {
@@ -215,10 +219,12 @@ window.NegativeTabs = (function () {
 				this.tabIndex = newTabIndex > 0 ? newTabIndex : 0;
 			}
 			
-			this.tabs.splice(closedTabIndex, 1);
+			// this.tabs.splice(closedTabIndex, 1);
+			window.negative.removeUndoManagerAt(closedTabIndex);
 			
 			this.tabsContainer.children[closedTabIndex].remove();
 			this.selectTabByIndex(this.tabIndex);
+			this.count--;
 		}
 
 		moveTab(fromIndex, toIndex) {
@@ -226,12 +232,12 @@ window.NegativeTabs = (function () {
 		}
 
 		selectTabByIndex(index) {
-			const newTab       = this.tabs[index].undoManager.state;
-			const newTabButton = this.tabsContainer.children[index];
+			const newTabButton        = this.tabsContainer.children[index];
+			const tabUndoManagerState = window.negative.getUndoManagerAt(index).state;// this.tabs[index].undoManager.state;
 			const {
 				imageDimensions,
 				imageSrc
-			} = newTab;
+			} = tabUndoManagerState;
 
 			newTabButton.classList.add('selected');
 			newTabButton.setAttribute('aria-selected', 'true');
@@ -256,7 +262,7 @@ window.NegativeTabs = (function () {
 		selectNextTab() {
 			this.deselectTabByIndex(this.tabIndex);
 
-			if (this.tabIndex + 1 < this.tabs.length) {
+			if (this.tabIndex + 1 < this.count) {
 				this.tabIndex++;
 			} else {
 				this.tabIndex = 0;
@@ -272,7 +278,7 @@ window.NegativeTabs = (function () {
 			if (this.tabIndex > 0) {
 				this.tabIndex--;
 			} else {
-				this.tabIndex = this.tabs.length - 1;
+				this.tabIndex = this.count - 1;
 			}
 
 			this.selectTabByIndex(this.tabIndex);
@@ -291,11 +297,11 @@ window.NegativeTabs = (function () {
 			this.selectedTab.children[0].textContent = label;
 		}
 
-		getEmptyModel() {
-			return {
-				undoManager: new UndoManager()
-			};
-		}
+		// getEmptyModel() {
+		// 	return {
+		// 		undoManager: new UndoManager()
+		// 	};
+		// }
 
 		/**
 		 * Returns a DOM Node representing the tab, with the structure:
@@ -331,20 +337,20 @@ window.NegativeTabs = (function () {
 			return tabDiv;
 		}
 
-		saveForUndo(state) {
-			this.undoManager.save(state);
-			window.negative.refreshMenu();
-		}
-
-		undo() {
-			this.undoManager.undo();
-			window.negative.refreshMenu();
-		}
-
-		redo() {
-			this.undoManager.redo();
-			window.negative.refreshMenu();
-		}
+		// saveForUndo(state) {
+		// 	this.undoManager.save(state);
+		// 	window.negative.refreshMenu();
+		// }
+		// 
+		// undo() {
+		// 	this.undoManager.undo();
+		// 	window.negative.refreshMenu();
+		// }
+		// 
+		// redo() {
+		// 	this.undoManager.redo();
+		// 	window.negative.refreshMenu();
+		// }
 
 		copy() {
 			const {

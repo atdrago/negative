@@ -38,6 +38,17 @@
 				});
 			},
 			
+			addTabForUndoManager(undoManager) {
+				const newUndoManager = new UndoManager();
+				
+				newUndoManager.history.stack = undoManager.history.stack;
+				newUndoManager.history.position = undoManager.history.position;
+				newUndoManager.state = undoManager.state;
+				
+				undoManagers.push(newUndoManager);
+				this.tabsController.addTab(false);
+			},
+			
 			getUndoManagerAt(index) {
 				return undoManagers[index];
 			},
@@ -67,6 +78,10 @@
 			redo() {
 				this.currentUndoManager.redo();
 				this.refreshMenu();
+			},
+			
+			sendUndoManagersToMain() {
+				ipcRenderer.send('undo-managers-response', undoManagers);
 			}
 		};
 	});

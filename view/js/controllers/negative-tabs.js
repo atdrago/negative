@@ -26,9 +26,9 @@ window.NegativeTabs = (function () {
 		}
 		
 		constructor() {
+			this.count         = 0;
 			this.dragOverIndex = null;
-			this.tabIndex      = 0;
-			this.count = 1;
+			this.tabIndex      = -1;
 			
 			this.tabBar        = document.getElementById('tabbar');
 			this.tabsContainer = document.getElementById('tabs');
@@ -182,19 +182,25 @@ window.NegativeTabs = (function () {
 			}
 		}
 
-		addTab() {
+		addTab(needsUndoManager) {
 			this.deselectTabByIndex(this.tabIndex);
 			this.tabIndex++;
 			this.count++;
-			window.negative.insertUndoManagerAt(this.tabIndex);
 			
 			const newTabButton = this.getTabButtonElement(true);
 
 			this.tabsContainer.insertBefore(newTabButton, this.selectedTab);
 			newTabButton.focus();
+			
+			if (needsUndoManager) {
+				window.negative.insertUndoManagerAt(this.tabIndex);
+				window.negative.frameController.removeImage();
+			} else {
+				this.selectTabByIndex(this.tabIndex);
+			}
+			
 			this.updateTabBarScrollPosition();
 			
-			window.negative.frameController.removeImage();
 			window.negative.refreshMenu();
 		}
 
@@ -227,11 +233,16 @@ window.NegativeTabs = (function () {
 				imageDimensions,
 				imageSrc
 			} = tabUndoManagerState;
+			
+			// @TODO - This is redundant. See selectNextTab(), selectPreviousTab()
+			this.tabIndex = index;
 
 			newTabButton.classList.add('selected');
 			newTabButton.setAttribute('aria-selected', 'true');
 			newTabButton.focus();
-
+			
+			console.log('selectTabByIndex');
+			
 			if (imageSrc && imageDimensions) {
 				window.negative.frameController.setImageAndSize(imageSrc, imageDimensions[0], imageDimensions[1]);
 			} else {
@@ -244,8 +255,14 @@ window.NegativeTabs = (function () {
 		deselectTabByIndex(index) {
 			const oldTab = this.tabsContainer.children[index];
 			
-			oldTab.classList.remove('selected');
-			oldTab.setAttribute('aria-selected', 'false');
+			if (oldTab) {
+				oldTab.classList.remove('selected');
+				oldTab.setAttribute('aria-selected', 'false');
+			}
+		}
+		
+		deselectTab() {
+			this.deselectTabByIndex(this.tabIndex);
 		}
 
 		selectNextTab() {

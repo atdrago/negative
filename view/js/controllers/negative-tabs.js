@@ -241,8 +241,6 @@ window.NegativeTabs = (function () {
 			newTabButton.setAttribute('aria-selected', 'true');
 			newTabButton.focus();
 			
-			console.log('selectTabByIndex');
-			
 			if (imageSrc && imageDimensions) {
 				window.negative.frameController.setImageAndSize(imageSrc, imageDimensions[0], imageDimensions[1]);
 			} else {
@@ -384,7 +382,7 @@ window.NegativeTabs = (function () {
 		}
 
 		fitWindowToImage() {
-			const { imageDimensions } = this.undoManager.state;
+			const { imageDimensions } = window.negative.currentUndoManager.state;
 
 			ipcRenderer.send('fit-window-to-image', imageDimensions);
 		}

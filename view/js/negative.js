@@ -2,9 +2,13 @@
 	'use strict';
 	
 	const { ipcRenderer } = require('electron');
+	const undoManagers = [];
+	
+	ipcRenderer.on('undo-managers-request', (evt) => {
+		ipcRenderer.send('undo-managers-response', undoManagers);
+	});
 	
 	document.addEventListener('DOMContentLoaded', () => {
-		const undoManagers = [];
 		
 		window.negative = {
 			frameController: new NegativeFrame(),
@@ -78,10 +82,6 @@
 			redo() {
 				this.currentUndoManager.redo();
 				this.refreshMenu();
-			},
-			
-			sendUndoManagersToMain() {
-				ipcRenderer.send('undo-managers-response', undoManagers);
 			}
 		};
 	});

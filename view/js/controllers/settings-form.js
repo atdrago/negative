@@ -1,4 +1,4 @@
-(function () {
+window.SettingsForm = (function () {
 	'use strict';
 	
 	const { ipcRenderer } = require('electron');

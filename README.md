@@ -21,7 +21,7 @@ Currently only Mac OS X is supported.
 1. [Install Node.js](https://nodejs.org/en/) v4 or greater
 2. `git clone https://github.com/atdrago/negative.git`
 3. `cd negative`
-4. `git checkout tags/v0.6.0`
+4. `git checkout tags/v0.6.0` (*recommended*)
 5. `npm run build`
 6. Locate and copy `dist/Negative-darwin-x64/Negative.app` to your `Applications` folder
 

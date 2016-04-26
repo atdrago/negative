@@ -4,6 +4,9 @@ window.UndoManager = (function () {
 	const SimpleUndo = require('simple-undo');
 
 	class UndoManager {
+		get canUndo() { return this.history.canUndo(); }
+		get canRedo() { return this.history.canRedo(); }
+		
 		constructor() {
 			this.state = {
 				imageDimensions: null,
@@ -39,13 +42,11 @@ window.UndoManager = (function () {
 
 		undo() { this.history.undo(this.unserializer); }
 		redo() { this.history.redo(this.unserializer); }
-		canUndo() { return this.history.canUndo(); }
-		canRedo() { return this.history.canRedo(); }
 
 		serialize() {
 			return {
-				canUndo: this.canUndo(),
-				canRedo: this.canRedo()
+				canUndo: this.canUndo,
+				canRedo: this.canRedo
 			};
 		}
 	}

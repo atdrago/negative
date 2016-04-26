@@ -8,6 +8,14 @@ window.NegativeFrame = (function () {
 	const ZOOM_MIN = 0.5;
 
 	class NegativeFrame {
+		get canZoomIn() {
+			return this.zoomLevel < 2;
+		}
+		
+		get canZoomOut() {
+			return this.zoomLevel > 0.5;
+		}
+		
 		constructor() {
 			this.zoomLevel = 1;
 			
@@ -83,14 +91,6 @@ window.NegativeFrame = (function () {
 
 		unsetPrimary() {
 			document.body.classList.remove('primary');
-		}
-		
-		canZoomIn() {
-			return this.zoomLevel < 2;
-		}
-		
-		canZoomOut() {
-			return this.zoomLevel > 0.5;
 		}
 		
 		zoomIn() {

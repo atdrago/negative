@@ -4,8 +4,11 @@
 	const { ipcRenderer } = require('electron');
 	const undoManagers = [];
 	
-	ipcRenderer.on('undo-managers-request', (evt) => {
-		ipcRenderer.send('undo-managers-response', undoManagers);
+	ipcRenderer.on('window-settings-request', (evt, windowSettings) => {
+		windowSettings = windowSettings || {};
+		windowSettings.undoManagers = undoManagers;
+		
+		ipcRenderer.send('window-settings-response', windowSettings);
 	});
 	
 	document.addEventListener('DOMContentLoaded', () => {

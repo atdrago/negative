@@ -5,7 +5,7 @@ const concat        = require('gulp-concat');
 const del           = require('del');
 const gulp          = require('gulp');
 const gulpUglify    = require('gulp-uglify/minifier');
-const minifyCss     = require('gulp-minify-css');
+const cleanCss      = require('gulp-clean-css');
 const runSequence   = require('run-sequence');
 const sass          = require('gulp-sass');
 const uglifyJs      = require('uglify-js');
@@ -40,7 +40,7 @@ function buildJs(src, dest, filename) {
 gulp.task('sass', () => {
 	return gulp.src(sassSrc)
 		.pipe(sass())
-		.pipe(minifyCss())
+		.pipe(cleanCss())
 		.pipe(changed(sassDest, {
 			hasChanged: changed.compareSha1Digest
 		}))

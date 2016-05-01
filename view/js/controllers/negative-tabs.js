@@ -88,9 +88,9 @@ window.NegativeTabs = (function () {
 			const selectedTabWidth   = this.getTabWidth(fromIndex);
 			
 			if (toIndex !== this.dragOverIndex) {
-				const newTransform = (((toIndex - fromIndex) * deselectedTabWidth)) + 'px';
+				const newTransform = (((toIndex - fromIndex) * deselectedTabWidth));
 				
-				this.tabsContainer.children[fromIndex].style.left = newTransform;
+				this.tabsContainer.children[fromIndex].style.left = `${newTransform}px`;
 				this.dragOverIndex = toIndex;
 			}
 			
@@ -112,10 +112,12 @@ window.NegativeTabs = (function () {
 		}
 		
 		_dragResetStyles() {
+			const animationDelay = 250;
+			
 			this.tabsContainer.classList.add('shift-none');
 			setTimeout(() => {
 				this.tabsContainer.classList.remove('shift-none');
-			}, 250);
+			}, animationDelay);
 			
 			Array.from(this.tabsContainer.children).forEach((tab) => {
 				tab.style.transform = '';
@@ -124,7 +126,7 @@ window.NegativeTabs = (function () {
 			
 				setTimeout(() => {
 					tab.classList.remove('shift-left', 'shift-right');
-				}, 250);
+				}, animationDelay);
 			});
 		}
 		
@@ -173,7 +175,7 @@ window.NegativeTabs = (function () {
 			const isRightOfView   = tabOffsetRight > tabBarWidth;
 			
 			const tabChildOffsetLeft = this.tabIndex * siblingTabWidth;
-			const tabChildOffsetRight = tabChildOffsetLeft + tabWidth;
+			// const tabChildOffsetRight = tabChildOffsetLeft + tabWidth;
 			
 			if (isLeftOfView) {
 				this.tabBar.scrollLeft = tabChildOffsetLeft;
@@ -352,7 +354,7 @@ window.NegativeTabs = (function () {
 		}
 
 		paste() {
-			const image = clipboard.readImage()
+			const image = clipboard.readImage();
 			
 			let imageDimensions;
 
@@ -361,7 +363,7 @@ window.NegativeTabs = (function () {
 				// such as the image's file name, so prevent the error.
 				imageDimensions = JSON.parse(clipboard.readText() || null);
 			} catch (err) {
-				console.error(err);
+				process.stderr.write(err);
 			}
 
 			if (image !== null) {

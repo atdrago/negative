@@ -4,8 +4,13 @@ window.UndoManager = (function () {
 	const SimpleUndo = require('simple-undo');
 
 	class UndoManager {
-		get canUndo() { return this.history.canUndo(); }
-		get canRedo() { return this.history.canRedo(); }
+		get canUndo() { 
+			return this.history.canUndo(); 
+		}
+		
+		get canRedo() { 
+			return this.history.canRedo(); 
+		}
 		
 		constructor() {
 			this.state = {
@@ -27,7 +32,7 @@ window.UndoManager = (function () {
 					imageSrc 
 				} = this.state;
 
-				if (imageSrc != null) {
+				if (imageSrc) {
 					window.negative.frameController.setImageAndSize(imageSrc, imageDimensions[0], imageDimensions[1]);
 				} else {
 					window.negative.frameController.removeImage();
@@ -40,8 +45,13 @@ window.UndoManager = (function () {
 			this.history.save();
 		}
 
-		undo() { this.history.undo(this.unserializer); }
-		redo() { this.history.redo(this.unserializer); }
+		undo() { 
+			this.history.undo(this.unserializer); 
+		}
+		
+		redo() { 
+			this.history.redo(this.unserializer); 
+		}
 
 		serialize() {
 			return {

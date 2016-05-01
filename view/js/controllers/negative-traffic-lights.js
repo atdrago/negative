@@ -6,15 +6,15 @@ window.NegativeTrafficLights = (function () {
 	
 	class NegativeTrafficLights {
 		constructor() {
-			document.getElementById('close').addEventListener('click', (evt) => {
+			document.getElementById('close').addEventListener('click', () => {
 				BrowserWindow.getFocusedWindow().close();
 			});
 
-			document.getElementById('minimize').addEventListener('click', (evt) => {
+			document.getElementById('minimize').addEventListener('click', () => {
 				BrowserWindow.getFocusedWindow().minimize();
 			});
 
-			document.getElementById('maximize').addEventListener('click', (evt) => {
+			document.getElementById('maximize').addEventListener('click', () => {
 				BrowserWindow.getFocusedWindow().maximize();
 			});
 		}

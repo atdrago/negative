@@ -9,11 +9,11 @@ window.NegativeFrame = (function () {
 
 	class NegativeFrame {
 		get canZoomIn() {
-			return this.zoomLevel < 2;
+			return this.zoomLevel < ZOOM_MAX;
 		}
 		
 		get canZoomOut() {
-			return this.zoomLevel > 0.5;
+			return this.zoomLevel > ZOOM_MIN;
 		}
 		
 		constructor() {

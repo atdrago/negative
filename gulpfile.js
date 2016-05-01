@@ -3,6 +3,7 @@
 const changed       = require('gulp-changed');
 const concat        = require('gulp-concat');
 const del           = require('del');
+const eslint        = require('gulp-eslint');
 const gulp          = require('gulp');
 const gulpUglify    = require('gulp-uglify/minifier');
 const cleanCss      = require('gulp-clean-css');
@@ -23,6 +24,7 @@ const jsSettingsSrc = [
 	'view/js/controllers/settings-form.js',
 	'view/js/settings.js'
 ];
+const jsLintSrc     = [ 'lib/**/*.js', 'view/**/*.js', '!view/index.js', '!view/settings.js' ];
 const sassSrc       = 'view/**/*.scss';
 const sassDest      = 'view';
 
@@ -47,16 +49,23 @@ gulp.task('sass', () => {
 		.pipe(gulp.dest(sassDest));
 });
 
-gulp.task('js-index',    () => buildJs(jsIndexSrc, jsDest, 'index.js'));
-gulp.task('js-settings', () => buildJs(jsSettingsSrc, jsDest, 'settings.js'));
+gulp.task('js:index',    () => buildJs(jsIndexSrc, jsDest, 'index.js'));
+gulp.task('js:settings', () => buildJs(jsSettingsSrc, jsDest, 'settings.js'));
 
 gulp.task('watch', () => {
 	watch(sassSrc,       () => gulp.start('sass'));
-	watch(jsIndexSrc,    () => gulp.start('js-index'));
-	watch(jsSettingsSrc, () => gulp.start('js-settings'));
+	watch(jsIndexSrc,    () => gulp.start('js:index'));
+	watch(jsSettingsSrc, () => gulp.start('js:settings'));
+	watch(jsLintSrc,     () => gulp.start('js:lint'));
 });
 
-gulp.task('default', [ 'js-index', 'js-settings', 'sass', 'watch' ]);
+gulp.task('default', [ 'js:index', 'js:settings', 'sass', 'watch' ]);
+
+gulp.task('js:lint', () => {
+	return gulp.src(jsLintSrc)
+		.pipe(eslint())
+		.pipe(eslint.format());
+});
 
 gulp.task('release:clean', () => {
 	return del(['release']);

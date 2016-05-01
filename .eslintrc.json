@@ -1,0 +1,97 @@
+{
+    "env": {
+        "browser": true,
+        "es6": true,
+        "node": true
+    },
+    "extends": "eslint:recommended",
+    "globals": {
+        "NegativeFrame": true,
+        "NegativeTabs": true,
+        "NegativeTrafficLights": true,
+        "SettingsForm": true,
+        "UndoManager": true
+    },
+    "rules": {
+        "block-spacing": [
+            "error",
+            "always"
+        ],
+        "brace-style": [ "error" ],
+        "callback-return": [ "error" ],
+        "camelcase": [ "error" ],
+        "comma-spacing": [ "error" ],
+        "comma-style": [ "error" ],
+        "curly": [
+            "error",
+            "all"
+        ],
+        "default-case": [ "error" ],
+        "eol-last": [ "error" ],
+        "eqeqeq": [ "error" ],
+        "guard-for-in": [ "error" ],
+        "indent": [
+            "error",
+            "tab",
+            { "SwitchCase": 1 }
+        ],
+        "key-spacing": [ "error" ],
+        "linebreak-style": [
+            "error",
+            "unix"
+        ],
+        "new-cap": [ "error" ],
+        "new-parens": [ "error" ],
+        "no-catch-shadow": [ "error" ],
+        "no-eval": [ "error" ],
+        "no-extend-native": [ "error" ],
+        "no-extra-bind": [ "error" ],
+        "no-extra-label": [ "error" ],
+        "no-floating-decimal": [ "error" ],
+        "no-implicit-globals": [ "error" ],
+        "no-implied-eval": [ "error" ],
+        "no-lone-blocks": [ "error" ],
+        "no-lonely-if": [ "error" ],
+        "no-loop-func": [ "error" ],
+        "no-magic-numbers": [ 
+            "error",
+            {
+                "ignore": [ 0, 1 ],
+                "ignoreArrayIndexes": true 
+            } 
+        ],
+        "no-multi-str": [ "error" ],
+        "no-native-reassign": [ "error" ],
+        "no-return-assign": [ "error" ],
+        "no-script-url": [ "error" ],
+        "no-shadow": [ "error" ],
+        "no-shadow-restricted-names": [ "error" ],
+        "no-spaced-func": [ "error" ],
+        "no-undef-init": [ "error" ],
+        "no-unmodified-loop-condition": [ "error" ],
+        "no-unused-expressions": [ "error" ],
+        "no-useless-call": [ "error" ],
+        "no-useless-concat": [ "error" ],
+        "no-useless-escape": [ "error" ],
+        "no-var": [ "error" ],
+        "no-void": [ "error" ],
+        "no-whitespace-before-property": [ "error" ],
+        "no-with": [ "error" ],
+        "object-curly-spacing": [
+            "error",
+            "always"
+        ],
+        "prefer-const": [ "error" ],
+        "prefer-template": [ "error" ],
+        "quotes": [
+            "error",
+            "single"
+        ],
+        "semi": [
+            "error",
+            "always"
+        ],
+        "sort-vars": [ "error" ],
+        "yoda": [ "error" ]
+    }
+}

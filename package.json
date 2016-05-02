@@ -12,7 +12,7 @@
   },
   "author": "Adam Drago",
   "dependencies": {
-    "electron-window": "^0.6.4",
+    "electron-window": "^0.7.0",
     "nodobjc": "^2.1.0",
     "simple-undo": "^1.0.1"
   },

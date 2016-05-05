@@ -33,7 +33,37 @@ describe('Negative', function () {
 
 	describe('Menues', function () {
 		describe('View', function () {
-			it('Capture');
+			it('Clear', function () {
+				// Capture first, then test that clearing works
+				return app.electron.ipcRenderer.send('test-capture')
+					.then(function () {
+						app.electron.ipcRenderer.send('test-clear')
+					})
+					.then(function () {
+						return app.client.selectorExecute('#negativeImage', function (element) {
+							return element[0].getAttribute('src');
+						});
+					})
+					.then(function (src) {
+						assert.equal(src, '');
+					})
+			});
+			
+			it('Capture', function () {
+				// Clear first, then test that capturing works
+				return app.electron.ipcRenderer.send('test-clear')
+					.then(function () {
+						app.electron.ipcRenderer.send('test-capture');
+					})
+					.then(function () {
+						return app.client.selectorExecute('#negativeImage', function (element) {
+							return element[0].getAttribute('src');
+						});
+					})
+					.then(function (src) {
+						assert.notEqual(src, '');
+					})
+			});
 		});
 		
 		describe('Window', function () {

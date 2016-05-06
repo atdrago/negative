@@ -9,6 +9,7 @@ describe('Negative', function () {
 	const app = new Application({
 		path: APP_PATH,
 		env: {
+			IGNORE_WINDOW_SETTINGS: true,
 			NODE_ENV: 'development'
 		}
 	});
@@ -26,18 +27,34 @@ describe('Negative', function () {
 	describe('Launch', function () {
 		it('shows an initial window', function () {
 			return app.client.getWindowCount().then(function (count) {
-				assert.equal(count, 1);
+				assert.isAtLeast(count, 1);
 			});
 		});
 	});
 
 	describe('Menues', function () {
+		describe('File', function () {
+			it('New Tab', function () {
+				return app.electron.ipcRenderer.send('test-new-tab')
+					.then(function () {
+						return app.client.selectorExecute('#tabs', function (element) {
+							const el = element[0];
+							
+							return el.children && el.children.length;
+						});
+					})
+					.then(function (tabCount) {
+						assert.equal(tabCount, 2);
+					});
+			});
+		});
+		
 		describe('View', function () {
 			it('Clear', function () {
 				// Capture first, then test that clearing works
 				return app.electron.ipcRenderer.send('test-capture')
 					.then(function () {
-						app.electron.ipcRenderer.send('test-clear')
+						return app.electron.ipcRenderer.send('test-clear')
 					})
 					.then(function () {
 						return app.client.selectorExecute('#negativeImage', function (element) {
@@ -46,14 +63,14 @@ describe('Negative', function () {
 					})
 					.then(function (src) {
 						assert.equal(src, '');
-					})
+					});
 			});
 			
 			it('Capture', function () {
 				// Clear first, then test that capturing works
 				return app.electron.ipcRenderer.send('test-clear')
 					.then(function () {
-						app.electron.ipcRenderer.send('test-capture');
+						return app.electron.ipcRenderer.send('test-capture');
 					})
 					.then(function () {
 						return app.client.selectorExecute('#negativeImage', function (element) {

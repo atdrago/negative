@@ -53,13 +53,13 @@ gulp.task('js:index',    () => buildJs(jsIndexSrc, jsDest, 'index.js'));
 gulp.task('js:settings', () => buildJs(jsSettingsSrc, jsDest, 'settings.js'));
 
 gulp.task('watch', () => {
-	watch(sassSrc,       () => gulp.start('sass'));
 	watch(jsIndexSrc,    () => gulp.start('js:index'));
 	watch(jsSettingsSrc, () => gulp.start('js:settings'));
 	watch(jsLintSrc,     () => gulp.start('js:lint'));
+	watch(sassSrc,       () => gulp.start('sass'));
 });
 
-gulp.task('default', [ 'js:index', 'js:settings', 'sass', 'watch' ]);
+gulp.task('default', [ 'js:index', 'js:settings', 'js:lint', 'sass', 'watch' ]);
 
 gulp.task('js:lint', () => {
 	return gulp.src(jsLintSrc)

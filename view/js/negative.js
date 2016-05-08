@@ -5,8 +5,7 @@
 	const undoManagers = [];
 	
 	ipcRenderer.on('window-settings-request', (evt, windowSettings) => {
-		windowSettings = windowSettings || {};
-		windowSettings.undoManagers = undoManagers;
+		windowSettings = Object.assign({}, windowSettings, { undoManagers: undoManagers });
 		
 		ipcRenderer.send('window-settings-response', windowSettings);
 	});

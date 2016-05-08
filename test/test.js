@@ -33,6 +33,23 @@ describe('Negative', function () {
 	});
 
 	describe('Menues', function () {
+		describe('Negative', function () {
+			after(function () {
+				return app.start();
+			});
+			
+			it('About Negative');
+			it('Preferences...');
+			it('Quit Negative', function () {
+				return app.electron.ipcRenderer.send('test-quit-negative')
+					.then(function () {
+						return app.client.getWindowCount().then(function (count) {
+							assert.equal(count, 0);
+						});
+					});
+			});
+		});
+		
 		describe('File', function () {
 			it('New Tab', function () {
 				return app.electron.ipcRenderer.send('test-new-tab')
@@ -47,25 +64,34 @@ describe('Negative', function () {
 						assert.equal(tabCount, 2);
 					});
 			});
-		});
-		
-		describe('View', function () {
-			it('Clear', function () {
-				// Capture first, then test that clearing works
-				return app.electron.ipcRenderer.send('test-capture')
+			
+			it('Close Tab', function () {
+				return app.electron.ipcRenderer.send('test-close-tab')
 					.then(function () {
-						return app.electron.ipcRenderer.send('test-clear')
-					})
-					.then(function () {
-						return app.client.selectorExecute('#negativeImage', function (element) {
-							return element[0].getAttribute('src');
+						return app.client.selectorExecute('#tabs', function (element) {
+							const el = element[0];
+							
+							return el.children && el.children.length;
 						});
 					})
-					.then(function (src) {
-						assert.equal(src, '');
+					.then(function (tabCount) {
+						assert.equal(tabCount, 1);
 					});
 			});
 			
+			it('New Window');
+			it('Close Window');
+			it('Close');
+		});
+		
+		describe('Edit', function () {
+			it('Undo');
+			it('Redo');
+			it('Copy');
+			it('Paste');
+		});
+		
+		describe('View', function () {
 			it('Capture', function () {
 				// Clear first, then test that capturing works
 				return app.electron.ipcRenderer.send('test-clear')
@@ -73,17 +99,42 @@ describe('Negative', function () {
 						return app.electron.ipcRenderer.send('test-capture');
 					})
 					.then(function () {
-						return app.client.selectorExecute('#negativeImage', function (element) {
-							return element[0].getAttribute('src');
-						});
+						return app.client.selectorExecute('#negativeImage', (element) => element[0].getAttribute('src'));
 					})
 					.then(function (src) {
 						assert.notEqual(src, '');
 					})
 			});
+			
+			it('Clear', function () {
+				// Capture first, then test that clearing works
+				return app.electron.ipcRenderer.send('test-capture')
+					.then(function () {
+						return app.electron.ipcRenderer.send('test-clear')
+					})
+					.then(function () {
+						return app.client.selectorExecute('#negativeImage', (element) => element[0].getAttribute('src'));
+					})
+					.then(function (src) {
+						assert.equal(src, '');
+					});
+			});
+			
+			it('Actual Size');
+			it('Zoom In');
+			it('Zoom Out');
+			it('Reload');
+			it('Toggle DevTools');
 		});
 		
 		describe('Window', function () {
+			it('Minimize');
+			it('Fit Window to Image');
+			it('Next Tab');
+			it('Previous Tab');
+			it('Next Tab and Resize');
+			it('Previous Tab and Resize');
+			
 			describe('Move', function () {
 				function testBounds(direction, amount) {
 					return new Promise(function (resolve, reject) {

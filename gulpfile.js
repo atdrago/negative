@@ -74,14 +74,9 @@ gulp.task('release:clean', () => {
 gulp.task('release:root', () => {
 	return gulp.src([
 		'negative.icns',
-		'package.json'
+		'package.json',
+		'.npmrc'
 	]).pipe(gulp.dest('release'));
-});
-
-gulp.task('release:node_modules', () => {
-	return gulp.src([
-		'node_modules/**/*.*'
-	], { dot: true }).pipe(gulp.dest('release/node_modules'));
 });
 
 gulp.task('release:view', () => {
@@ -99,5 +94,5 @@ gulp.task('release:lib', () => {
 });
 
 gulp.task('release', () => {
-	return runSequence('release:clean', ['release:node_modules', 'release:root', 'release:view', 'release:lib'])
+	return runSequence('release:clean', ['release:root', 'release:view', 'release:lib']);
 });

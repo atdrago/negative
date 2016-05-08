@@ -7,13 +7,13 @@
   "license": "MIT",
   "scripts": {
     "start": "export NODE_ENV=development && export ELECTRON_ENABLE_LOGGING=true && electron .",
-    "build": "npm install && ./node_modules/.bin/electron-rebuild && gulp release && grunt",
+    "build": "gulp release && mkdir -p ./release/node_modules && npm install --production --prefix ./release/ && ./node_modules/.bin/electron-rebuild && grunt",
     "lint": "gulp js:lint",
     "test": "mocha --harmony_destructuring"
   },
   "author": "Adam Drago",
   "dependencies": {
-    "electron-window": "^0.6.4",
+    "electron-window": "^0.7.0",
     "nodobjc": "^2.1.0",
     "simple-undo": "^1.0.1"
   },

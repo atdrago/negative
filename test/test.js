@@ -225,7 +225,25 @@ describe('Negative', () => {
 		
 		describe('Window', () => {
 			it('Minimize');
-			it('Fit Window to Image');
+			it('Fit Window to Image', () => {
+				let origBounds;
+				
+				return app.electron.ipcRenderer.send('test-capture')
+					.then(() => app.browserWindow.getBounds())
+					.then((bounds) => {
+						origBounds = bounds;
+						
+						let { width, height } = bounds;
+						
+						return app.browserWindow.setSize(width + 100, height + 100);
+					})
+					.then(() => app.electron.ipcRenderer.send('test-fit-window-to-image'))
+					.then(() => app.browserWindow.getBounds())
+					.then((bounds) => {
+						assert.strictEqual(origBounds.width, bounds.width);
+						assert.strictEqual(origBounds.height, bounds.height);
+					});
+			});
 			it('Next Tab');
 			it('Previous Tab');
 			it('Next Tab and Resize');

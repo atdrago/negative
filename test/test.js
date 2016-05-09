@@ -3,12 +3,12 @@
 const { Application } = require('spectron');
 const { assert } = require('chai');
 
-const APP_PATH = './dist/Negative-darwin-x64/Negative.app/Contents/MacOS/Negative';
+const APP_PATH  = './dist/Negative-darwin-x64/Negative.app/Contents/MacOS/Negative';
+const IMAGE_ID  = '#negativeImage';
+const TABS_ID   = '#tabs';
+const REGEX_PNG = /^data:image\/png;base64,/;
 
-const IMAGE_ID = '#negativeImage';
-const REGEX_BASE_64_PNG = /^data:image\/png;base64,/;
-
-describe('Negative', () => {
+describe('Negative', function () {
 	const app = new Application({
 		path: APP_PATH,
 		env: {
@@ -16,6 +16,8 @@ describe('Negative', () => {
 			NODE_ENV: 'development'
 		}
 	});
+	
+	this.timeout(5000);
 	
 	before(() => {
 		return app.start();
@@ -51,7 +53,7 @@ describe('Negative', () => {
 			it('New Tab', () => {
 				return app.electron.ipcRenderer.send('test-new-tab')
 					.then(() => {
-						return app.client.selectorExecute('#tabs', (element) => {
+						return app.client.selectorExecute(TABS_ID, (element) => {
 							const el = element[0];
 							
 							return el.children && el.children.length;
@@ -63,7 +65,7 @@ describe('Negative', () => {
 			it('Close Tab', () => {
 				return app.electron.ipcRenderer.send('test-close-tab')
 					.then(() => {
-						return app.client.selectorExecute('#tabs', (element) => {
+						return app.client.selectorExecute(TABS_ID, (element) => {
 							const el = element[0];
 							
 							return el.children && el.children.length;
@@ -111,7 +113,7 @@ describe('Negative', () => {
 					.then(() => {
 						return app.client.selectorExecute(IMAGE_ID, (element) => element[0].getAttribute('src'));
 					})
-					.then((src) => assert.isTrue(REGEX_BASE_64_PNG.test(src)));
+					.then((src) => assert.isTrue(REGEX_PNG.test(src)));
 			});
 			
 			it('Copy', () => {
@@ -130,7 +132,7 @@ describe('Negative', () => {
 					.then(() => {
 						return app.client.selectorExecute(IMAGE_ID, (element) => element[0].getAttribute('src'));
 					})
-					.then((src) => assert.isTrue(REGEX_BASE_64_PNG.test(src)));
+					.then((src) => assert.isTrue(REGEX_PNG.test(src)));
 			});
 		});
 		
@@ -142,7 +144,7 @@ describe('Negative', () => {
 					.then(() => {
 						return app.client.selectorExecute(IMAGE_ID, (element) => element[0].getAttribute('src'));
 					})
-					.then((src) => assert.isTrue(REGEX_BASE_64_PNG.test(src)));
+					.then((src) => assert.isTrue(REGEX_PNG.test(src)));
 			});
 			
 			it('Clear', () => {
@@ -225,6 +227,9 @@ describe('Negative', () => {
 		
 		describe('Window', () => {
 			it('Minimize');
+			
+			beforeEach(() => app.restart());
+			
 			it('Fit Window to Image', () => {
 				let origBounds;
 				
@@ -244,70 +249,163 @@ describe('Negative', () => {
 						assert.strictEqual(origBounds.height, bounds.height);
 					});
 			});
-			it('Next Tab');
-			it('Previous Tab');
-			it('Next Tab and Resize');
-			it('Previous Tab and Resize');
 			
-			describe('Move', () => {
-				function testBounds(direction, amount) {
-					return new Promise((resolve, reject) => {
-						let oldBounds;
+			it('Next Tab', () => {
+				// Test circular
+				return app.electron.ipcRenderer.send('test-new-tab')
+					.then(() => app.electron.ipcRenderer.send('test-next-tab'))
+					.then(() => {
+						return app.client.selectorExecute(TABS_ID, (element) => {
+							return Array.from(element[0].children).findIndex((child) => child.classList.contains('selected'));
+						});
+					})
+					.then((selectedIndex) => assert.equal(selectedIndex, 0))
+					.then(() => app.electron.ipcRenderer.send('test-next-tab'))
+					.then(() => {
+						return app.client.selectorExecute(TABS_ID, (element) => {
+							return Array.from(element[0].children).findIndex((child) => child.classList.contains('selected'));
+						});
+					})
+					.then((selectedIndex) => assert.equal(selectedIndex, 1))
+			});
+			
+			it('Previous Tab', () => {
+				return app.electron.ipcRenderer.send('test-new-tab')
+					.then(() => app.electron.ipcRenderer.send('test-previous-tab'))
+					.then(() => {
+						return app.client.selectorExecute(TABS_ID, (element) => {
+							return Array.from(element[0].children).findIndex((child) => child.classList.contains('selected'));
+						});
+					})
+					.then((selectedIndex) => assert.equal(selectedIndex, 0))
+					.then(() => app.electron.ipcRenderer.send('test-previous-tab'))
+					.then(() => {
+						return app.client.selectorExecute(TABS_ID, (element) => {
+							return Array.from(element[0].children).findIndex((child) => child.classList.contains('selected'));
+						});
+					})
+					.then((selectedIndex) => assert.equal(selectedIndex, 1))
+			});
+			
+			it('Next Tab and Resize', () => {
+				let origBounds;
+				
+				return app.electron.ipcRenderer.send('test-new-tab')
+					.then(() => app.electron.ipcRenderer.send('test-capture'))
+					.then(() => app.electron.ipcRenderer.send('test-next-tab'))
+					.then(() => app.browserWindow.getBounds())
+					.then((bounds) => {
+						origBounds = bounds;
 						
-						return app.browserWindow.getBounds()
-							.then((bounds) => {
-								oldBounds = bounds;
-								return app.electron.ipcRenderer.send(`test-move-${direction}-${amount}`);
-							})
-							.then(() => app.browserWindow.getBounds())
-							.then((newBounds) => {
-								resolve({
-									oldBounds: oldBounds,
-									newBounds: newBounds
-								});
-							});
+						let { width, height } = bounds;
+						
+						return app.browserWindow.setSize(width + 100, height + 100);
+					})
+					.then(() => app.electron.ipcRenderer.send('test-capture'))
+					.then(() => app.electron.ipcRenderer.send('test-next-tab-and-resize'))
+					.then(() => app.browserWindow.getBounds())
+					.then((bounds) => {
+						assert.strictEqual(origBounds.width, bounds.width);
+						assert.strictEqual(origBounds.height, bounds.height);
+					})
+					.then(() => app.electron.ipcRenderer.send('test-next-tab-and-resize'))
+					.then(() => app.browserWindow.getBounds())
+					.then((bounds) => {
+						assert.strictEqual(origBounds.width + 100, bounds.width);
+						assert.strictEqual(origBounds.height + 100, bounds.height);
 					});
-				}
+			});
+			
+			it('Previous Tab and Resize', () => {
+				let origBounds;
 				
-				it('Left by 1px', () => {
-					return testBounds('left', 1)
-						.then((result) => assert.strictEqual(result.newBounds.x, result.oldBounds.x - 1));
+				return app.electron.ipcRenderer.send('test-new-tab')
+					.then(() => app.electron.ipcRenderer.send('test-capture'))
+					.then(() => app.electron.ipcRenderer.send('test-next-tab'))
+					.then(() => app.browserWindow.getBounds())
+					.then((bounds) => {
+						origBounds = bounds;
+						
+						let { width, height } = bounds;
+						
+						return app.browserWindow.setSize(width + 100, height + 100);
+					})
+					.then(() => app.electron.ipcRenderer.send('test-capture'))
+					.then(() => app.electron.ipcRenderer.send('test-previous-tab-and-resize'))
+					.then(() => app.browserWindow.getBounds())
+					.then((bounds) => {
+						assert.strictEqual(origBounds.width, bounds.width);
+						assert.strictEqual(origBounds.height, bounds.height);
+					})
+					.then(() => app.electron.ipcRenderer.send('test-previous-tab-and-resize'))
+					.then(() => app.browserWindow.getBounds())
+					.then((bounds) => {
+						assert.strictEqual(origBounds.width + 100, bounds.width);
+						assert.strictEqual(origBounds.height + 100, bounds.height);
+					});
+			});
+			
+			
+		});
+		
+		describe('Window -> Move', () => {
+			function testBounds(direction, amount) {
+				return new Promise((resolve, reject) => {
+					let oldBounds;
+					
+					return app.browserWindow.getBounds()
+						.then((bounds) => {
+							oldBounds = bounds;
+							return app.electron.ipcRenderer.send(`test-move-${direction}-${amount}`);
+						})
+						.then(() => app.browserWindow.getBounds())
+						.then((newBounds) => {
+							resolve({
+								oldBounds: oldBounds,
+								newBounds: newBounds
+							});
+						});
 				});
-				
-				it('Right by 1px', () => {
-					return testBounds('right', 1)
-						.then((result) => assert.strictEqual(result.newBounds.x, result.oldBounds.x + 1));
-				});
-				
-				it('Up by 1px', () => {
-					return testBounds('up', 1)
-						.then((result) => assert.strictEqual(result.newBounds.y, result.oldBounds.y - 1));
-				});
-				
-				it('Down by 1px', () => {
-					return testBounds('down', 1)
-						.then((result) => assert.strictEqual(result.newBounds.y, result.oldBounds.y + 1));
-				});
-				
-				it('Left by 10px', () => {
-					return testBounds('left', 10)
-						.then((result) => assert.strictEqual(result.newBounds.x, result.oldBounds.x - 10));
-				});
-				
-				it('Right by 10px', () => {
-					return testBounds('right', 10)
-						.then((result) => assert.strictEqual(result.newBounds.x, result.oldBounds.x + 10));
-				});
-				
-				it('Up by 10px', () => {
-					return testBounds('up', 10)
-						.then((result) => assert.strictEqual(result.newBounds.y, result.oldBounds.y - 10));
-				});
-				
-				it('Down by 10px', () => {
-					return testBounds('down', 10)
-						.then((result) => assert.strictEqual(result.newBounds.y, result.oldBounds.y + 10));
-				});
+			}
+			
+			it('Left by 1px', () => {
+				return testBounds('left', 1)
+					.then((result) => assert.strictEqual(result.newBounds.x, result.oldBounds.x - 1));
+			});
+			
+			it('Right by 1px', () => {
+				return testBounds('right', 1)
+					.then((result) => assert.strictEqual(result.newBounds.x, result.oldBounds.x + 1));
+			});
+			
+			it('Up by 1px', () => {
+				return testBounds('up', 1)
+					.then((result) => assert.strictEqual(result.newBounds.y, result.oldBounds.y - 1));
+			});
+			
+			it('Down by 1px', () => {
+				return testBounds('down', 1)
+					.then((result) => assert.strictEqual(result.newBounds.y, result.oldBounds.y + 1));
+			});
+			
+			it('Left by 10px', () => {
+				return testBounds('left', 10)
+					.then((result) => assert.strictEqual(result.newBounds.x, result.oldBounds.x - 10));
+			});
+			
+			it('Right by 10px', () => {
+				return testBounds('right', 10)
+					.then((result) => assert.strictEqual(result.newBounds.x, result.oldBounds.x + 10));
+			});
+			
+			it('Up by 10px', () => {
+				return testBounds('up', 10)
+					.then((result) => assert.strictEqual(result.newBounds.y, result.oldBounds.y - 10));
+			});
+			
+			it('Down by 10px', () => {
+				return testBounds('down', 10)
+					.then((result) => assert.strictEqual(result.newBounds.y, result.oldBounds.y + 10));
 			});
 		});
 	});

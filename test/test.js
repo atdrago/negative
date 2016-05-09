@@ -6,6 +6,7 @@ const { assert } = require('chai');
 const APP_PATH = './dist/Negative-darwin-x64/Negative.app/Contents/MacOS/Negative';
 
 const IMAGE_ID = '#negativeImage';
+const REGEX_BASE_64_PNG = /^data:image\/png;base64,/;
 
 describe('Negative', function () {
 	const app = new Application({
@@ -118,9 +119,10 @@ describe('Negative', function () {
 						return app.client.selectorExecute(IMAGE_ID, (element) => element[0].getAttribute('src'));
 					})
 					.then(function (src) {
-						assert.notEqual(src, '');
+						assert.isTrue(REGEX_BASE_64_PNG.test(src));
 					});
 			});
+			
 			it('Copy', function () {
 				return app.electron.ipcRenderer.send('test-capture')
 					.then(function () {
@@ -130,10 +132,11 @@ describe('Negative', function () {
 						return app.electron.clipboard.readImage();
 					})
 					.then(function (image) {
-						// @TODO better assertions: test type
 						assert.isDefined(image);
+						assert.isDefined(image.getSize);
 					})
 			});
+			
 			it('Paste', function () {
 				return app.electron.ipcRenderer.send('test-clear')
 					.then(function () {
@@ -143,8 +146,7 @@ describe('Negative', function () {
 						return app.client.selectorExecute(IMAGE_ID, (element) => element[0].getAttribute('src'));
 					})
 					.then(function (src) {
-						// @TODO better assertions: test string
-						assert.notEqual(src, '');
+						assert.isTrue(REGEX_BASE_64_PNG.test(src));
 					});
 			});
 		});
@@ -160,7 +162,7 @@ describe('Negative', function () {
 						return app.client.selectorExecute(IMAGE_ID, (element) => element[0].getAttribute('src'));
 					})
 					.then(function (src) {
-						assert.notEqual(src, '');
+						assert.isTrue(REGEX_BASE_64_PNG.test(src));
 					})
 			});
 			

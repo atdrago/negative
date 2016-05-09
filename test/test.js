@@ -5,6 +5,8 @@ const { assert } = require('chai');
 
 const APP_PATH = './dist/Negative-darwin-x64/Negative.app/Contents/MacOS/Negative';
 
+const IMAGE_ID = '#negativeImage';
+
 describe('Negative', function () {
 	const app = new Application({
 		path: APP_PATH,
@@ -85,10 +87,66 @@ describe('Negative', function () {
 		});
 		
 		describe('Edit', function () {
-			it('Undo');
-			it('Redo');
-			it('Copy');
-			it('Paste');
+			it('Undo', function () {
+				// Get some history first
+				return app.electron.ipcRenderer.send('test-clear')
+					.then(function () {
+						return app.electron.ipcRenderer.send('test-capture');
+					})
+					.then(function () {
+						return app.client.selectorExecute(IMAGE_ID, (element) => element[0].getAttribute('src'));
+					})
+					.then(function (src) {
+						assert.notEqual(src, '');
+					})
+					.then(function () {
+						return app.electron.ipcRenderer.send('test-undo');
+					})
+					.then(function () {
+						return app.client.selectorExecute(IMAGE_ID, (element) => element[0].getAttribute('src'));
+					})
+					.then(function (src) {
+						assert.equal(src, '');
+					});
+					
+			});
+			
+			it('Redo', function () {
+				// Use history from Undo test
+				return app.electron.ipcRenderer.send('test-redo')
+					.then(function () {
+						return app.client.selectorExecute(IMAGE_ID, (element) => element[0].getAttribute('src'));
+					})
+					.then(function (src) {
+						assert.notEqual(src, '');
+					});
+			});
+			it('Copy', function () {
+				return app.electron.ipcRenderer.send('test-capture')
+					.then(function () {
+						return app.electron.ipcRenderer.send('test-copy');
+					})
+					.then(function () {
+						return app.electron.clipboard.readImage();
+					})
+					.then(function (image) {
+						// @TODO better assertions: test type
+						assert.isDefined(image);
+					})
+			});
+			it('Paste', function () {
+				return app.electron.ipcRenderer.send('test-clear')
+					.then(function () {
+						return app.electron.ipcRenderer.send('test-paste');
+					})
+					.then(function () {
+						return app.client.selectorExecute(IMAGE_ID, (element) => element[0].getAttribute('src'));
+					})
+					.then(function (src) {
+						// @TODO better assertions: test string
+						assert.notEqual(src, '');
+					});
+			});
 		});
 		
 		describe('View', function () {
@@ -99,7 +157,7 @@ describe('Negative', function () {
 						return app.electron.ipcRenderer.send('test-capture');
 					})
 					.then(function () {
-						return app.client.selectorExecute('#negativeImage', (element) => element[0].getAttribute('src'));
+						return app.client.selectorExecute(IMAGE_ID, (element) => element[0].getAttribute('src'));
 					})
 					.then(function (src) {
 						assert.notEqual(src, '');
@@ -113,7 +171,7 @@ describe('Negative', function () {
 						return app.electron.ipcRenderer.send('test-clear')
 					})
 					.then(function () {
-						return app.client.selectorExecute('#negativeImage', (element) => element[0].getAttribute('src'));
+						return app.client.selectorExecute(IMAGE_ID, (element) => element[0].getAttribute('src'));
 					})
 					.then(function (src) {
 						assert.equal(src, '');

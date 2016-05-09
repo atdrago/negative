@@ -107,6 +107,7 @@ window.NegativeFrame = (function () {
 			
 			if (zoomLevel !== this.zoomLevel) {
 				this.setElementSize(this.imageWidth * zoomLevel, this.imageHeight * zoomLevel);
+				this.currentImage.setAttribute('data-zoom-level', zoomLevel);
 				
 				this.zoomLevel = zoomLevel;
 				window.negative.refreshMenu();

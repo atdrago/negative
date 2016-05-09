@@ -2,6 +2,7 @@
 
 const { Application } = require('spectron');
 const { assert } = require('chai');
+const util = require('../lib/util');
 
 const APP_PATH = './dist/Negative-darwin-x64/Negative.app/Contents/MacOS/Negative';
 
@@ -28,7 +29,7 @@ describe('Negative', function () {
 	});
 	
 	describe('Launch', function () {
-		it('shows an initial window', function () {
+		it('Shows a window', function () {
 			return app.client.getWindowCount().then(function (count) {
 				assert.isAtLeast(count, 1);
 			});
@@ -82,8 +83,29 @@ describe('Negative', function () {
 					});
 			});
 			
-			it('New Window');
-			it('Close Window');
+			it.skip('New Window', function () {
+				return app.electron.ipcRenderer.send('test-new-window')
+					.then(function () {
+						return app.client.getWindowCount();
+					})
+					.then(function (count) {
+						assert.equal(count, 2);
+					})
+					.then(function () {
+						return app.browserWindow.close();
+					});
+			});
+			
+			it.skip('Close Window', function () {
+				return app.electron.ipcRenderer.send('test-close-window')
+					.then(function () {
+						return app.client.getWindowCount();
+					})
+					.then(function (count) {
+						assert.equal(count, 1);
+					});
+			});
+			
 			it('Close');
 		});
 		
@@ -170,7 +192,7 @@ describe('Negative', function () {
 				// Capture first, then test that clearing works
 				return app.electron.ipcRenderer.send('test-capture')
 					.then(function () {
-						return app.electron.ipcRenderer.send('test-clear')
+						return app.electron.ipcRenderer.send('test-clear');
 					})
 					.then(function () {
 						return app.client.selectorExecute(IMAGE_ID, (element) => element[0].getAttribute('src'));
@@ -180,7 +202,27 @@ describe('Negative', function () {
 					});
 			});
 			
-			it('Actual Size');
+			it('Actual Size', function () {
+				let bounds;
+				
+				return app.electron.ipcRenderer.send('test-capture')
+					.then(function () {
+						return app.electron.ipcRenderer.send('test-zoom-in');
+					})
+					.then(function () {
+						return app.electron.ipcRenderer.send('test-actual-size');
+					})
+					.then(function () {
+						return app.client.selectorExecute(IMAGE_ID, (element) => {
+							const zoomLevel = element[0].getAttribute('data-zoom-level');
+							
+							return zoomLevel;
+						});
+					})
+					.then(function (zoomLevel) {
+						assert.equal(zoomLevel, 1);
+					});
+			});
 			it('Zoom In');
 			it('Zoom Out');
 			it('Reload');

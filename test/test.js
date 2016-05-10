@@ -37,19 +37,73 @@ describe('Negative', function () {
 	});
 
 	describe('Menues', () => {
-		describe('Negative', () => {
+		describe('Negative -> Preferences', () => {
+			describe('Preferences...', () => {
+				it('Should open', () => {
+					return app.electron.ipcRenderer.send('test-preferences')
+						.then(() => app.client.getWindowCount())
+						.then((count) => assert.strictEqual(count, 2));
+				});
+				
+				it('Should toggle tips', () => {
+					let windowHandles, originalIsChecked;
+					
+					// Focus the preferences window with `client.window`
+					return app.client.windowHandles()
+						.then((handles) => {
+							windowHandles = handles.value;
+							app.client.window(windowHandles[1])
+						})
+						.then(() => {
+							return app.client.selectorExecute('#shouldShowTips', (elements) => {
+								return elements[0].checked;
+							});
+						})
+						.then((isChecked) => {
+							originalIsChecked = isChecked;
+							
+							if (!isChecked) {
+								return app.client.leftClick('#shouldShowTips');
+							}
+						})
+						.then(() => app.client.window(windowHandles[0]))
+						.then(() => {
+							return app.client.selectorExecute('//body', (elements) => {
+								return elements[0].classList.contains('no-tips');
+							})
+						})
+						.then((hasNoTipsClass) => assert.isFalse(hasNoTipsClass))
+						.then(() => app.client.window(windowHandles[1]))
+						.then(() => app.client.leftClick('#shouldShowTips'))
+						.then(() => app.client.window(windowHandles[0]))
+						.then(() => {
+							return app.client.selectorExecute('//body', (elements) => {
+								return elements[0].classList.contains('no-tips');
+							})
+						})
+						.then((hasNoTipsClass) => assert.isTrue(hasNoTipsClass));
+				});
+				
+				// @TODO - Close should be tested here, but because it uses
+				// `performSelector`, it cannot be properly tested until
+				// Spectron supports testing menu item functionality.
+				it('Close');
+			});
+			
+			
+		});
+		
+		describe('Negative -> Quit', () => {
 			after(() => app.start());
 			
-			it('About Negative');
-			it('Preferences...');
 			it('Quit Negative', () => {
 				return app.electron.ipcRenderer.send('test-quit-negative')
 					.then(() => app.client.getWindowCount())
-					.then((count) => assert.equal(count, 0));
+					.then((count) => assert.strictEqual(count, 0));
 			});
-		});
+		})
 		
-		describe('File', () => {
+		describe('File -> Tabs', () => {
 			it('New Tab', () => {
 				return app.electron.ipcRenderer.send('test-new-tab')
 					.then(() => {
@@ -73,21 +127,25 @@ describe('Negative', function () {
 					})
 					.then((tabCount) => assert.equal(tabCount, 1));
 			});
+		});
+		
+		describe('File -> Window', () => {
+			after(() => app.restart());
 			
-			it.skip('New Window', () => {
+			it('New Window', () => {
 				return app.electron.ipcRenderer.send('test-new-window')
 					.then(() => app.client.getWindowCount())
-					.then((count) => assert.equal(count, 2))
-					.then(() => app.browserWindow.close());
+					.then((count) => assert.equal(count, 2));
 			});
 			
-			it.skip('Close Window', () => {
-				return app.electron.ipcRenderer.send('test-close-window')
+			it('Close Window', () => {
+				// @TODO - This does not actually test that the menu item works, 
+				// just that windows close without error
+				return app.browserWindow.close()
 					.then(() => app.client.getWindowCount())
 					.then((count) => assert.equal(count, 1));
 			});
 			
-			it('Close');
 		});
 		
 		describe('Edit', () => {
@@ -220,14 +278,9 @@ describe('Negative', function () {
 					})
 					.then((zoomLevel) => assert.equal(zoomLevel, 0.5));
 			});
-			
-			it('Reload');
-			it('Toggle DevTools');
 		});
 		
 		describe('Window', () => {
-			it('Minimize');
-			
 			beforeEach(() => app.restart());
 			
 			it('Fit Window to Image', () => {
@@ -344,8 +397,6 @@ describe('Negative', function () {
 						assert.strictEqual(origBounds.height + 100, bounds.height);
 					});
 			});
-			
-			
 		});
 		
 		describe('Window -> Move', () => {

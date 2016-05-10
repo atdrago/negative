@@ -7,7 +7,7 @@
   "license": "MIT",
   "scripts": {
     "start": "export NODE_ENV=development && export ELECTRON_ENABLE_LOGGING=true && electron .",
-    "build": "gulp release && mkdir -p ./release/node_modules && npm install --production --prefix ./release/ && ./node_modules/.bin/electron-rebuild && grunt",
+    "build": "gulp release && mkdir -p ./release/node_modules && npm install --production --prefix ./release/ && grunt",
     "lint": "gulp js:lint",
     "test": "mocha --harmony_destructuring",
     "postinstall": "./node_modules/.bin/electron-rebuild"

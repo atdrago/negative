@@ -59,7 +59,7 @@ gulp.task('watch', () => {
 	watch(sassSrc,       () => gulp.start('sass'));
 });
 
-gulp.task('default', [ 'js:index', 'js:settings', 'js:lint', 'sass', 'watch' ]);
+gulp.task('default', ['js:index', 'js:settings', 'js:lint', 'sass', 'watch']);
 
 gulp.task('js:lint', () => {
 	return gulp.src(jsLintSrc)
@@ -94,5 +94,5 @@ gulp.task('release:lib', () => {
 });
 
 gulp.task('release', () => {
-	return runSequence('release:clean', ['release:root', 'release:view', 'release:lib']);
+	return runSequence('release:clean', ['js:index', 'js:settings', 'sass'], ['release:root', 'release:view', 'release:lib']);
 });

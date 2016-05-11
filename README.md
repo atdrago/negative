@@ -21,7 +21,7 @@ Currently only Mac OS X is supported.
 
 ## Testing
 
-*Important:* Tests gets run against the **built app**. If you are attempting to run tests and the results are not what you expected, you need to run `npm run build` again.
+*Important:* Tests get run against the **built app**. If you are attempting to run tests and the results are not what you expected, you need to run `npm run build` again.
 
 1. `npm run build`
 2. `npm run test`
@@ -29,7 +29,7 @@ Currently only Mac OS X is supported.
 ## Developing
 
 ### Compiling
-- `gulp` - Compile, combine, and minify files for the renderer process. This isn't necessary for files in the main process.
+- `gulp` - Compile, combine, and minify files for the renderer process. This isn't necessary for files in the main process. Make sure this is running when working on UI.
 
 ### NPM Scripts
 - `npm start` - Start the app with the following environment variables:

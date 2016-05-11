@@ -2,8 +2,6 @@
 
 > An app for making visual comparison.
 
-![Negative Demo](negative-demo.gif)
-
 ## User Documentation
 
 - [Usage](docs/usage.md)

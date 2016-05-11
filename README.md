@@ -4,7 +4,7 @@
 
 ![Negative Demo](negative-demo.gif)
 
-## Documentation
+## User Documentation
 
 - [Usage](docs/usage.md)
 
@@ -28,8 +28,23 @@ Currently only Mac OS X is supported.
 
 ## Developing
 
-- `gulp` - Files in the renderer process are combined and minified, so you'll need to be running gulp to see your changes. This isn't necessary for files in the main process.
-- `npm start` - This opens the app.
+### Compiling
+- `gulp` - Compile, combine, and minify files for the renderer process. This isn't necessary for files in the main process.
+
+### NPM Scripts
+- `npm start` - Start the app with the following environment variables:
+	- NODE_ENV=development
+	- ELECTRON_ENABLE_LOGGING=true
+- `npm run build` - Build the production app
+	1. Compiles JavaScript and Sass
+	2. Copies necessary files to `./release/`
+	3. Runs `npm install --production` in `./release/`
+	4. Builds the app moves it to `./dist/`
+- `npm run lint` - Run ESLint
+- `npm run test` - Run Mocha tests 
+
+## Contributing
+All contributions are welcome!! Please check [negative/issues](https://github.com/atdrago/negative/issues) for things that need attention, or feel free to create your own. Please make sure you create an issue *first*, and then do the work and a submit a PR. 
 
 ## About
 Created by [Adam Drago](http://adamdrago.com). Icon by [Tiffany Wang](mailto:wangtiff@gmail.com). Built on [Electron](http://electron.atom.io/).

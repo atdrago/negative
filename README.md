@@ -1,8 +1,6 @@
 # Negative
 
-> An app for making visual comparison.
-
-![Negative Demo](negative-demo.gif)
+> An app for making visual comparisons.
 
 ## User Documentation
 
@@ -21,7 +19,7 @@ Currently only Mac OS X is supported.
 
 ## Testing
 
-*Important:* Tests get run against the **built app**. If you are attempting to run tests and the results are not what you expected, you need to run `npm run build` again.
+*Important:* Tests get run against the **built app**. If you are attempting to run tests and the results are not what you expected, you need to `npm run build` again.
 
 1. `npm run build`
 2. `npm run test`

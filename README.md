@@ -1,6 +1,6 @@
 # Negative
 
-> An app for making visual comparison.
+> An app for making visual comparisons.
 
 ## User Documentation
 

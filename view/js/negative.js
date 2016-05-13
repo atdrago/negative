@@ -11,7 +11,6 @@
 	});
 	
 	document.addEventListener('DOMContentLoaded', () => {
-		
 		window.negative = {
 			frameController: new NegativeFrame(),
 			tabsController: new NegativeTabs(),
@@ -86,6 +85,24 @@
 				this.refreshMenu();
 			}
 		};
+	});
+	
+	const KEYCODE_EQUALS_SIGN = 187;
+	const KEYCODE_UNDERSCORE = 189;
+	
+	// https://github.com/electron/electron/issues/5256#issuecomment-213559148
+	document.addEventListener('keydown', (event) => {
+		const { frameController } = window.negative;
+		const { keyCode, metaKey, shiftKey } = event;
+		
+		if (metaKey) {
+			if (keyCode === KEYCODE_EQUALS_SIGN) {
+				frameController.zoomIn();
+			}
+			if (keyCode === KEYCODE_UNDERSCORE && shiftKey) {
+				frameController.zoomOut();
+			}
+		}
 	});
 })();
 

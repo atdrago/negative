@@ -83,6 +83,12 @@
 			redo() {
 				this.currentUndoManager.redo();
 				this.refreshMenu();
+			},
+			
+			confirmReset() {
+				const shouldReset = confirm('Reset will remove all images, tabs, and windows, and open a new Negative window. Are you sure you want to continue?');
+				
+				ipcRenderer.send('confirm-reset-response', shouldReset);
 			}
 		};
 	});

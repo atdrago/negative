@@ -1,4 +1,4 @@
-# <img src="icon_64x64@2x.png" width="64" height="64" /> Negative
+# <img alt="Negative" src="docs/header.png" width="228" height="68" />
 
 > An app for making visual comparisons.
 

@@ -6,6 +6,9 @@
 
 - [Usage](docs/usage.md)
 
+## Contributing
+All contributions are welcome!! Please check [negative/issues](https://github.com/atdrago/negative/issues) for things that need attention, or feel free to create your own. Please make sure you create an issue *first*, and then do the work and a submit a PR. 
+
 ## Build Negative.app
 
 Currently only Mac OS X is supported.
@@ -40,9 +43,6 @@ Currently only Mac OS X is supported.
 	4. Builds the app moves it to `./dist/`
 - `npm run lint` - Run ESLint
 - `npm run test` - Run Mocha tests 
-
-## Contributing
-All contributions are welcome!! Please check [negative/issues](https://github.com/atdrago/negative/issues) for things that need attention, or feel free to create your own. Please make sure you create an issue *first*, and then do the work and a submit a PR. 
 
 ## About
 Created by [Adam Drago](http://adamdrago.com). Built on [Electron](http://electron.atom.io/).

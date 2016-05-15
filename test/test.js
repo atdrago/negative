@@ -19,6 +19,15 @@ describe('Negative', function () {
 	
 	this.timeout(5000);
 	
+	/**
+	 * Reset all windows.
+	 */
+	function reset() {
+		return app.electron.ipcRenderer.send('test-reset')
+			.then(() => app.client.windowHandles())
+			.then((handles) => app.client.window(handles.value[0]));
+	}
+	
 	before(() => {
 		return app.start();
 	});
@@ -93,6 +102,14 @@ describe('Negative', function () {
 			
 		});
 		
+		describe('Negative -> Reset', () => {
+			it('Reset Negative', () => {
+				return reset()
+					.then(() => app.client.getWindowCount())
+					.then((count) => assert.strictEqual(count, 1));
+			});
+		});
+		
 		describe('Negative -> Quit', () => {
 			after(() => app.start());
 			
@@ -101,7 +118,7 @@ describe('Negative', function () {
 					.then(() => app.client.getWindowCount())
 					.then((count) => assert.strictEqual(count, 0));
 			});
-		})
+		});
 		
 		describe('File -> Tabs', () => {
 			it('New Tab', () => {
@@ -281,7 +298,7 @@ describe('Negative', function () {
 		});
 		
 		describe('Window', () => {
-			beforeEach(() => app.restart());
+			beforeEach(() => reset());
 			
 			it('Fit Window to Image', () => {
 				let origBounds;

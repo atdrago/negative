@@ -1,4 +1,4 @@
-# Negative
+# <img src="icon_64x64@2x.png" width="64" height="64" /> Negative
 
 > An app for making visual comparisons.
 
@@ -45,4 +45,4 @@ Currently only Mac OS X is supported.
 All contributions are welcome!! Please check [negative/issues](https://github.com/atdrago/negative/issues) for things that need attention, or feel free to create your own. Please make sure you create an issue *first*, and then do the work and a submit a PR. 
 
 ## About
-Created by [Adam Drago](http://adamdrago.com). Icon by [Tiffany Wang](mailto:wangtiff@gmail.com). Built on [Electron](http://electron.atom.io/).
+Created by [Adam Drago](http://adamdrago.com). Built on [Electron](http://electron.atom.io/).

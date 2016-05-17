@@ -41,7 +41,7 @@
     "uglify-js": "mishoo/UglifyJS2.git#harmony"
   },
   "engines": {
-    "node": ">=4.x <=5.x"
+    "node": ">=4.x"
   },
   "os": [ "darwin" ]
 }

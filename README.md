@@ -2,6 +2,8 @@
 
 > An app for making visual comparisons.
 
+![build status](https://travis-ci.org/atdrago/negative.svg?branch=develop)
+
 ## User Documentation
 
 - [Usage](docs/usage.md)

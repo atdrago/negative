@@ -7,6 +7,7 @@
   "license": "MIT",
   "scripts": {
     "start": "export NODE_ENV=development && export ELECTRON_ENABLE_LOGGING=true && export ELECTRON_ENABLE_STACK_DUMPING=true && electron .",
+    "prebuild": "rm -rf dist",
     "build": "gulp release && mkdir -p ./release/node_modules && npm install --production --prefix ./release/ && grunt",
     "lint": "gulp js:lint",
     "test": "mocha",

@@ -116,7 +116,7 @@ describe('Negative', function () {
 		describe('Negative -> Quit', () => {
 			after(() => app.start());
 			
-			it.skip('Quit Negative', () => {
+			it('Quit Negative', () => {
 				return app.electron.ipcRenderer.send('test-quit-negative')
 					.then(() => app.client.getWindowCount())
 					.then((count) => assert.strictEqual(count, 0));

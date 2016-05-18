@@ -6,11 +6,13 @@
   "repository": "https://github.com/atdrago/negative.git",
   "license": "MIT",
   "scripts": {
-    "start": "export NODE_ENV=development && export ELECTRON_ENABLE_LOGGING=true && electron .",
+    "start": "export NODE_ENV=development && export ELECTRON_ENABLE_LOGGING=true && export ELECTRON_ENABLE_STACK_DUMPING=true && electron .",
     "build": "gulp release && mkdir -p ./release/node_modules && npm install --production --prefix ./release/ && grunt",
     "lint": "gulp js:lint",
     "test": "mocha",
-    "postinstall": "./node_modules/.bin/electron-rebuild"
+    "postinstall": "./node_modules/.bin/electron-rebuild",
+    "pretravis": "rm -rf node_modules",
+    "travis": "npm install && npm run build && npm test"
   },
   "author": "Adam Drago",
   "dependencies": {
@@ -41,7 +43,7 @@
     "uglify-js": "mishoo/UglifyJS2.git#harmony"
   },
   "engines": {
-    "node": ">=4.x"
+    "node": ">=6.x"
   },
   "os": [ "darwin" ]
 }

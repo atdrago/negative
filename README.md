@@ -13,7 +13,7 @@ All contributions are welcome!! Please check [negative/issues](https://github.co
 
 Currently only Mac OS X is supported.
 
-1. [Install Node.js](https://nodejs.org/en/) >= v4
+1. [Install Node.js](https://nodejs.org/en/) >= v6
 2. `git clone https://github.com/atdrago/negative.git`
 3. `cd negative`
 4. `npm install`

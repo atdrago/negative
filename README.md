@@ -13,7 +13,7 @@ All contributions are welcome!! Please check [negative/issues](https://github.co
 
 Currently only Mac OS X is supported.
 
-1. [Install Node.js](https://nodejs.org/en/) v4 or v5
+1. [Install Node.js](https://nodejs.org/en/) >= v4
 2. `git clone https://github.com/atdrago/negative.git`
 3. `cd negative`
 4. `npm install`
@@ -25,7 +25,7 @@ Currently only Mac OS X is supported.
 *Important:* Tests get run against the **built app**. If you are attempting to run tests and the results are not what you expected, you need to `npm run build` again.
 
 1. `npm run build`
-2. `npm run test`
+2. `npm test`
 
 ## Developing
 
@@ -42,7 +42,7 @@ Currently only Mac OS X is supported.
 	3. Runs `npm install --production` in `./release/`
 	4. Builds the app moves it to `./dist/`
 - `npm run lint` - Run ESLint
-- `npm run test` - Run Mocha tests 
+- `npm test` - Run Mocha tests 
 
 ## About
 Created by [Adam Drago](http://adamdrago.com). Built on [Electron](http://electron.atom.io/).

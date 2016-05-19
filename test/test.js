@@ -118,6 +118,7 @@ describe('Negative', function () {
 			
 			it('Quit Negative', () => {
 				return app.electron.ipcRenderer.send('test-quit-negative')
+					.then(() => app.client.waitUntilWindowLoaded())
 					.then(() => app.client.getWindowCount())
 					.then((count) => assert.strictEqual(count, 0))
 					.then(() => app.client.getMainProcessLogs())

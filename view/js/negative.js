@@ -25,12 +25,12 @@
 					canUndo,
 					canRedo,
 					state
-				} = this.currentUndoManager;
+				} = this.currentUndoManager || {};
 				
 				const {
 					canZoomIn,
 					canZoomOut
-				} = this.frameController;
+				} = this.frameController || {};
 				
 				const isImageEmpty = (state.imageSrc === null);
 

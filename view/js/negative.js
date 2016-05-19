@@ -25,14 +25,14 @@
 					canUndo,
 					canRedo,
 					state
-				} = this.currentUndoManager;
+				} = this.currentUndoManager || {};
 				
 				const {
 					canZoomIn,
 					canZoomOut
-				} = this.frameController;
+				} = this.frameController || {};
 				
-				const isImageEmpty = (state.imageSrc === null);
+				const isImageEmpty = (typeof state !== 'undefined' ? state.imageSrc === null : true);
 
 				ipcRenderer.send('refresh-menu', {
 					canUndo: canUndo,

@@ -116,8 +116,9 @@ describe('Negative', function () {
 		describe('Negative -> Quit', () => {
 			after(() => app.start());
 			
-			it.skip('Quit Negative', () => {
+			it('Quit Negative', () => {
 				return app.electron.ipcRenderer.send('test-quit-negative')
+					.then(() => app.client.waitUntilWindowLoaded())
 					.then(() => app.client.getWindowCount())
 					.then((count) => assert.strictEqual(count, 0));
 			});
@@ -479,6 +480,30 @@ describe('Negative', function () {
 					.then((result) => assert.strictEqual(result.newBounds.y, result.oldBounds.y + 10));
 			});
 		});
+		
+		describe('Logs', () => {
+			it('Log Output', () => {
+				let mainProcessLogs = [];
+				let rendererProcessLogs = [];
+				
+				return app.client.getMainProcessLogs()
+					.then((logs) => {
+						mainProcessLogs = logs;
+						return app.client.getRenderProcessLogs();
+					})
+					.then((logs) => {
+						rendererProcessLogs = logs;
+						
+						console.log('**MAIN PROCESS LOGS**');
+						mainProcessLogs.forEach((log) => console.log(log));
+						
+						console.log('**RENDERER PROCESS LOGS**');
+						rendererProcessLogs.forEach((log) => console.log(log));
+						
+						return assert.isTrue(true);
+					});
+			})
+		})
 	});
 });
 

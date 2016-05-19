@@ -32,7 +32,7 @@
 					canZoomOut
 				} = this.frameController || {};
 				
-				const isImageEmpty = (state.imageSrc === null);
+				const isImageEmpty = (typeof state !== 'undefined' ? state.imageSrc === null : true);
 
 				ipcRenderer.send('refresh-menu', {
 					canUndo: canUndo,

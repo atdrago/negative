@@ -8,6 +8,42 @@ const IMAGE_ID  = '#negativeImage';
 const TABS_ID   = '#tabs';
 const REGEX_PNG = /^data:image\/png;base64,/;
 
+describe.skip('Benchmark', function () {
+	const app = new Application({
+		path: APP_PATH,
+		env: {
+			ELECTRON_ENABLE_LOGGING: true,
+			ELECTRON_ENABLE_STACK_DUMPING: true,
+			NEGATIVE_IGNORE_WINDOW_SETTINGS: true,
+			NEGATIVE_SKIP_RESET_DIALOG: true,
+			NODE_ENV: 'development'
+		}
+	});
+	
+	this.timeout(60000);
+	
+	after(() => {
+		if (app && app.isRunning()) {
+			return app.stop();
+		}
+	});
+	
+	describe('Launch', () => {
+		it('Launches in less than 2 seconds', () => {
+			const startTime = Date.now();
+			
+			return app.start()
+				.then(() => app.client.waitUntilWindowLoaded())
+				.then(() => {
+					const endTime = Date.now();
+					const launchTime = endTime - startTime;
+					
+					return assert.isAtMost(launchTime, 2000, `Launched in ${launchTime}ms.`);
+				});
+		});
+	})
+});
+
 describe('Negative', function () {
 	const app = new Application({
 		path: APP_PATH,
@@ -44,7 +80,18 @@ describe('Negative', function () {
 	describe('Launch', () => {
 		it('Shows a window', () => {
 			return app.client.getWindowCount()
-				.then((count) => assert.isAtLeast(count, 1));
+				.then((count) => assert.isAtLeast(count, 1))
+				.then(() => {
+					return app.client.selectorExecute('//body', (elements) => {
+						return elements[0].classList;
+					})
+				})
+				.then((classList) => {
+					assert.isFalse(classList.includes('blur'));
+					assert.isTrue(classList.includes('focus'));
+					assert.isTrue(classList.includes('primary'));
+				});
+				
 		});
 	});
 

@@ -12,8 +12,7 @@
     "lint": "gulp js:lint",
     "test": "mocha",
     "postinstall": "./node_modules/.bin/electron-rebuild",
-    "pretravis": "rm -rf node_modules",
-    "travis": "npm install && npm run build && npm test"
+    "travis": "npm run build && npm test"
   },
   "author": "Adam Drago",
   "dependencies": {

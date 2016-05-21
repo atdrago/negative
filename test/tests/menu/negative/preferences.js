@@ -44,36 +44,36 @@ describe('Negative > Preferences', function () {
 			.then(() => app.client.windowHandles())
 			.then((handles) => {
 				windowHandles = handles.value;
-				app.client.window(windowHandles[1])
+				// Focus the Preferences window
+				return app.client.window(windowHandles[1]);
 			})
 			.then(() => {
+				// Get "Show tips" checkbox value
 				return app.client.selectorExecute(TIPS_ID, (elements) => {
 					return elements[0].checked;
-				});
-			})
-			.then((isChecked) => {
-				originalIsChecked = isChecked;
-				
-				if (!isChecked) {
-					return app.client.leftClick(TIPS_ID);
-				}
-			})
-			.then(() => app.client.window(windowHandles[0]))
-			.then(() => {
-				return app.client.selectorExecute('//body', (elements) => {
-					return elements[0].classList.contains('no-tips');
 				})
 			})
-			.then((hasNoTipsClass) => assert.isFalse(hasNoTipsClass))
+			.then((isChecked) => {
+				return assert.isTrue(isChecked, '"Show tips" checkbox should default to checked.');
+			})
+			// Focus the Negative window
+			.then(() => app.client.window(windowHandles[0]))
+			.then(() => {
+				// Get the class that is toggled by the "Show tips" checkbox
+				return app.client.selectorExecute('//body', (elements) => {
+					return elements[0].classList.contains('no-tips');
+				});
+			})
+			.then((hasNoTipsClass) => assert.isFalse(hasNoTipsClass, 'The body element should not have the .no-tips class when "Show tips" is checked.'))
 			.then(() => app.client.window(windowHandles[1]))
 			.then(() => app.client.leftClick(TIPS_ID))
 			.then(() => app.client.window(windowHandles[0]))
 			.then(() => {
 				return app.client.selectorExecute('//body', (elements) => {
 					return elements[0].classList.contains('no-tips');
-				})
+				});
 			})
-			.then((hasNoTipsClass) => assert.isTrue(hasNoTipsClass));
+			.then((hasNoTipsClass) => assert.isTrue(hasNoTipsClass, 'The body element should have the .no-tips class when "Show tips" is checked.'));
 	});
 	
 	// @TODO - Close should be tested here, but because it uses

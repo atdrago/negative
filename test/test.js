@@ -41,15 +41,7 @@ describe.skip('Negative', function () {
 		}
 	});
 
-	describe('Menues', () => {
-		describe.skip('Negative -> Quit', () => {
-			it('Quit Negative', () => {
-				return app.electron.ipcRenderer.send('test-quit-negative')
-					.then(() => app.client.getWindowCount())
-					.then((count) => assert.strictEqual(count, 0));
-			});
-		});
-		
+	describe('Menues', () => {		
 		describe('View', () => {
 			it('Actual Size', () => {
 				return app.electron.ipcRenderer.send('test-capture')

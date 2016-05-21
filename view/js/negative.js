@@ -43,6 +43,10 @@
 				});
 			},
 			
+			sendUndoManagersToMain() {
+				ipcRenderer.send('set-undo-managers-request', undoManagers);
+			},
+			
 			addTabForUndoManager(undoManager) {
 				const newUndoManager = new UndoManager();
 				
@@ -52,6 +56,7 @@
 				
 				undoManagers.push(newUndoManager);
 				this.tabsController.addTab(false);
+				this.sendUndoManagersToMain();
 			},
 			
 			getUndoManagerAt(index) {
@@ -60,29 +65,35 @@
 			
 			insertUndoManagerAt(index) {
 				undoManagers.splice(index, 0, new UndoManager());
+				this.sendUndoManagersToMain();
 			},
 			
 			removeUndoManagerAt(index) {
 				undoManagers.splice(index, 1);
+				this.sendUndoManagersToMain();
 			},
 			
 			moveUndoManager(fromIndex, toIndex) {
 				undoManagers.splice(toIndex, 0, undoManagers.splice(fromIndex, 1)[0]);
+				this.sendUndoManagersToMain();
 			},
 			
 			saveForUndo(state) {
 				this.currentUndoManager.save(state);
 				this.refreshMenu();
+				this.sendUndoManagersToMain();
 			},
 			
 			undo() {
 				this.currentUndoManager.undo();
 				this.refreshMenu();
+				this.sendUndoManagersToMain();
 			},
 
 			redo() {
 				this.currentUndoManager.redo();
 				this.refreshMenu();
+				this.sendUndoManagersToMain();
 			},
 			
 			confirmReset() {

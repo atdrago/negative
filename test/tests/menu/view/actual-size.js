@@ -4,8 +4,9 @@ const { Application } = require('spectron');
 const { assert } = require('chai');
 
 const APP_PATH = './dist/Negative-darwin-x64/Negative.app/Contents/MacOS/Negative';
+const IMAGE_ID = '#negativeImage';
 
-describe('Negative > Reset...', function () {
+describe('View > Actual Size', function () {
 	const app = new Application({
 		path: APP_PATH,
 		env: {
@@ -30,11 +31,17 @@ describe('Negative > Reset...', function () {
 		}
 	});
 	
-	it('Should reset', () => {
-		return app.electron.ipcRenderer.send('test-reset')
-			.then(() => app.client.windowHandles())
-			.then((handles) => app.client.window(handles.value[0]))
-			.then(() => app.client.getWindowCount())
-			.then((count) => assert.strictEqual(count, 1));
+	it('Should zoom to 0', () => {
+		// @TODO - Load settings file for actual size. Blocked by #96.
+		return app.electron.ipcRenderer.send('test-zoom-in')
+			.then(() => app.electron.ipcRenderer.send('test-actual-size'))
+			.then(() => {
+				return app.client.selectorExecute(IMAGE_ID, (element) => {
+					const zoomLevel = element[0].getAttribute('data-zoom-level');
+					
+					return zoomLevel;
+				});
+			})
+			.then((zoomLevel) => assert.equal(zoomLevel, 1));
 	});
 });

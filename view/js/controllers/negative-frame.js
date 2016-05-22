@@ -34,6 +34,10 @@ window.NegativeFrame = (function () {
 			});
 		}
 
+		sendZoomLevelToMain() {
+			ipcRenderer.send('set-zoom-level-request', this.zoomLevel);
+		}
+
 		setShouldShowTips(shouldShowTips) {
 			if (shouldShowTips) {
 				document.body.classList.remove('no-tips');
@@ -111,6 +115,8 @@ window.NegativeFrame = (function () {
 				
 				this.zoomLevel = zoomLevel;
 				window.negative.refreshMenu();
+				
+				this.sendZoomLevelToMain();
 			}
 		}
 	}

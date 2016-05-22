@@ -13,7 +13,9 @@
     "test": "mocha --recursive",
     "postinstall": "./node_modules/.bin/electron-rebuild",
     "travis": "npm run build && npm test",
-    "app": "open ./dist/Negative-darwin-x64/Negative.app"
+    "open": "open ./dist/Negative-darwin-x64/Negative.app",
+    "predmg": "npm run build && mkdir -p ./dist/release && mv -f ./dist/Negative-darwin-x64/Negative.app ./dist/release",
+    "dmg": "hdiutil create -srcfolder ./dist/release ./dist/release/Negative.dmg"
   },
   "author": "Adam Drago",
   "dependencies": {

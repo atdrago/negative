@@ -1,377 +1,395 @@
-let clipboard = require('clipboard'),
-	nativeImage = require('native-image'),
-	remote = require('electron').remote,
-	BrowserWindow = remote.BrowserWindow;
+window.NegativeTabs = (function () {
+	'use strict';
+	
+	const {
+		clipboard,
+		ipcRenderer,
+		nativeImage,
+		remote
+	} = require('electron');
 
-class NegativeTabs {
-	constructor() {
-		this.tabIndex = 0;
-		this.tabs = [this.getEmptyModel()];
-		this.tabsContainer = document.getElementById('tabs');
+	const { BrowserWindow } = remote;
+
+	const TAB_BAR_MARGIN_LEFT = 70;
+	const TAB_BAR_PADDING_LEFT = 16;
+	const TAB_MARGIN_LEFT = 6;
+	const TAB_MARGIN_RIGHT = 20;
+	const TAB_MARGIN_HORIZ = TAB_MARGIN_LEFT + TAB_MARGIN_RIGHT;
+	
+	class NegativeTabs {
+		get siblingTabIndex() {
+			return this.getSiblingTabIndex(this.tabIndex);
+		}
 		
-		let dragOverIndex = null,
+		get selectedTab() {
+			return this.tabsContainer.children[this.tabIndex];
+		}
+		
+		constructor() {
+			this.count         = 0;
+			this.dragOverIndex = null;
+			this.tabIndex      = -1;
 			
-			mouseDown = function (evt) {
-				let target = evt.target;
+			this.tabBar        = document.getElementById('tabbar');
+			this.tabsContainer = document.getElementById('tabs');
+				
+			// Tab Selecting
+			this.tabsContainer.addEventListener('mousedown', this._mouseDown.bind(this), false);
 
-				if (target) {
-					if (target.classList.contains('tab')) {
-						this.deselectTabByIndex(this.tabIndex);
+			// Tab Dragging
+			this.tabsContainer.addEventListener('dragstart', this._dragStart.bind(this), false);
+			this.tabsContainer.addEventListener('dragover', this._dragOver.bind(this), false);
+			this.tabsContainer.addEventListener('dragend', this._dragResetStyles.bind(this), false);
+			this.tabsContainer.addEventListener('drop', this._drop.bind(this), false);
+		}
+		
+		getSiblingTabIndex(index) {
+			return Math.abs(index - 1);
+		}
+		
+		_mouseDown(evt) {
+			const { target } = evt;
 
-						this.tabIndex = Array.from(this.tabsContainer.children).indexOf(target);
+			if (target) {
+				if (target.classList.contains('tab')) {
+					this.deselectTabByIndex(this.tabIndex);
 
-						this.selectTabByIndex(this.tabIndex);
-		            } else if (target.classList.contains('close')) {
-						// TODO: Rethink moving this to a click event
-						this.closeTab();
-					}
+					this.tabIndex = Array.from(this.tabsContainer.children).indexOf(target);
+
+					this.selectTabByIndex(this.tabIndex);
+				} else if (target.classList.contains('close')) {
+					// @TODO: Rethink moving this to a click event
+					this.closeTab();
 				}
-	        }.bind(this),
-			
-			dragStart = function (evt) {
-				let target = evt.target;
+			}
+		}
+		
+		_dragStart(evt) {
+			const { target } = evt;
 
-				if (target) {
-					if (target.classList.contains('tab') && this.tabs.length > 1) {
-						evt.dataTransfer.setData('from-index', `${this.tabIndex}`);
-						evt.dataTransfer.effectAllowed = 'move';
+			if (target) {
+				if (target.classList.contains('tab') && this.count > 1) {
+					evt.dataTransfer.setData('from-index', `${this.tabIndex}`);
+					evt.dataTransfer.effectAllowed = 'move';
+				} else {
+					evt.preventDefault();
+					return false;
+				}
+			}
+		}
+		
+		_dragOver(evt) {
+			evt.preventDefault();
+
+			const x                  = evt.x - TAB_BAR_MARGIN_LEFT;
+			const fromIndex          = +evt.dataTransfer.getData('from-index');
+			const deselectedTabWidth = this.getTabWidth(this.siblingTabIndex);
+			const toIndex            = Math.floor(x / deselectedTabWidth);
+			const selectedTabWidth   = this.getTabWidth(fromIndex);
+			
+			if (toIndex !== this.dragOverIndex) {
+				const newTransform = (((toIndex - fromIndex) * deselectedTabWidth));
+				
+				this.tabsContainer.children[fromIndex].style.left = `${newTransform}px`;
+				this.dragOverIndex = toIndex;
+			}
+			
+			Array.from(this.tabsContainer.children).forEach((tab, i) => {
+				if (fromIndex > i) {
+					if (toIndex <= i) {
+						tab.style.transform = `translateX(${selectedTabWidth}px)`;
 					} else {
-						evt.preventDefault();
-						return false;
+						tab.style.transform = '';
+					}
+				} else if (fromIndex < i) {
+					if (toIndex >= i) {
+						tab.style.transform = `translateX(-${selectedTabWidth}px)`;
+					} else {
+						tab.style.transform = '';
 					}
 				}
-			}.bind(this),
+			});
+		}
+		
+		_dragResetStyles() {
+			const animationDelay = 250;
 			
-			dragOver = function (evt) {
-				evt.preventDefault();
+			this.tabsContainer.classList.add('shift-none');
+			setTimeout(() => {
+				this.tabsContainer.classList.remove('shift-none');
+			}, animationDelay);
+			
+			Array.from(this.tabsContainer.children).forEach((tab) => {
+				tab.style.transform = '';
+				tab.style.left = '';
+				this.dragOverIndex = null;
+			
+				setTimeout(() => {
+					tab.classList.remove('shift-left', 'shift-right');
+				}, animationDelay);
+			});
+		}
+		
+		_drop(evt) {
+			evt.preventDefault();
 
-				let leftOffset = 70,
-					x = evt.x - leftOffset,
-					// 126 is the width of a tab
-					// TODO: What if a tab grows?
-					toIndex = Math.floor(x / 126),
-					fromIndex = +evt.dataTransfer.getData('from-index');
+			const { target } = evt;
+
+			if (target && target.classList.contains('tab')) {
+				const x             = evt.x - TAB_BAR_MARGIN_LEFT;
+				const fromIndex     = +evt.dataTransfer.getData('from-index');
+				const tabWidth      = this.getTabWidth(this.getSiblingTabIndex(fromIndex));
+				const toIndex       = Math.floor(x / tabWidth);
+				const spliceToIndex = toIndex > fromIndex ? toIndex + 1 : toIndex;
 					
-				if (toIndex !== dragOverIndex) {
-					let newTransform = (((toIndex - fromIndex) * 126)) + 'px';
-					this.tabsContainer.children[fromIndex].style.left = newTransform;
-					dragOverIndex = toIndex;
-				}
-
-				for (let i = 0, len = this.tabsContainer.children.length; i < len; i++) {
-					let tab = this.tabsContainer.children[i];
-
-					if (fromIndex > i) {
-						if (toIndex <= i) {
-							tab.classList.add('shift-right');
-						} else {
-							tab.classList.remove('shift-right');
-						}
-					} else if (fromIndex < i) {
-						if (toIndex >= i) {
-							tab.classList.add('shift-left');
-						} else {
-							tab.classList.remove('shift-left');
-						}
-					}
-				}
-			}.bind(this),
-			
-			dragResetStyles = function () {
-				this.tabsContainer.classList.add('shift-none');
-				setTimeout(function () {
-					this.tabsContainer.classList.remove('shift-none');
-				}.bind(this), 250);
+				this.moveTab(fromIndex, spliceToIndex);
+				window.negative.moveUndoManager(fromIndex, spliceToIndex);
+				this.tabIndex = toIndex;
 				
-				Array.from(this.tabsContainer.children).forEach(function (tab) {
-					tab.style.transform = '';
-					tab.style.left = '';
-					dragOverIndex = null;
+				this._dragResetStyles();
+			}
+		}
+		
+		getTabWidth(tabIndex) {
+			if (tabIndex >= 0 && tabIndex < this.tabsContainer.children.length) {
+				return this.tabsContainer.children[tabIndex].getBoundingClientRect().width + TAB_MARGIN_HORIZ;
+			}
+		}
+		
+		getTabOffsetLeft(tabIndex) {
+			if (tabIndex >= 0 && tabIndex < this.tabsContainer.children.length) {
+				const leftOffset = TAB_BAR_MARGIN_LEFT + TAB_BAR_PADDING_LEFT + TAB_MARGIN_LEFT;
 				
-					setTimeout(function () {
-						tab.classList.remove('shift-left', 'shift-right');
-					}, 250);
-				}.bind(this));
-			}.bind(this),
+				return this.tabsContainer.children[tabIndex].getBoundingClientRect().left - leftOffset;
+			}
+		}
+		
+		updateTabBarScrollPosition() {
+			const siblingTabWidth = this.getTabWidth(this.siblingTabIndex);
+			const tabBarWidth     = this.tabsContainer.getBoundingClientRect().width;
+			const tabWidth        = this.getTabWidth(this.tabIndex);
 			
-			drop = function (evt) {
-				evt.preventDefault();
-
-				let target = evt.target;
-
-				if (target && target.classList.contains('tab')) {
-					let leftOffset = 70,
-						x = evt.x - leftOffset,
-						// 126 is the width of a tab
-						// TODO: What if a tab grows?
-						toIndex = Math.floor(x / 126),
-						fromIndex = +evt.dataTransfer.getData('from-index'),
-						spliceToIndex = toIndex > fromIndex ? toIndex + 1 : toIndex;
-						
-					this.moveTab(fromIndex, spliceToIndex);
-					this.tabs.splice(spliceToIndex, 0, this.tabs.splice(fromIndex, 1, null)[0]);
-					this.tabs = this.tabs.filter(function (tab) { return tab !== null; });
-					this.tabIndex = toIndex;
-					
-					dragResetStyles();
-				}
-			}.bind(this);
-
-		// Tab Selecting
-		this.tabsContainer.addEventListener('mousedown', mouseDown, false);
-
-		// Tab Dragging
-		this.tabsContainer.addEventListener('dragstart', dragStart, false);
-		this.tabsContainer.addEventListener('dragover', dragOver, false);
-		this.tabsContainer.addEventListener('dragend', dragResetStyles, false);
-		this.tabsContainer.addEventListener('drop', drop, false);
-
-		// Traffic lights
-		document.getElementById('close').addEventListener('click', function (evt) {
-			BrowserWindow.getFocusedWindow().close();
-		});
-
-		document.getElementById('minimize').addEventListener('click', function (evt) {
-			BrowserWindow.getFocusedWindow().minimize();
-		});
-
-		document.getElementById('maximize').addEventListener('click', function (evt) {
-			BrowserWindow.getFocusedWindow().maximize();
-		});
-	}
-
-	addTab() {
-		this.deselectTabByIndex(this.tabIndex);
-		this.tabIndex++;
-
-		let newTabButton = this.getTabButtonElement(true);
-		this.tabsContainer.insertBefore(newTabButton, this.getCurrentTab());
-		newTabButton.focus();
-
-		this.tabs.splice(this.tabIndex, 0, this.getEmptyModel());
-		window.negative.frameController.removeImage();
-
-		this.refreshMenu();
-	}
-
-	closeTab() {
-		let closedTabIndex = this.tabIndex;
-
-		if (!this.canSelectNextTab()) {
-			if (this.canSelectPreviousTab()) {
-				this.tabIndex--;
-			} else {
-				BrowserWindow.getFocusedWindow().close();
-				return;
+			const tabOffsetLeft   = this.getTabOffsetLeft(this.tabIndex);
+			const tabOffsetRight  = tabOffsetLeft + tabWidth;
+			const isLeftOfView    = tabOffsetLeft < 0;
+			const isRightOfView   = tabOffsetRight > tabBarWidth;
+			
+			const tabChildOffsetLeft = this.tabIndex * siblingTabWidth;
+			// const tabChildOffsetRight = tabChildOffsetLeft + tabWidth;
+			
+			if (isLeftOfView) {
+				this.tabBar.scrollLeft = tabChildOffsetLeft;
+			} else if (isRightOfView) {
+				this.tabBar.scrollLeft = (tabOffsetLeft - tabBarWidth) + this.tabBar.scrollLeft + tabWidth;
 			}
 		}
 
-		this.tabsContainer.children[closedTabIndex].remove();
-		this.tabs.splice(closedTabIndex, 1);
-		this.selectTabByIndex(this.tabIndex);
-	}
-
-	getCurrentTab() {
-		return this.tabsContainer.children[this.tabIndex];
-	}
-
-	moveTab(fromIndex, toIndex) {
-		this.tabsContainer.insertBefore(this.tabsContainer.children[fromIndex], this.tabsContainer.children[toIndex]);
-	}
-
-	canSelectNextTab() {
-		return this.tabIndex + 1 < this.tabs.length;
-	}
-
-	canSelectPreviousTab() {
-		return this.tabIndex > 0;
-	}
-
-	selectTabByIndex(index) {
-		let newTab = this.tabs[index].undoManager.state,
-			newTabButton = this.tabsContainer.children[index],
-			imageSrc = newTab.imageSrc,
-			imageDimensions = newTab.imageDimensions;
-
-		newTabButton.classList.add('selected');
-		newTabButton.setAttribute('aria-selected', 'true');
-		newTabButton.focus();
-
-		if (imageSrc && imageDimensions) {
-			window.negative.frameController.setImageAndSize(imageSrc, imageDimensions[0], imageDimensions[1]);
-		} else {
-			window.negative.frameController.removeImage();
-		}
-
-		this.refreshMenu();
-	}
-
-	deselectTabByIndex(index) {
-		let oldTab = this.tabsContainer.children[index];
-		oldTab.classList.remove('selected');
-		oldTab.setAttribute('aria-selected', 'false');
-	}
-
-	selectNextTab() {
-		let canSelectNextTab = this.canSelectNextTab();
-
-		if (canSelectNextTab) {
+		addTab(needsUndoManager) {
 			this.deselectTabByIndex(this.tabIndex);
 			this.tabIndex++;
+			this.count++;
+			
+			const newTabButton = this.getTabButtonElement(true);
+
+			this.tabsContainer.insertBefore(newTabButton, this.selectedTab);
+			newTabButton.focus();
+			
+			if (needsUndoManager) {
+				window.negative.insertUndoManagerAt(this.tabIndex);
+				window.negative.frameController.removeImage();
+			} else {
+				this.selectTabByIndex(this.tabIndex);
+			}
+			
+			this.updateTabBarScrollPosition();
+			
+			window.negative.refreshMenu();
+		}
+
+		closeTab() {
+			const closedTabIndex = this.tabIndex;
+
+			if (this.count === 1) {
+				BrowserWindow.getFocusedWindow().close();
+				return;
+			} else {
+				const newTabIndex = this.tabIndex - 1;
+				this.tabIndex = newTabIndex > 0 ? newTabIndex : 0;
+			}
+			
+			window.negative.removeUndoManagerAt(closedTabIndex);
+			
+			this.tabsContainer.children[closedTabIndex].remove();
 			this.selectTabByIndex(this.tabIndex);
+			this.count--;
 		}
 
-		return canSelectNextTab;
-	}
-
-	selectPreviousTab() {
-		let canSelectPreviousTab = this.canSelectPreviousTab();
-
-		if (canSelectPreviousTab) {
-			this.deselectTabByIndex(this.tabIndex);
-			this.tabIndex--;
-			this.selectTabByIndex(this.tabIndex);
+		moveTab(fromIndex, toIndex) {
+			this.tabsContainer.insertBefore(this.tabsContainer.children[fromIndex], this.tabsContainer.children[toIndex]);
 		}
 
-		return canSelectPreviousTab;
-	}
+		selectTabByIndex(index) {
+			const newTabButton        = this.tabsContainer.children[index];
+			const tabUndoManagerState = window.negative.getUndoManagerAt(index).state;
+			const {
+				imageDimensions,
+				imageSrc
+			} = tabUndoManagerState;
+			
+			// @TODO - This is redundant. See selectNextTab(), selectPreviousTab()
+			this.tabIndex = index;
 
-	setTabHasContent() {
-		this.getCurrentTab().classList.add('has-content');
-	}
-
-	unsetTabHasContent() {
-		this.getCurrentTab().classList.remove('has-content');
-	}
-
-	setTabLabel(label) {
-		this.getCurrentTab().children[0].textContent = label;
-	}
-
-	getEmptyModel() {
-		return {
-			undoManager: new UndoManager()
-		};
-	}
-
-	getTabButtonElement(isSelected) {
-		let tabDiv = document.createElement('div'),
-			labelSpan = document.createElement('span'),
-			closeButton = document.createElement('button');
-
-		// <div class="tab selected" aria-selected="true">
-		// 	<span class="label"></span>
-		// 	<button class="close" aria-label="close"></button>
-		// </div>
-
-		tabDiv.classList.add('tab');
-		tabDiv.setAttribute('draggable', 'true');
-
-		labelSpan.classList.add('label');
-
-		closeButton.classList.add('close');
-		closeButton.setAttribute('aria-label', 'close');
-		closeButton.innerHTML = '&times;';
-
-		if (isSelected) {
-			tabDiv.classList.add('selected');
-			tabDiv.setAttribute('aria-selected', 'true');
-		}
-
-		tabDiv.appendChild(labelSpan);
-		tabDiv.appendChild(closeButton);
-
-		return tabDiv;
-	}
-
-	saveForUndo(state) {
-		let undoManager = this.tabs[this.tabIndex].undoManager;
-
-		undoManager.save(state);
-
-		this.refreshMenu();
-	}
-
-	undo() {
-		let undoManager = this.tabs[this.tabIndex].undoManager;
-
-		undoManager.undo();
-
-		this.refreshMenu();
-	}
-
-	redo() {
-		let undoManager = this.tabs[this.tabIndex].undoManager;
-
-		undoManager.redo();
-
-		this.refreshMenu();
-	}
-
-	copy() {
-        let undoManagerState = this.tabs[this.tabIndex].undoManager.state,
-			imageSrc = undoManagerState.imageSrc,
-			imageDimensions = undoManagerState.imageDimensions;
-
-        if (imageSrc !== null && imageDimensions !== null) {
-			clipboard.write({
-				image: nativeImage.createFromDataURL(imageSrc),
-				text: JSON.stringify(imageDimensions)
-			});
-
-            this.refreshMenu();
-        }
-    }
-
-	paste() {
-        let image = clipboard.readImage(),
-			imageDimensions;
-
-		try {
-			// Try to parse text as image dimensions, but this could anything,
-			// such as the image's file name, so prevent the error.
-			imageDimensions = JSON.parse(clipboard.readText() || null);
-		} catch (err) {}
-
-        if (image !== null) {
-			if (!imageDimensions) {
-				imageDimensions = (function (dims) { return [dims.width, dims.height]; })(image.getSize());
+			newTabButton.classList.add('selected');
+			newTabButton.setAttribute('aria-selected', 'true');
+			newTabButton.focus();
+			
+			if (imageSrc && imageDimensions) {
+				window.negative.frameController.setImageAndSize(imageSrc, imageDimensions[0], imageDimensions[1]);
+			} else {
+				window.negative.frameController.removeImage();
 			}
 
-			let imageSrc = image.toDataURL();
+			window.negative.refreshMenu();
+		}
 
-			window.negative.frameController.setImageAndSize(imageSrc, imageDimensions[0], imageDimensions[1]);
-            this.saveForUndo({
-				imageSrc: imageSrc,
-                imageDimensions: imageDimensions
-            });
-			this.refreshMenu();
-        }
-    }
+		deselectTabByIndex(index) {
+			const oldTab = this.tabsContainer.children[index];
+			
+			if (oldTab) {
+				oldTab.classList.remove('selected');
+				oldTab.setAttribute('aria-selected', 'false');
+			}
+		}
+		
+		deselectTab() {
+			this.deselectTabByIndex(this.tabIndex);
+		}
 
-	refreshMenu() {
-		let undoManager = this.tabs[this.tabIndex].undoManager;
+		selectNextTab() {
+			this.deselectTabByIndex(this.tabIndex);
 
-		ipc.send('refresh-menu', {
-			canAddTab: true,
-			canCloseTab: true,
-			canCloseWindow: true,
-			canUndo: undoManager.canUndo(),
-			canRedo: undoManager.canRedo(),
-			canCapture: true,
-			isImageEmpty: undoManager.state.imageSrc === null,
-			canReload: true,
-			canToggleDevTools: true,
-			canSelectPreviousTab: this.canSelectPreviousTab(),
-			canSelectNextTab: this.canSelectNextTab(),
-			canMinimize: true,
-            canMove: true
-		});
+			if (this.tabIndex + 1 < this.count) {
+				this.tabIndex++;
+			} else {
+				this.tabIndex = 0;
+			}
+
+			this.selectTabByIndex(this.tabIndex);
+			this.updateTabBarScrollPosition();
+		}
+
+		selectPreviousTab() {
+			this.deselectTabByIndex(this.tabIndex);
+			
+			if (this.tabIndex > 0) {
+				this.tabIndex--;
+			} else {
+				this.tabIndex = this.count - 1;
+			}
+
+			this.selectTabByIndex(this.tabIndex);
+			this.updateTabBarScrollPosition();
+		}
+
+		setTabHasContent() {
+			this.selectedTab.classList.add('has-content');
+		}
+
+		unsetTabHasContent() {
+			this.selectedTab.classList.remove('has-content');
+		}
+
+		setTabLabel(label) {
+			this.selectedTab.children[0].textContent = label;
+		}
+		
+		/**
+		 * Returns a DOM Node representing the tab, with the structure:
+		 * <div class="tab selected" aria-selected="true">
+		 *     <span class="label"></span>
+		 *     <button class="close" aria-label="close"></button>
+		 * </div>
+		 * @param  {Boolean} isSelected Adds `selected` class and `aria-selected=true`
+		 * @return {Node}
+		 */
+		getTabButtonElement(isSelected) {
+			const tabDiv      = document.createElement('div');
+			const labelSpan   = document.createElement('span');
+			const closeButton = document.createElement('button');
+
+			tabDiv.classList.add('tab');
+			tabDiv.setAttribute('draggable', 'true');
+
+			labelSpan.classList.add('label');
+
+			closeButton.classList.add('close');
+			closeButton.setAttribute('aria-label', 'close');
+			closeButton.innerHTML = '&times;';
+
+			if (isSelected) {
+				tabDiv.classList.add('selected');
+				tabDiv.setAttribute('aria-selected', 'true');
+			}
+
+			tabDiv.appendChild(labelSpan);
+			tabDiv.appendChild(closeButton);
+
+			return tabDiv;
+		}
+
+		copy() {
+			const {
+				imageDimensions,
+				imageSrc
+			} = window.negative.currentUndoManager.state;
+
+			if (imageSrc !== null && imageDimensions !== null) {
+				clipboard.write({
+					image: nativeImage.createFromDataURL(imageSrc),
+					text: JSON.stringify(imageDimensions)
+				});
+
+				window.negative.refreshMenu();
+			}
+		}
+
+		paste() {
+			const image = clipboard.readImage();
+			
+			let imageDimensions;
+
+			try {
+				// Try to parse text as image dimensions, but this could anything,
+				// such as the image's file name, so prevent the error.
+				imageDimensions = JSON.parse(clipboard.readText() || null);
+			} catch (err) {
+				process.stderr.write(err);
+			}
+
+			if (image !== null) {
+				if (!imageDimensions) {
+					const { width, height } = image.getSize();
+					imageDimensions = [ width, height ];
+				}
+
+				const imageSrc = image.toDataURL();
+
+				window.negative.frameController.setImageAndSize(imageSrc, imageDimensions[0], imageDimensions[1]);
+				window.negative.saveForUndo({
+					imageDimensions: imageDimensions,
+					imageSrc: imageSrc
+				});
+				window.negative.refreshMenu();
+			}
+		}
+
+		fitWindowToImage() {
+			const { imageDimensions } = window.negative.currentUndoManager.state;
+
+			ipcRenderer.send('fit-window-to-image', imageDimensions);
+		}
 	}
+	
+	return NegativeTabs;
+})();
 
-	fitWindowToImage() {
-		let undoManagerState = this.tabs[this.tabIndex].undoManager.state;
-
-		ipc.send('fit-window-to-image', undoManagerState.imageDimensions);
-	}
-}

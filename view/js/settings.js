@@ -1,13 +1,19 @@
-document.addEventListener('DOMContentLoaded', function () {
+(function () {
+	'use strict';
+	
+	document.addEventListener('DOMContentLoaded', () => {
+		new SettingsForm();
+		
+		const cancelEvent = (evt) => { 
+			evt.preventDefault(); 
+			return false; 
+		};
 
-    let settingsForm = new SettingsForm();
+		document.body.addEventListener('dragend', 	cancelEvent, false);
+		document.body.addEventListener('dragleave', cancelEvent, false);
+		document.body.addEventListener('dragover', 	cancelEvent, false);
+		document.body.addEventListener('dragstart', cancelEvent, false);
+		document.body.addEventListener('drop', 		cancelEvent, false);
+	});
+})();
 
-	let noop = function (evt) { evt.preventDefault(); return false; };
-
-	document.body.addEventListener('dragend', 	noop, false);
-	document.body.addEventListener('dragleave', noop, false);
-	document.body.addEventListener('dragover', 	noop, false);
-	document.body.addEventListener('dragstart', noop, false);
-	document.body.addEventListener('drop', 		noop, false);
-
-});

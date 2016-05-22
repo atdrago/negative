@@ -1,48 +1,65 @@
-let SimpleUndo = require('simple-undo');
+window.UndoManager = (function () {
+	'use strict';
+	
+	const SimpleUndo = require('simple-undo');
 
-class UndoManager {
-    constructor() {
-        this.state = {
-            imageDimensions: null,
-            imageSrc: null
-        };
+	class UndoManager {
+		get canUndo() { 
+			return this.history.canUndo(); 
+		}
+		
+		get canRedo() { 
+			return this.history.canRedo(); 
+		}
+		
+		constructor() {
+			this.state = {
+				imageDimensions: null,
+				imageSrc: null
+			};
+			this.history = new SimpleUndo({
+				maxLength: 10,
+				provider: (done) => done(JSON.stringify(this.state))
+			});
+			
+			this.history.initialize(JSON.stringify(this.state));
 
-        this.history = new SimpleUndo({
-            maxLength: 10,
-            provider: function(done) {
-                return done(JSON.stringify(this.state));
-            }.bind(this)
-        });
-        this.history.initialize(JSON.stringify(this.state));
+			this.unserializer = (serialized) => {
+				this.state = JSON.parse(serialized);
+				
+				const { 
+					imageDimensions, 
+					imageSrc 
+				} = this.state;
 
-        this.unserializer = function(serialized) {
-            this.state = JSON.parse(serialized);
+				if (imageSrc) {
+					window.negative.frameController.setImageAndSize(imageSrc, imageDimensions[0], imageDimensions[1]);
+				} else {
+					window.negative.frameController.removeImage();
+				}
+			};
+		}
 
-            let imageDimensions = this.state.imageDimensions,
-                imageSrc = this.state.imageSrc;
+		save(state) {
+			this.state = state;
+			this.history.save();
+		}
 
-            if (imageSrc != null) {
-                window.negative.frameController.setImageAndSize(imageSrc, imageDimensions[0], imageDimensions[1]);
-            } else {
-                window.negative.frameController.removeImage();
-            }
-        }.bind(this);
-    }
+		undo() { 
+			this.history.undo(this.unserializer); 
+		}
+		
+		redo() { 
+			this.history.redo(this.unserializer); 
+		}
 
-    save(state) {
-        this.state = state;
-        this.history.save();
-    }
-
-    undo() { this.history.undo(this.unserializer); }
-    redo() { this.history.redo(this.unserializer); }
-    canUndo() { return this.history.canUndo(); }
-    canRedo() { return this.history.canRedo(); }
-
-    serialize() {
-        return {
-            canUndo: this.canUndo(),
-            canRedo: this.canRedo()
-        };
-    }
-}
+		serialize() {
+			return {
+				canUndo: this.canUndo,
+				canRedo: this.canRedo
+			};
+		}
+	}
+	
+	return UndoManager;
+})();

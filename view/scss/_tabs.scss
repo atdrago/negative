@@ -1,29 +1,35 @@
 nav {
-    height: 27px;
-    overflow: hidden;
-    flex-shrink: 0;
-    flex-grow: 0;
-    position: relative;
+	height: 27px;
+	overflow: hidden;
+	flex-shrink: 0;
+	flex-grow: 0;
+	position: relative;
 }
 
-.wrap {
-    margin: 0 10px 0 70px;
-    padding-left: 16px;
-    overflow-x: scroll;
-    overflow-y: hidden;
-    height: 50px;
+.tabbar {
+	margin: 0 10px 0 70px;
+	padding-left: 16px;
+	overflow-x: scroll;
+	overflow-y: hidden;
+	height: 50px;
+	
+	&::-webkit-scrollbar {
+		display: none;
+	}
 }
 
 .tabs {
-    margin: 0;
-    padding: 0;
-    height: 100%;
+	margin: 0;
+	padding: 0;
+	height: 100%;
+	min-width: 100%;
+	display: flex;
 	
 	&.shift-none {
 		> .tab {
 			left: 0 !important;
-	        transition: none !important;
-	        transform: translateX(0) !important;
+			transition: none !important;
+			transform: translateX(0) !important;
 		}
 	}
 	
@@ -37,99 +43,94 @@ nav {
 
 .tab {
 	margin: 1px 20px 0 6px;
-    float: left;
+	float: left;
 	height: 26px;
-    min-width: 100px;
-    max-width: 160px;
+	min-width: 60px;
+	max-width: 120px;
 	outline: none;
 	box-sizing: border-box;
-    position: relative;
-    box-shadow: inset -1px 1px 0 #484848;
-    transition: transform 200ms ease, left 200ms ease;
-    transform: translateX(0);
-    left: 0;
+	position: relative;
+	box-shadow: inset -1px 1px 0 #484848;
+	transition: transform 200ms ease, left 200ms ease;
+	transform: translateX(0);
+	left: 0;
+	flex: 1;
 
-    /*&:hover,
-    &:focus,
-    &.selected,
-    &.has-content {
-        border-width: 3px;
-    }*/
+	> .label {
+		position: relative;
+		z-index: 1;
+		font-size: 11px;
+		line-height: 26px;
+		color: #aaa;
+		pointer-events: none;
+	}
+	> .close {
+		border: 0;
+		background-color: transparent;
+		color: #aaa;
+		font-size: 14px;
+		font-weight: bold;
+		line-height: 14px;
+		position: absolute;
+		right: -5px;
+		top: 2px;
+		z-index: 1;
+		padding: 5px;
 
-    > .label {
-        position: relative;
-        z-index: 1;
-        font-size: 11px;
-        line-height: 26px;
-        color: #aaa;
-        pointer-events: none;
-    }
-    > .close {
-        border: 0;
-        background-color: transparent;
-        color: #aaa;
-        font-size: 14px;
-        font-weight: bold;
-        line-height: 14px;
-        position: absolute;
-        right: -5px;
-        top: 2px;
-        z-index: 1;
-        padding: 5px;
+		&:hover {
+			color: #fff;
+		}
+	}
 
-        &:hover {
-            color: #fff;
-        }
-    }
+	&:before {
+		left: -14px;
+		border-top-left-radius: 3px;
+		box-shadow: inset 1px 1px 0 #484848;
+		transform: skewX(-30deg);
+	}
+	&:after {
+		right: -14px;
+		border-top-right-radius: 3px;
+		box-shadow: inset -1px 1px 0 #484848;
+		transform: skewX(30deg);
+	}
+	&:before, &:after {
+		content: '';
+		position: absolute;
+		top: 0px;
+		width: 25px;
+		height: 26px;
+	}
+	&, &:before, &:after {
+		background-color: $frame-color-blur;
+	}
 
-    &:before {
-        left: -14px;
-        border-top-left-radius: 3px;
-        box-shadow: inset 1px 1px 0 #484848;
-        transform: skewX(-30deg);
-    }
-    &:after {
-        right: -14px;
-        border-top-right-radius: 3px;
-        box-shadow: inset -1px 1px 0 #484848;
-        transform: skewX(30deg);
-    }
-    &:before, &:after {
-        content: '';
-        position: absolute;
-        top: 0px;
-        width: 25px;
-        height: 26px;
-    }
-    &, &:before, &:after {
-        /*transition: background-color 100ms ease;*/
-        background-color: $frame-color-blur;
-    }
-
-    &:hover,
-    &:focus {
+	&:hover,
+	&:focus {
 	}
 
 	&.selected {
-        background-color: $frame-color-focus;
-        z-index: 9999;
+		background-color: $frame-color-focus;
+		z-index: 9999;
+		flex: 2;
+		width: -webkit-fit-content;
 
-        &, &:before, &:after {
-            background-color: $frame-color-focus;
-        }
+		&, &:before, &:after {
+			background-color: $frame-color-focus;
+		}
 
-        > .label {
-            color: #fff;
-        }
+		> .label {
+			color: #fff;
+		}
 	}
 
-    &.shift-right {
-        transform: translateX(126px);
-    }
+	&.shift-right {
+		transform: translateX(126px);
+	}
 
-    &.shift-left {
-        transform: translateX(-126px);
-    }
+	&.shift-left {
+		transform: translateX(-126px);
+	}
 	
 	
 }

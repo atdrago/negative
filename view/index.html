@@ -11,13 +11,8 @@
 				<button class="traffic-light traffic-light-minimize" id="minimize"></button>
 				<button class="traffic-light traffic-light-maximize" id="maximize"></button>
 			</div>
-			<div class="wrap">
-				<div id="tabs" class="tabs">
-					<div class="tab selected" aria-selected="true" draggable="true">
-						<span class="label"></span>
-						<button class="close" aria-label="close">&times;</button>
-					</div>
-				</div>
+			<div id="tabbar" class="tabbar">
+				<div id="tabs" class="tabs"></div>
 			</div>
 		</nav>
 		<main class="frame">
@@ -35,55 +30,51 @@
 			<ul class="tip-list">
 				<li class="tip" id="tip1" aria-label="short cut">
 					<p>&#8984;G</p>
-					<p>Take a screenshot</p>
+					<p>Capture</p>
 				</li>
 				<li class="tip" id="tip2" aria-label="short cut">
+					<p>&#8963;&#8984;H</p>
+					<p>Hide/Show (global)</p>
+				</li>
+				<li class="tip" id="tip3" aria-label="short cut">
 					<ul class="shortcut-list">
 						<li>&larr;</li>
 						<li>&uarr;</li>
 						<li>&rarr;</li>
 						<li>&darr;</li>
 					</ul>
-					<p>Move the window 1px</p>
+					<p>Move Window 1px</p>
 				</li>
-				<li class="tip" id="tip3" aria-label="short cut">
+				<li class="tip" id="tip4" aria-label="short cut">
 					<ul class="shortcut-list">
 						<li>&#8679;&larr;</li>
 						<li>&#8679;&uarr;</li>
 						<li>&#8679;&rarr;</li>
 						<li>&#8679;&darr;</li>
 					</ul>
-					<p>Move the window 10px</p>
+					<p>Move Window 10px</p>
 				</li>
-				<li class="tip" id="tip4" aria-label="short cut">
-					<p>&#8963;&#8984;H</p>
-					<p>Hide or show Negative (from any app)</p>
-				</li>
-				<li class="tip" id="tip5" aria-label="short cut">
+				<!-- <li class="tip" id="tip5" aria-label="short cut">
 					<p>&#8963;&#8984;L</p>
 					<p>Lock Negative (from any app)</p>
+				</li> -->
+				<li class="tip" id="tip5" aria-label="short cut">
+					<p>&#8984;F</p>
+					<p>Fit Window to Image</p>
 				</li>
 				<li class="tip" id="tip6" aria-label="short cut">
-					<p>&#8984;T</p>
-					<p>Add a tab</p>
+					<ul class="shortcut-list">
+						<li>&#8984;}</li>
+						<li>&#8984;{</li>
+					</ul>
+					<p>Next or Previous Tab</p>
 				</li>
 				<li class="tip" id="tip7" aria-label="short cut">
 					<ul class="shortcut-list">
-						<li>&#8984;&rarr;</li>
-						<li>&#8984;&larr;</li>
+						<li>&#8997;&#8984;}</li>
+						<li>&#8997;&#8984;{</li>
 					</ul>
-					<p>Select next or previous tab</p>
-				</li>
-				<li class="tip" id="tip8" aria-label="short cut">
-					<p>&#8984;F</p>
-					<p>Fit window to image</p>
-				</li>
-				<li class="tip" id="tip9" aria-label="short cut">
-					<ul class="shortcut-list">
-						<li>&#8679;&#8984;&rarr;</li>
-						<li>&#8679;&#8984;&larr;</li>
-					</ul>
-					<p>Select next or previous tab + fit window to image</p>
+					<p>Next or Previous Tab + Fit Window to Image</p>
 				</li>
 			</ul>
 		</main>

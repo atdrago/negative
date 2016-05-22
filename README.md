@@ -38,6 +38,7 @@ Currently only Mac OS X is supported.
 - `npm start` - Start the app with the following environment variables:
 	- NODE_ENV=development
 	- ELECTRON_ENABLE_LOGGING=true
+	- ELECTRON_ENABLE_STACK_DUMPING=true
 - `npm run build` - Build the production app
 	1. Compiles JavaScript and Sass
 	2. Copies necessary files to `./release/`
@@ -45,6 +46,14 @@ Currently only Mac OS X is supported.
 	4. Builds the app moves it to `./dist/`
 - `npm run lint` - Run ESLint
 - `npm test` - Run Mocha tests 
+- `npm run travis`
+	1. Run `build`
+	2. Run `test`
+- `npm run open` - Starts the app from `dist/Negative-darwin-x64/Negative.app`
+- `npm run dmg`
+	1. Run `build`
+	2. Move `dist/Negative-darwin-x64/Negative.app` to `dist/release/Negative.app`
+	3. Create `dist/release/Negative.dmg`
 
 ## About
 Created by [Adam Drago](http://adamdrago.com). Built on [Electron](http://electron.atom.io/).

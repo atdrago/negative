@@ -33,7 +33,8 @@ describe('File > Close Window', function () {
 	it('Should close a window', () => {
 		// @TODO - This does not actually test that the menu item works, 
 		// just that windows close without error
-		return app.browserWindow.close()
+		return app.client.waitUntilWindowLoaded()
+			.then(() => app.browserWindow.close())
 			.then(() => app.client.getWindowCount())
 			.then((count) => assert.equal(count, 1));
 	});

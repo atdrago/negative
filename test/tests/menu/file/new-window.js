@@ -30,7 +30,8 @@ describe('File > New Window', function () {
 	});
 	
 	it('Should add a window', () => {
-		return app.electron.ipcRenderer.send('test-new-window')
+		return app.client.waitUntilWindowLoaded()
+			.then(() => app.electron.ipcRenderer.send('test-new-window'))
 			.then(() => app.client.getWindowCount())
 			.then((count) => assert.equal(count, 2));
 	});

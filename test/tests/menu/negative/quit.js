@@ -31,6 +31,9 @@ describe('Negative > Quit', function () {
 	
 	it('Should quit', () => {
 		// @TODO - This should test that settings are saved (or at least written)
-		return app.stop().then(() => assert.isFalse(app.isRunning()));
+		return app.client.waitUntilWindowLoaded()
+			.then(() => {
+				return app.stop().then(() => assert.isFalse(app.isRunning()))
+			})
 	});
 });

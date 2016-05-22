@@ -32,7 +32,8 @@ describe('File > Close Tab', function () {
 	});
 	
 	it('Should close a tab', () => {
-		return app.electron.ipcRenderer.send('test-close-tab')
+		return app.client.waitUntilWindowLoaded()
+			.then(() => app.electron.ipcRenderer.send('test-close-tab'))
 			.then(() => {
 				return app.client.selectorExecute(TABS_ID, (element) => {
 					const el = element[0];

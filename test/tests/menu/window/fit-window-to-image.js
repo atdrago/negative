@@ -35,7 +35,8 @@ describe('Window > Fit Window to Image', function () {
 	it('Should fit', () => {
 		let origBounds;
 		
-		return app.browserWindow.getBounds()
+		return app.client.waitUntilWindowLoaded()
+			.then(() => app.browserWindow.getBounds())
 			.then((bounds) => {
 				origBounds = bounds;
 				

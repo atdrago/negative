@@ -31,7 +31,8 @@ describe('Edit > Copy', function () {
 	});
 	
 	it('Should copy', () => {
-		return app.electron.ipcRenderer.send('test-copy')
+		return app.client.waitUntilWindowLoaded()
+			.then(() => app.electron.ipcRenderer.send('test-copy'))
 			.then(() => app.electron.clipboard.readImage())
 			.then((image) => {
 				assert.isDefined(image);

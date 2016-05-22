@@ -33,7 +33,8 @@ describe('Edit > Redo', function () {
 	});
 	
 	it('Should redo', () => {
-		return app.electron.ipcRenderer.send('test-redo')
+		return app.client.waitUntilWindowLoaded()
+			.then(() => app.electron.ipcRenderer.send('test-redo'))
 			.then(() => {
 				return app.client.selectorExecute(IMAGE_ID, (element) => element[0].getAttribute('src'));
 			})

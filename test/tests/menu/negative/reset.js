@@ -31,7 +31,8 @@ describe('Negative > Reset...', function () {
 	});
 	
 	it('Should reset', () => {
-		return app.electron.ipcRenderer.send('test-reset')
+		return app.client.waitUntilWindowLoaded()
+			.then(() => app.electron.ipcRenderer.send('test-reset'))
 			.then(() => app.client.windowHandles())
 			.then((handles) => app.client.window(handles.value[0]))
 			.then(() => app.client.getWindowCount())

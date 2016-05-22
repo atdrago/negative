@@ -32,7 +32,8 @@ describe('Edit > Paste', function () {
 	});
 	
 	it('Should paste', () => {
-		return app.electron.clipboard.writeImage('./test/fixtures/image.png')
+		return app.client.waitUntilWindowLoaded()
+			.then(() => app.electron.clipboard.writeImage('./test/fixtures/image.png'))
 			.then(() => app.electron.ipcRenderer.send('test-paste'))
 			.then(() => {
 				return app.client.selectorExecute(IMAGE_ID, (element) => element[0].getAttribute('src'));

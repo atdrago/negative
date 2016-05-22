@@ -32,7 +32,8 @@ describe('Edit > Undo', function () {
 	});
 	
 	it('Should undo', () => {
-		return app.electron.ipcRenderer.send('test-undo')
+		return app.client.waitUntilWindowLoaded()
+			.then(() => app.electron.ipcRenderer.send('test-undo'))
 			.then(() => {
 				return app.client.selectorExecute(IMAGE_ID, (element) => element[0].getAttribute('src'));
 			})

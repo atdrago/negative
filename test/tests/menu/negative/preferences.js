@@ -31,7 +31,8 @@ describe('Negative > Preferences', function () {
 	});
 	
 	it('Should open', () => {
-		return app.electron.ipcRenderer.send('test-preferences')
+		return app.client.waitUntilWindowLoaded()
+			.then(() => app.electron.ipcRenderer.send('test-preferences'))
 			.then(() => app.client.getWindowCount())
 			.then((count) => assert.strictEqual(count, 2));
 	});
@@ -40,7 +41,8 @@ describe('Negative > Preferences', function () {
 		let windowHandles, originalIsChecked;
 		
 		// Focus the preferences window with `client.window`
-		return app.electron.ipcRenderer.send('test-preferences')
+		return app.client.waitUntilWindowLoaded()
+			.then(() => app.electron.ipcRenderer.send('test-preferences'))
 			.then(() => app.client.windowHandles())
 			.then((handles) => {
 				windowHandles = handles.value;

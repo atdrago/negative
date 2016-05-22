@@ -32,7 +32,8 @@ describe('View > Clear', function () {
 	});
 	
 	it('Should clear', () => {
-		return app.electron.ipcRenderer.send('test-clear')
+		return app.client.waitUntilWindowLoaded()
+			.then(() => app.electron.ipcRenderer.send('test-clear'))
 			.then(() => {
 				return app.client.selectorExecute(IMAGE_ID, (element) => element[0].getAttribute('src'))
 			})

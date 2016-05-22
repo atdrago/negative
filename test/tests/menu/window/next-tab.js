@@ -32,7 +32,8 @@ describe('Window > Next Tab', function () {
 	});
 	
 	it('Should go to next tab', () => {
-		return app.electron.ipcRenderer.send('test-next-tab')
+		return app.client.waitUntilWindowLoaded()
+			.then(() => app.electron.ipcRenderer.send('test-next-tab'))
 			.then(() => {
 				return app.client.selectorExecute(TABS_ID, (element) => {
 					return Array.from(element[0].children).findIndex((child) => child.classList.contains('selected'));

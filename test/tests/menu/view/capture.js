@@ -32,7 +32,8 @@ describe('View > Capture', function () {
 	});
 	
 	it('Should capture', () => {
-		return app.electron.ipcRenderer.send('test-capture')
+		return app.client.waitUntilWindowLoaded()
+			.then(() => app.electron.ipcRenderer.send('test-capture'))
 			.then(() => {
 				return app.client.selectorExecute(IMAGE_ID, (element) => element[0].getAttribute('src'));
 			})

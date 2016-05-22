@@ -33,7 +33,8 @@ describe('Window > Next Tab And Resize', function () {
 	it('Should go to next tab and resize', () => {
 		let firstTabBounds, secondTabBounds;
 		
-		return app.browserWindow.getBounds()
+		return app.client.waitUntilWindowLoaded()
+			.then(() => app.browserWindow.getBounds())
 			.then((bounds) => {
 				firstTabBounds = bounds;
 				

@@ -33,7 +33,8 @@ describe('View > Actual Size', function () {
 	
 	it('Should zoom to 0', () => {
 		// @TODO - Load settings file for actual size. Blocked by #96.
-		return app.electron.ipcRenderer.send('test-zoom-in')
+		return app.client.waitUntilWindowLoaded()
+			.then(() => app.electron.ipcRenderer.send('test-zoom-in'))
 			.then(() => app.electron.ipcRenderer.send('test-actual-size'))
 			.then(() => {
 				return app.client.selectorExecute(IMAGE_ID, (element) => {

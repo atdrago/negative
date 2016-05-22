@@ -31,7 +31,8 @@ describe('File > New Tab', function () {
 	});
 	
 	it('Should add a tab', () => {
-		return app.electron.ipcRenderer.send('test-new-tab')
+		return app.client.waitUntilWindowLoaded()
+			.then(() => app.electron.ipcRenderer.send('test-new-tab'))
 			.then(() => {
 				return app.client.selectorExecute(TABS_ID, (element) => {
 					const el = element[0];

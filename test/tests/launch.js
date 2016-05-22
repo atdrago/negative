@@ -30,7 +30,8 @@ describe('Launch', function () {
 	});
 	
 	it('Shows a window', () => {
-		return app.client.getWindowCount()
+		return app.client.waitUntilWindowLoaded()
+			.then(() => app.client.getWindowCount())
 			.then((count) => assert.isAtLeast(count, 1))
 			.then(() => {
 				return app.client.selectorExecute('//body', (elements) => {

@@ -19,11 +19,11 @@ describe('Window > Move', function () {
 	
 	this.timeout(60000);
 	
-	beforeEach(() => {
+	before(() => {
 		return app.start();
 	});
 
-	afterEach(() => {
+	after(() => {
 		if (app && app.isRunning()) {
 			return app.stop();
 		}

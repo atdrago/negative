@@ -32,7 +32,8 @@ describe('View > Zoom In', function () {
 	});
 	
 	it('Should zoom in', () => {
-		return app.electron.ipcRenderer.send('test-zoom-in')
+		return app.client.waitUntilWindowLoaded()
+			.then(() => app.electron.ipcRenderer.send('test-zoom-in'))
 			.then(() => {
 				return app.client.selectorExecute(IMAGE_ID, (element) => {
 					const zoomLevel = element[0].getAttribute('data-zoom-level');

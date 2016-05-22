@@ -6,7 +6,7 @@ const { assert } = require('chai');
 const APP_PATH = './dist/Negative-darwin-x64/Negative.app/Contents/MacOS/Negative';
 const IMAGE_ID = '#negativeImage';
 
-describe.only('View > Actual Size', function () {
+describe('View > Actual Size', function () {
 	const app = new Application({
 		path: APP_PATH,
 		env: {

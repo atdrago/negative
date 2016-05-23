@@ -13,7 +13,7 @@ describe('Edit > Paste', function () {
 		env: {
 			ELECTRON_ENABLE_LOGGING: true,
 			ELECTRON_ENABLE_STACK_DUMPING: true,
-			NEGATIVE_IGNORE_WINDOW_SETTINGS: true,
+			NEGATIVE_IGNORE_SETTINGS: true,
 			NEGATIVE_SKIP_RESET_DIALOG: true,
 			NODE_ENV: 'development'
 		}

@@ -15,7 +15,7 @@ grunt.initConfig({
 				name: 'Negative',
 				icon: 'negative.icns',
 				arch: 'x64',
-				version: '1.1.1',
+				version: '1.1.3',
 				platform: 'darwin',
 				out: 'dist',
 				dir: 'release',

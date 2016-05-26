@@ -20,5 +20,5 @@
 }
 
 #imageContainer, .negative {
-	transition: width 200ms ease, height 200ms ease;
+	transition: width 200ms ease, height 200ms ease, background-color $color-transition-duration $color-transition-easing;
 }

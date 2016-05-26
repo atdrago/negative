@@ -19,6 +19,7 @@
 	animation: fade-in-out #{$tip-duration} ease infinite;
 	display: flex;
 	flex-direction: column;
+	transition: color $color-transition-duration $color-transition-easing;
 	
 	body.light-mode & {
 		color: $text-color-selected-light-mode;

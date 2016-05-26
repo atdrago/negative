@@ -20,9 +20,10 @@ body {
 	flex-grow: 1;
 	-webkit-app-region: drag;
 	-webkit-user-select: none;
+	transition: border-color $color-transition-duration $color-transition-easing;
 	
 	body.light-mode & {
-		border: 10px solid $frame-color-focus-light-mode;
+		border-color: $frame-color-focus-light-mode;
 	}
 }
 
@@ -43,6 +44,7 @@ body {
 
 .col, .row-outer {
 	background-color: $column-background-color-dark-mode;
+	transition: background-color $color-transition-duration $color-transition-easing;
 	
 	body.light-mode & {
 		background-color: $column-background-color-light-mode;

@@ -14,6 +14,9 @@ $text-color-selected-light-mode: #000;
 $text-color-deselected-dark-mode: #aaa;
 $text-color-deselected-light-mode: #555;
 
+$color-transition-duration: 500ms;
+$color-transition-easing: ease;
+
 // $tip-duration must be divisible by $tip-count
 $tip-count: 7;
 $tip-duration: $tip-count * 6s;

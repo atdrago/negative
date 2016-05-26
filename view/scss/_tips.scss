@@ -14,11 +14,16 @@
 	opacity: 0;
 	font-size: 44px;
 	font-weight: 500;
-	color: #fff;
+	color: $text-color-selected-dark-mode;
 	text-align: center;
 	animation: fade-in-out #{$tip-duration} ease infinite;
 	display: flex;
 	flex-direction: column;
+	transition: color $color-transition-duration $color-transition-easing;
+	
+	body.light-mode & {
+		color: $text-color-selected-light-mode;
+	}
 
 	&:after,
 	&:before {

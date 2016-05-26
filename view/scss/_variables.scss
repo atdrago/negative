@@ -1,7 +1,21 @@
-$frame-color-blur: #666;
-$frame-color-focus: #333;
+$frame-color-blur-dark-mode: #666;
+$frame-color-blur-light-mode: #999;
+$frame-color-focus-dark-mode: #333;
+$frame-color-focus-light-mode: #ccc;
 
-$column-background-color: rgba(0, 0, 0, 0.5);
+$tab-shadow-color-dark-mode: #484848;
+$tab-shadow-color-light-mode: #b7b7b7;
+
+$column-background-color-dark-mode: rgba(0, 0, 0, 0.5);
+$column-background-color-light-mode: rgba(255, 255, 255, 0.5);
+
+$text-color-selected-dark-mode: #fff;
+$text-color-selected-light-mode: #000;
+$text-color-deselected-dark-mode: #aaa;
+$text-color-deselected-light-mode: #555;
+
+$color-transition-duration: 500ms;
+$color-transition-easing: ease;
 
 // $tip-duration must be divisible by $tip-count
 $tip-count: 7;

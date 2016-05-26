@@ -50,24 +50,32 @@ nav {
 	outline: none;
 	box-sizing: border-box;
 	position: relative;
-	box-shadow: inset -1px 1px 0 #484848;
+	box-shadow: inset -1px 1px 0 $tab-shadow-color-dark-mode;
 	transition: transform 200ms ease, left 200ms ease;
 	transform: translateX(0);
 	left: 0;
 	flex: 1;
+	
+	body.light-mode & {
+		box-shadow: inset -1px 1px 0 $tab-shadow-color-light-mode;
+	}
 
 	> .label {
 		position: relative;
 		z-index: 1;
 		font-size: 11px;
 		line-height: 26px;
-		color: #aaa;
+		color: $text-color-deselected-dark-mode;
 		pointer-events: none;
+		
+		body.light-mode & {
+			color: $text-color-deselected-light-mode;
+		}
 	}
 	> .close {
 		border: 0;
 		background-color: transparent;
-		color: #aaa;
+		color: $text-color-deselected-dark-mode;
 		font-size: 14px;
 		font-weight: bold;
 		line-height: 14px;
@@ -76,23 +84,39 @@ nav {
 		top: 2px;
 		z-index: 1;
 		padding: 5px;
+		
+		body.light-mode & {
+			color: $text-color-deselected-light-mode;
+		}
 
 		&:hover {
-			color: #fff;
+			color: $text-color-selected-dark-mode;
+			
+			body.light-mode & {
+				color: $text-color-selected-light-mode;
+			}
 		}
 	}
 
 	&:before {
 		left: -14px;
 		border-top-left-radius: 3px;
-		box-shadow: inset 1px 1px 0 #484848;
+		box-shadow: inset 1px 1px 0 $tab-shadow-color-dark-mode;
 		transform: skewX(-30deg);
+		
+		body.light-mode & {
+			box-shadow: inset 1px 1px 0 $tab-shadow-color-light-mode;
+		}
 	}
 	&:after {
 		right: -14px;
 		border-top-right-radius: 3px;
-		box-shadow: inset -1px 1px 0 #484848;
+		box-shadow: inset -1px 1px 0 $tab-shadow-color-dark-mode;
 		transform: skewX(30deg);
+		
+		body.light-mode & {
+			box-shadow: inset -1px 1px 0 $tab-shadow-color-light-mode;
+		}
 	}
 	&:before, &:after {
 		content: '';
@@ -102,7 +126,11 @@ nav {
 		height: 26px;
 	}
 	&, &:before, &:after {
-		background-color: $frame-color-blur;
+		background-color: $frame-color-blur-dark-mode;
+		
+		body.light-mode & {
+			background-color: $frame-color-blur-light-mode;
+		}
 	}
 
 	&:hover,
@@ -110,17 +138,29 @@ nav {
 	}
 
 	&.selected {
-		background-color: $frame-color-focus;
+		background-color: $frame-color-focus-dark-mode;
 		z-index: 9999;
 		flex: 2;
 		width: -webkit-fit-content;
+		
+		body.light-mode & {
+			background-color: $frame-color-focus-light-mode;
+		}
 
 		&, &:before, &:after {
-			background-color: $frame-color-focus;
+			background-color: $frame-color-focus-dark-mode;
+			
+			body.light-mode & {
+				background-color: $frame-color-focus-light-mode;
+			}
 		}
 
 		> .label {
-			color: #fff;
+			color: $text-color-selected-dark-mode;
+			
+			body.light-mode & {
+				color: $text-color-selected-light-mode;
+			}
 		}
 	}
 
@@ -131,6 +171,4 @@ nav {
 	&.shift-left {
 		transform: translateX(-126px);
 	}
-	
-	
 }

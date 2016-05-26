@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Negative</title>
+		<link rel="stylesheet" href="index.css" />
+	</head>
+	<body class="light-mode">
+		<nav>
+			<div class="traffic-lights">
+				<button class="traffic-light traffic-light-close" id="close"></button>
+				<button class="traffic-light traffic-light-minimize" id="minimize"></button>
+				<button class="traffic-light traffic-light-maximize" id="maximize"></button>
+			</div>
+			<div id="tabbar" class="tabbar">
+				<div id="tabs" class="tabs"></div>
+			</div>
+		</nav>
+		<main class="frame">
+			<div class="container">
+				<div class="row row-outer"></div>
+				<div class="row">
+					<div class="col col-outer"></div>
+					<div class="col" id="imageContainer">
+						<img class="negative" id="negativeImage" />
+					</div>
+					<div class="col col-outer"></div>
+				</div>
+				<div class="row row-outer"></div>
+			</div>
+			<ul class="tip-list">
+				<li class="tip" id="tip1" aria-label="short cut">
+					<p>&#8984;G</p>
+					<p>Capture</p>
+				</li>
+				<li class="tip" id="tip2" aria-label="short cut">
+					<p>&#8963;&#8984;H</p>
+					<p>Hide/Show (global)</p>
+				</li>
+				<li class="tip" id="tip3" aria-label="short cut">
+					<ul class="shortcut-list">
+						<li>&larr;</li>
+						<li>&uarr;</li>
+						<li>&rarr;</li>
+						<li>&darr;</li>
+					</ul>
+					<p>Move Window 1px</p>
+				</li>
+				<li class="tip" id="tip4" aria-label="short cut">
+					<ul class="shortcut-list">
+						<li>&#8679;&larr;</li>
+						<li>&#8679;&uarr;</li>
+						<li>&#8679;&rarr;</li>
+						<li>&#8679;&darr;</li>
+					</ul>
+					<p>Move Window 10px</p>
+				</li>
+				<!-- <li class="tip" id="tip5" aria-label="short cut">
+					<p>&#8963;&#8984;L</p>
+					<p>Lock Negative (from any app)</p>
+				</li> -->
+				<li class="tip" id="tip5" aria-label="short cut">
+					<p>&#8984;F</p>
+					<p>Fit Window to Image</p>
+				</li>
+				<li class="tip" id="tip6" aria-label="short cut">
+					<ul class="shortcut-list">
+						<li>&#8984;}</li>
+						<li>&#8984;{</li>
+					</ul>
+					<p>Next or Previous Tab</p>
+				</li>
+				<li class="tip" id="tip7" aria-label="short cut">
+					<ul class="shortcut-list">
+						<li>&#8997;&#8984;}</li>
+						<li>&#8997;&#8984;{</li>
+					</ul>
+					<p>Next or Previous Tab + Fit Window to Image</p>
+				</li>
+			</ul>
+		</main>
+		<script src="index.js"></script>
+	</body>
+</html>

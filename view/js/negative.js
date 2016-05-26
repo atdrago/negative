@@ -100,6 +100,14 @@
 				const shouldReset = confirm('Reset will remove all images, tabs, and windows, and open a new Negative window. Are you sure you want to continue?');
 				
 				ipcRenderer.send('confirm-reset-response', shouldReset);
+			},
+			
+			toggleDarkMode() {
+				if (document.body.classList.contains('light-mode')) {
+					document.body.classList.remove('light-mode');
+				} else {
+					document.body.classList.add('light-mode');
+				}
 			}
 		};
 	});

@@ -6,6 +6,8 @@
 
 ## User Documentation
 
+Please check [negative/releases](https://github.com/atdrago/negative/issues) for the latest production build.
+
 - [Usage](docs/usage.md)
 
 ## Contributing

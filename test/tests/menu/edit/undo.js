@@ -1,7 +1,6 @@
 'use strict';
 
 const { Application } = require('spectron');
-const { assert } = require('chai');
 
 const APP_PATH = './dist/Negative-darwin-x64/Negative.app/Contents/MacOS/Negative';
 const IMAGE_ID = '#negativeImage';
@@ -35,8 +34,10 @@ describe('Edit > Undo', function () {
 		return app.client.waitUntilWindowLoaded()
 			.then(() => app.electron.ipcRenderer.send('test-undo'))
 			.then(() => {
-				return app.client.selectorExecute(IMAGE_ID, (element) => element[0].getAttribute('src'));
-			})
-			.then((src) => assert.equal(src, ''));
+				return app.client.waitUntil(() => {
+					return app.client.selectorExecute(IMAGE_ID, (element) => element[0].getAttribute('src'))
+						.then((src) => src === '');
+				});
+			});
 	});
 });

@@ -44,31 +44,32 @@ describe('Negative > Preferences', function () {
 			.then(() => app.client.windowByIndex(1))
 			.then(() => {
 				// Get "Show tips" checkbox value
-				return app.client.selectorExecute(TIPS_ID, (elements) => {
-					return elements[0].checked;
-				})
-			})
-			.then((isChecked) => {
-				return assert.isTrue(isChecked, '"Show tips" checkbox should default to checked.');
+				return app.client.waitUntil(() => {
+					return app.client.selectorExecute(TIPS_ID, (elements) => {
+						return elements[0].checked;
+					});
+				});
 			})
 			// Focus the Negative window
 			.then(() => app.client.windowByIndex(0))
 			.then(() => {
 				// Get the class that is toggled by the "Show tips" checkbox
-				return app.client.selectorExecute('//body', (elements) => {
-					return elements[0].classList.contains('no-tips');
+				return app.client.waitUntil(() => {
+					return app.client.selectorExecute('//body', (elements) => {
+						return !elements[0].classList.contains('no-tips');
+					});
 				});
 			})
-			.then((hasNoTipsClass) => assert.isFalse(hasNoTipsClass, 'The body element should not have the .no-tips class when "Show tips" is checked.'))
 			.then(() => app.client.windowByIndex(1))
 			.then(() => app.client.leftClick(TIPS_ID))
 			.then(() => app.client.windowByIndex(0))
 			.then(() => {
-				return app.client.selectorExecute('//body', (elements) => {
-					return elements[0].classList.contains('no-tips');
+				return app.client.waitUntil(() => {
+					return app.client.selectorExecute('//body', (elements) => {
+						return elements[0].classList.contains('no-tips');
+					});
 				});
 			})
-			.then((hasNoTipsClass) => assert.isTrue(hasNoTipsClass, 'The body element should have the .no-tips class when "Show tips" is checked.'));
 	});
 	
 	// @TODO - Close should be tested here, but because it uses

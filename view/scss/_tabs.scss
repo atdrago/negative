@@ -51,7 +51,7 @@ nav {
 	box-sizing: border-box;
 	position: relative;
 	box-shadow: inset -1px 1px 0 $tab-shadow-color-dark-mode;
-	transition: transform 200ms ease, left 200ms ease, box-shadow $color-transition-duration $color-transition-easing;
+	transition: transform 200ms ease, left 200ms ease;
 	transform: translateX(0);
 	left: 0;
 	flex: 1;
@@ -67,7 +67,6 @@ nav {
 		line-height: 26px;
 		color: $text-color-deselected-dark-mode;
 		pointer-events: none;
-		transition: color $color-transition-duration $color-transition-easing;
 		
 		body.light-mode & {
 			color: $text-color-deselected-light-mode;
@@ -85,7 +84,6 @@ nav {
 		top: 2px;
 		z-index: 1;
 		padding: 5px;
-		transition: color $color-transition-duration $color-transition-easing;
 		
 		body.light-mode & {
 			color: $text-color-deselected-light-mode;
@@ -129,7 +127,6 @@ nav {
 	}
 	&, &:before, &:after {
 		background-color: $frame-color-blur-dark-mode;
-		transition: background-color $color-transition-duration $color-transition-easing, box-shadow $color-transition-duration $color-transition-easing;
 		
 		body.light-mode & {
 			background-color: $frame-color-blur-light-mode;
@@ -152,7 +149,6 @@ nav {
 
 		&, &:before, &:after {
 			background-color: $frame-color-focus-dark-mode;
-			transition: background-color $color-transition-duration $color-transition-easing, box-shadow $color-transition-duration $color-transition-easing;
 			
 			body.light-mode & {
 				background-color: $frame-color-focus-light-mode;
@@ -161,7 +157,6 @@ nav {
 
 		> .label {
 			color: $text-color-selected-dark-mode;
-			transition: color $color-transition-duration $color-transition-easing;
 			
 			body.light-mode & {
 				color: $text-color-selected-light-mode;

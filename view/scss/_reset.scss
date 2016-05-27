@@ -44,3 +44,23 @@ input[type=checkbox] {
     width: 1px !important;
     overflow: hidden;
 }
+
+.transition-colors {
+	.frame,
+	.tip,
+	#imageContainer,
+	.negative,
+	.col,
+	.row-outer,
+	.label,
+	.close,
+	.tab,
+	:after,
+	:before {
+		transition: 
+			background-color $color-transition-duration $color-transition-easing,
+			border-color $color-transition-duration $color-transition-easing,
+			box-shadow $color-transition-duration $color-transition-easing,
+			color $color-transition-duration $color-transition-easing !important;
+	}
+}

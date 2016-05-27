@@ -39,8 +39,10 @@ describe('View > Dark Mode', function () {
 			.then((hasNoTipsClass) => assert.isFalse(hasNoTipsClass, 'The body element should not have the .light-mode class when on startup.'))
 			.then(() => app.electron.ipcRenderer.send('test-dark-mode'))
 			.then(() => {
-				return app.client.selectorExecute('//body', (elements) => {
-					return elements[0].classList.contains('light-mode');
+				return app.client.waitUntil(() => {
+					return app.client.selectorExecute('//body', (elements) => {
+						return elements[0].classList.contains('light-mode');
+					});
 				});
 			})
 			.then((hasNoTipsClass) => assert.isTrue(hasNoTipsClass, 'The body element should have the .light-mode class Dark Mode is off.'))

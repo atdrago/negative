@@ -1,7 +1,6 @@
 'use strict';
 
 const { Application } = require('spectron');
-const { assert } = require('chai');
 
 const APP_PATH = './dist/Negative-darwin-x64/Negative.app/Contents/MacOS/Negative';
 const IMAGE_ID = '#negativeImage';
@@ -35,12 +34,10 @@ describe('View > Actual Size', function () {
 		return app.client.waitUntilWindowLoaded()
 			.then(() => app.electron.ipcRenderer.send('test-actual-size'))
 			.then(() => {
-				return app.client.selectorExecute(IMAGE_ID, (element) => {
-					const zoomLevel = element[0].getAttribute('data-zoom-level');
-					
-					return zoomLevel;
+				return app.client.waitUntil(() => {
+					return app.client.selectorExecute(IMAGE_ID, (element) => element[0].getAttribute('data-zoom-level'))
+						.then((zoomLevel) => zoomLevel === '1');
 				});
 			})
-			.then((zoomLevel) => assert.equal(zoomLevel, 1));
 	});
 });

@@ -1,7 +1,6 @@
 'use strict';
 
 const { Application } = require('spectron');
-const { assert } = require('chai');
 
 const APP_PATH = './dist/Negative-darwin-x64/Negative.app/Contents/MacOS/Negative';
 const IMAGE_ID = '#negativeImage';
@@ -35,22 +34,18 @@ describe('View > Zoom Out', function () {
 		return app.client.waitUntilWindowLoaded()
 			.then(() => app.electron.ipcRenderer.send('test-zoom-out'))
 			.then(() => {
-				return app.client.selectorExecute(IMAGE_ID, (element) => {
-					const zoomLevel = element[0].getAttribute('data-zoom-level');
-					
-					return zoomLevel;
+				return app.client.waitUntil(() => {
+					return app.client.selectorExecute(IMAGE_ID, (element) => element[0].getAttribute('data-zoom-level'))
+						.then((zoomLevel) => zoomLevel === '0.75');
 				});
 			})
-			.then((zoomLevel) => assert.equal(zoomLevel, 0.75))
 			.then(() => app.electron.ipcRenderer.send('test-zoom-out'))
 			.then(() => app.electron.ipcRenderer.send('test-zoom-out'))
 			.then(() => {
-				return app.client.selectorExecute(IMAGE_ID, (element) => {
-					const zoomLevel = element[0].getAttribute('data-zoom-level');
-					
-					return zoomLevel;
+				return app.client.waitUntil(() => {
+					return app.client.selectorExecute(IMAGE_ID, (element) => element[0].getAttribute('data-zoom-level'))
+						.then((zoomLevel) => zoomLevel === '0.5');
 				});
-			})
-			.then((zoomLevel) => assert.equal(zoomLevel, 0.5));
+			});
 	});
 });

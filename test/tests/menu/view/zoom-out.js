@@ -37,7 +37,7 @@ describe('View > Zoom Out', function () {
 				return app.client.waitUntil(() => {
 					return app.client.selectorExecute(IMAGE_ID, (element) => element[0].getAttribute('data-zoom-level'))
 						.then((zoomLevel) => zoomLevel === '0.75');
-				});
+				}, 2000);
 			})
 			.then(() => app.electron.ipcRenderer.send('test-zoom-out'))
 			.then(() => app.electron.ipcRenderer.send('test-zoom-out'))
@@ -45,7 +45,7 @@ describe('View > Zoom Out', function () {
 				return app.client.waitUntil(() => {
 					return app.client.selectorExecute(IMAGE_ID, (element) => element[0].getAttribute('data-zoom-level'))
 						.then((zoomLevel) => zoomLevel === '0.5');
-				});
+				}, 2000);
 			});
 	});
 });

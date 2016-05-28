@@ -38,7 +38,7 @@ describe('Edit > Redo', function () {
 				return app.client.waitUntil(() => {
 					return app.client.selectorExecute(IMAGE_ID, (element) => element[0].getAttribute('src'))
 						.then((src) => REGEX_PNG.test(src));
-				});
+				}, 2000);
 			});
 	});
 });

@@ -37,7 +37,7 @@ describe('View > Clear', function () {
 				return app.client.waitUntil(() => {
 					return app.client.selectorExecute(IMAGE_ID, (element) => element[0].getAttribute('src'))
 						.then((src) => src === '');
-				});
+				}, 2000);
 			})
 	});
 });

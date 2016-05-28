@@ -48,7 +48,7 @@ describe('Negative > Preferences', function () {
 					return app.client.selectorExecute(TIPS_ID, (elements) => {
 						return elements[0].checked;
 					});
-				});
+				}, 2000);
 			})
 			// Focus the Negative window
 			.then(() => app.client.windowByIndex(0))
@@ -58,7 +58,7 @@ describe('Negative > Preferences', function () {
 					return app.client.selectorExecute('//body', (elements) => {
 						return !elements[0].classList.contains('no-tips');
 					});
-				});
+				}, 2000);
 			})
 			.then(() => app.client.windowByIndex(1))
 			.then(() => app.client.leftClick(TIPS_ID))
@@ -68,7 +68,7 @@ describe('Negative > Preferences', function () {
 					return app.client.selectorExecute('//body', (elements) => {
 						return elements[0].classList.contains('no-tips');
 					});
-				});
+				}, 2000);
 			})
 	});
 	

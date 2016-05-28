@@ -45,7 +45,7 @@ describe('Window > Previous Tab And Resize', function () {
 						.then((bounds) => {
 							return firstTabBounds.width !== bounds.width && firstTabBounds.height !== bounds.height;
 						});
-				});
+				}, 2000);
 			})
 			.then(() => app.electron.ipcRenderer.send('test-previous-tab-and-resize'))
 			.then(() => {
@@ -54,7 +54,7 @@ describe('Window > Previous Tab And Resize', function () {
 						.then((bounds) => {
 							return firstTabBounds.width === bounds.width && firstTabBounds.height === bounds.height;
 						});
-				});
+				}, 2000);
 			});
 	});
 });

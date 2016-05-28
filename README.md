@@ -4,10 +4,13 @@
 
 ![build status](https://travis-ci.org/atdrago/negative.svg?branch=develop)
 
+Follow [@NegativeJS](https://twitter.com/negativejs) on Twitter for important updates.
+
+## Download
+- [Negative v0.7.0 for Mac OS X ](https://github.com/atdrago/negative/releases/download/v0.7.0/Negative.dmg)
+
 ## User Documentation
-
-Please check [negative/releases](https://github.com/atdrago/negative/releases) for the latest production build.
-
+Please check [negative/releases](https://github.com/atdrago/negative/releases) for details on changes between versions.
 - [Usage](docs/usage.md)
 
 ## Contributing

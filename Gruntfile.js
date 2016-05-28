@@ -4,7 +4,6 @@ const grunt   = require('grunt');
 const fs      = require('fs');
 const config  = JSON.parse(fs.readFileSync('package.json'));
 const version = config['version'];
-const devDeps = Object.keys(config['devDependencies']).join('|');
 
 require('load-grunt-tasks')(grunt);
 

@@ -2,7 +2,7 @@
 
 > An app for making visual comparisons.
 
-![build status](https://travis-ci.org/atdrago/negative.svg?branch=develop)
+[![build status](https://travis-ci.org/atdrago/negative.svg?branch=develop)](https://travis-ci.org/atdrago/negative)
 
 Follow [@NegativeJS](https://twitter.com/negativejs) on Twitter for important updates.
 

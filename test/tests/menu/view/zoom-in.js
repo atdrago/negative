@@ -37,7 +37,7 @@ describe('View > Zoom In', function () {
 				return app.client.waitUntil(() => {
 					return app.client.selectorExecute(IMAGE_ID, (element) => element[0].getAttribute('data-zoom-level'))
 						.then((zoomLevel) => zoomLevel === '1.25');
-				});
+				}, 2000);
 			})
 			.then(() => app.electron.ipcRenderer.send('test-zoom-in'))
 			.then(() => app.electron.ipcRenderer.send('test-zoom-in'))
@@ -47,7 +47,7 @@ describe('View > Zoom In', function () {
 				return app.client.waitUntil(() => {
 					return app.client.selectorExecute(IMAGE_ID, (element) => element[0].getAttribute('data-zoom-level'))
 						.then((zoomLevel) => zoomLevel === '2');
-				});
+				}, 2000);
 			})
 	});
 });

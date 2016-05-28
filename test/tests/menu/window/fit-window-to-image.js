@@ -50,7 +50,7 @@ describe('Window > Fit Window to Image', function () {
 						.then((bounds) => {
 							return origBounds.width === bounds.width && origBounds.height === bounds.height;
 						});
-				});
+				}, 2000);
 			});
 	});
 });

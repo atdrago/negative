@@ -37,7 +37,7 @@ describe('View > Actual Size', function () {
 				return app.client.waitUntil(() => {
 					return app.client.selectorExecute(IMAGE_ID, (element) => element[0].getAttribute('data-zoom-level'))
 						.then((zoomLevel) => zoomLevel === '1');
-				});
+				}, 2000);
 			})
 	});
 });

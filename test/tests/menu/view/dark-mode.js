@@ -43,7 +43,7 @@ describe('View > Dark Mode', function () {
 					return app.client.selectorExecute('//body', (elements) => {
 						return elements[0].classList.contains('light-mode');
 					});
-				});
+				}, 2000);
 			})
 			.then((hasNoTipsClass) => assert.isTrue(hasNoTipsClass, 'The body element should have the .light-mode class Dark Mode is off.'))
 			

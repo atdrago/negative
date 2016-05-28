@@ -1,12 +1,14 @@
 'use strict';
 
 const changed       = require('gulp-changed');
+const cleanCss      = require('gulp-clean-css');
 const concat        = require('gulp-concat');
 const del           = require('del');
 const eslint        = require('gulp-eslint');
+const fs            = require('fs');
 const gulp          = require('gulp');
 const gulpUglify    = require('gulp-uglify/minifier');
-const cleanCss      = require('gulp-clean-css');
+const packager      = require('electron-packager');
 const runSequence   = require('run-sequence');
 const sass          = require('gulp-sass');
 const uglifyJs      = require('uglify-js');
@@ -28,7 +30,7 @@ const jsLintSrc     = [ 'lib/**/*.js', 'view/**/*.js', '!view/index.js', '!view/
 const sassSrc       = 'view/**/*.scss';
 const sassDest      = 'view';
 
-function buildJs(src, dest, filename) {
+function compileJs(src, dest, filename) {
 	return gulp.src(src)
 		.pipe(concat(filename))
 		.pipe(wrap("(function (window, document, JSON) { <%= contents %> })(window, document, JSON);"))
@@ -38,6 +40,8 @@ function buildJs(src, dest, filename) {
 		}))
 		.pipe(gulp.dest(dest));
 }
+
+// Sass
 
 gulp.task('sass', () => {
 	return gulp.src(sassSrc)
@@ -49,8 +53,18 @@ gulp.task('sass', () => {
 		.pipe(gulp.dest(sassDest));
 });
 
-gulp.task('js:index',    () => buildJs(jsIndexSrc, jsDest, 'index.js'));
-gulp.task('js:settings', () => buildJs(jsSettingsSrc, jsDest, 'settings.js'));
+// JavaScript
+
+gulp.task('js:index',    () => compileJs(jsIndexSrc, jsDest, 'index.js'));
+gulp.task('js:settings', () => compileJs(jsSettingsSrc, jsDest, 'settings.js'));
+
+gulp.task('js:lint', () => {
+	return gulp.src(jsLintSrc)
+		.pipe(eslint())
+		.pipe(eslint.format());
+});
+
+// Watch
 
 gulp.task('watch', () => {
 	watch(jsIndexSrc,    () => gulp.start('js:index'));
@@ -59,13 +73,7 @@ gulp.task('watch', () => {
 	watch(sassSrc,       () => gulp.start('sass'));
 });
 
-gulp.task('default', ['js:index', 'js:settings', 'js:lint', 'sass', 'watch']);
-
-gulp.task('js:lint', () => {
-	return gulp.src(jsLintSrc)
-		.pipe(eslint())
-		.pipe(eslint.format());
-});
+// Release
 
 gulp.task('release:clean', () => {
 	return del(['release']);
@@ -107,3 +115,38 @@ gulp.task('release', () => {
 		['release:root', 'release:view', 'release:lib', 'release:test']
 	);
 });
+
+// Build
+
+gulp.task('build', (done) => {
+	const config          = JSON.parse(fs.readFileSync('package.json'));
+	const appVersion      = config.version;
+	const electronVersion = config.devDependencies['electron-prebuilt'].match(/[\d.]+/)[0];
+	const options         = {
+		arch: 'x64',
+		asar: true,
+		dir: 'release',
+		icon: 'negative.icns',
+		name: 'Negative',
+		out: 'dist',
+		overwrite: true,
+		platform: 'darwin',
+		prune: true,
+		version: electronVersion,
+		'app-bundle-id': 'com.adamdrago.negative',
+		'helper-bundle-id': 'com.adamdrago.negative.helper',
+		'app-version': appVersion,
+	};
+	
+	packager(options, (err, paths) => {
+		if (err) {
+			console.error(err);
+		}
+		
+		done();
+	});
+});
+
+// Default
+
+gulp.task('default', ['js:index', 'js:settings', 'js:lint', 'sass', 'watch']);

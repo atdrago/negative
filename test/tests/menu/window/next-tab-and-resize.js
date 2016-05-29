@@ -2,7 +2,12 @@
 
 const { Application } = require('spectron');
 
-const APP_PATH = './dist/Negative-darwin-x64/Negative.app/Contents/MacOS/Negative';
+const config    = require('../../../config.json');
+const REGEX_PNG = new RegExp(config.REGEX_PNG);
+const { 
+	APP_PATH,
+	WAIT_UNTIL_TIMEOUT
+} = config;
 
 describe('Window > Next Tab And Resize', function () {
 	const app = new Application({
@@ -45,7 +50,7 @@ describe('Window > Next Tab And Resize', function () {
 						.then((bounds) => {
 							return firstTabBounds.width !== bounds.width && firstTabBounds.height !== bounds.height;
 						});
-				}, 2000);
+				}, WAIT_UNTIL_TIMEOUT);
 			})
 			.then(() => app.electron.ipcRenderer.send('test-next-tab-and-resize'))
 			.then(() => {
@@ -54,7 +59,7 @@ describe('Window > Next Tab And Resize', function () {
 						.then((bounds) => {
 							return firstTabBounds.width === bounds.width && firstTabBounds.height === bounds.height;
 						});
-				}, 2000);
+				}, WAIT_UNTIL_TIMEOUT);
 			});
 	});
 });

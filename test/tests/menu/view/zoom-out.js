@@ -2,8 +2,12 @@
 
 const { Application } = require('spectron');
 
-const APP_PATH = './dist/Negative-darwin-x64/Negative.app/Contents/MacOS/Negative';
-const IMAGE_ID = '#negativeImage';
+const config = require('../../../config.json');
+const { 
+	APP_PATH,
+	IMAGE_ID,
+	WAIT_UNTIL_TIMEOUT
+} = config;
 
 describe('View > Zoom Out', function () {
 	const app = new Application({
@@ -37,7 +41,7 @@ describe('View > Zoom Out', function () {
 				return app.client.waitUntil(() => {
 					return app.client.selectorExecute(IMAGE_ID, (element) => element[0].getAttribute('data-zoom-level'))
 						.then((zoomLevel) => zoomLevel === '0.75');
-				}, 2000);
+				}, WAIT_UNTIL_TIMEOUT);
 			})
 			.then(() => app.electron.ipcRenderer.send('test-zoom-out'))
 			.then(() => app.electron.ipcRenderer.send('test-zoom-out'))
@@ -45,7 +49,7 @@ describe('View > Zoom Out', function () {
 				return app.client.waitUntil(() => {
 					return app.client.selectorExecute(IMAGE_ID, (element) => element[0].getAttribute('data-zoom-level'))
 						.then((zoomLevel) => zoomLevel === '0.5');
-				}, 2000);
+				}, WAIT_UNTIL_TIMEOUT);
 			});
 	});
 });

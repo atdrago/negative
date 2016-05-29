@@ -1,0 +1,8 @@
+{
+	"APP_PATH": "./dist/Negative-darwin-x64/Negative.app/Contents/MacOS/Negative",
+	"IMAGE_ID": "#negativeImage",
+	"REGEX_PNG": "^data:image\/png;base64,",
+	"TABS_ID": "#tabs",
+	"TIPS_ID": "#shouldShowTips",
+	"WAIT_UNTIL_TIMEOUT": 2000
+}

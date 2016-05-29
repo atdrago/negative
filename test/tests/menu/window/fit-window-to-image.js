@@ -2,9 +2,13 @@
 
 const { Application } = require('spectron');
 
-const APP_PATH = './dist/Negative-darwin-x64/Negative.app/Contents/MacOS/Negative';
-const IMAGE_ID = '#negativeImage';
-const REGEX_PNG = /^data:image\/png;base64,/;
+const config    = require('../../../config.json');
+const REGEX_PNG = new RegExp(config.REGEX_PNG);
+const { 
+	APP_PATH,
+	IMAGE_ID,
+	WAIT_UNTIL_TIMEOUT
+} = config;
 
 describe('Window > Fit Window to Image', function () {
 	const app = new Application({
@@ -50,7 +54,7 @@ describe('Window > Fit Window to Image', function () {
 						.then((bounds) => {
 							return origBounds.width === bounds.width && origBounds.height === bounds.height;
 						});
-				}, 2000);
+				}, WAIT_UNTIL_TIMEOUT);
 			});
 	});
 });

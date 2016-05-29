@@ -1,10 +1,13 @@
 'use strict';
 
 const { Application } = require('spectron');
-const { assert } = require('chai');
+const { assert }      = require('chai');
 
-const APP_PATH = './dist/Negative-darwin-x64/Negative.app/Contents/MacOS/Negative';
-const TABS_ID  = '#tabs';
+const config = require('../../../config.json');
+const { 
+	APP_PATH,
+	TABS_ID
+} = config;
 
 describe('File > New Tab', function () {
 	const app = new Application({

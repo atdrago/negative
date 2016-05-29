@@ -11,7 +11,7 @@ describe('Negative > Reset...', function () {
 		env: {
 			ELECTRON_ENABLE_LOGGING: true,
 			ELECTRON_ENABLE_STACK_DUMPING: true,
-			NEGATIVE_IGNORE_WINDOW_SETTINGS: false,
+			NEGATIVE_IGNORE_SETTINGS: false,
 			NEGATIVE_SKIP_RESET_DIALOG: true,
 			NEGATIVE_SETTINGS_PATH: '../test/fixtures/two-windows-with-data.json',
 			NODE_ENV: 'development'
@@ -33,8 +33,7 @@ describe('Negative > Reset...', function () {
 	it('Should reset', () => {
 		return app.client.waitUntilWindowLoaded()
 			.then(() => app.electron.ipcRenderer.send('test-reset'))
-			.then(() => app.client.windowHandles())
-			.then((handles) => app.client.window(handles.value[0]))
+			.then(() => app.client.windowByIndex(0))
 			.then(() => app.client.getWindowCount())
 			.then((count) => assert.strictEqual(count, 1));
 	});

@@ -12,7 +12,7 @@ describe('Window > Next Tab', function () {
 		env: {
 			ELECTRON_ENABLE_LOGGING: true,
 			ELECTRON_ENABLE_STACK_DUMPING: true,
-			NEGATIVE_IGNORE_WINDOW_SETTINGS: false,
+			NEGATIVE_IGNORE_SETTINGS: false,
 			NEGATIVE_SKIP_RESET_DIALOG: true,
 			NEGATIVE_SETTINGS_PATH: '../test/fixtures/window-with-two-tabs.json',
 			NODE_ENV: 'development'

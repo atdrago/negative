@@ -4,6 +4,9 @@
 	const { ipcRenderer } = require('electron');
 	const undoManagers = [];
 	
+	let addTransitionColorsTimeout;
+	let removeTransitionColorsTimeout;
+	
 	ipcRenderer.on('window-settings-request', (evt, windowSettings) => {
 		windowSettings = Object.assign({}, windowSettings, { undoManagers: undoManagers });
 		
@@ -100,6 +103,27 @@
 				const shouldReset = confirm('Reset will remove all images, tabs, and windows, and open a new Negative window. Are you sure you want to continue?');
 				
 				ipcRenderer.send('confirm-reset-response', shouldReset);
+			},
+			
+			toggleDarkMode() {
+				const colorTransitionDuration = 500;
+				
+				clearTimeout(addTransitionColorsTimeout);
+				clearTimeout(removeTransitionColorsTimeout);
+				
+				document.body.classList.add('transition-colors');
+				
+				addTransitionColorsTimeout = setTimeout(() => {
+					if (document.body.classList.contains('light-mode')) {
+						document.body.classList.remove('light-mode');
+					} else {
+						document.body.classList.add('light-mode');
+					}
+					
+					removeTransitionColorsTimeout = setTimeout(() => {
+						document.body.classList.remove('transition-colors');
+					}, colorTransitionDuration);
+				}, 0);
 			}
 		};
 	});

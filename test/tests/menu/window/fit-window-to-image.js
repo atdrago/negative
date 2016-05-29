@@ -1,7 +1,6 @@
 'use strict';
 
 const { Application } = require('spectron');
-const { assert } = require('chai');
 
 const APP_PATH = './dist/Negative-darwin-x64/Negative.app/Contents/MacOS/Negative';
 const IMAGE_ID = '#negativeImage';
@@ -13,7 +12,7 @@ describe('Window > Fit Window to Image', function () {
 		env: {
 			ELECTRON_ENABLE_LOGGING: true,
 			ELECTRON_ENABLE_STACK_DUMPING: true,
-			NEGATIVE_IGNORE_WINDOW_SETTINGS: false,
+			NEGATIVE_IGNORE_SETTINGS: false,
 			NEGATIVE_SKIP_RESET_DIALOG: true,
 			NEGATIVE_SETTINGS_PATH: '../test/fixtures/two-windows-with-data.json',
 			NODE_ENV: 'development'
@@ -45,10 +44,13 @@ describe('Window > Fit Window to Image', function () {
 				return app.browserWindow.setSize(width + 100, height + 100);
 			})
 			.then(() => app.electron.ipcRenderer.send('test-fit-window-to-image'))
-			.then(() => app.browserWindow.getBounds())
-			.then((bounds) => {
-				assert.strictEqual(origBounds.width, bounds.width);
-				assert.strictEqual(origBounds.height, bounds.height);
+			.then(() => {
+				return app.client.waitUntil(() => {
+					return app.browserWindow.getBounds()
+						.then((bounds) => {
+							return origBounds.width === bounds.width && origBounds.height === bounds.height;
+						});
+				}, 2000);
 			});
 	});
 });

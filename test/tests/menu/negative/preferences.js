@@ -12,7 +12,7 @@ describe('Negative > Preferences', function () {
 		env: {
 			ELECTRON_ENABLE_LOGGING: true,
 			ELECTRON_ENABLE_STACK_DUMPING: true,
-			NEGATIVE_IGNORE_WINDOW_SETTINGS: true,
+			NEGATIVE_IGNORE_SETTINGS: true,
 			NEGATIVE_SKIP_RESET_DIALOG: true,
 			NODE_ENV: 'development'
 		}
@@ -38,44 +38,38 @@ describe('Negative > Preferences', function () {
 	});
 	
 	it('Should toggle tips', () => {
-		let windowHandles, originalIsChecked;
-		
 		// Focus the preferences window with `client.window`
 		return app.client.waitUntilWindowLoaded()
 			.then(() => app.electron.ipcRenderer.send('test-preferences'))
-			.then(() => app.client.windowHandles())
-			.then((handles) => {
-				windowHandles = handles.value;
-				// Focus the Preferences window
-				return app.client.window(windowHandles[1]);
-			})
+			.then(() => app.client.windowByIndex(1))
 			.then(() => {
 				// Get "Show tips" checkbox value
-				return app.client.selectorExecute(TIPS_ID, (elements) => {
-					return elements[0].checked;
-				})
-			})
-			.then((isChecked) => {
-				return assert.isTrue(isChecked, '"Show tips" checkbox should default to checked.');
+				return app.client.waitUntil(() => {
+					return app.client.selectorExecute(TIPS_ID, (elements) => {
+						return elements[0].checked;
+					});
+				}, 2000);
 			})
 			// Focus the Negative window
-			.then(() => app.client.window(windowHandles[0]))
+			.then(() => app.client.windowByIndex(0))
 			.then(() => {
 				// Get the class that is toggled by the "Show tips" checkbox
-				return app.client.selectorExecute('//body', (elements) => {
-					return elements[0].classList.contains('no-tips');
-				});
+				return app.client.waitUntil(() => {
+					return app.client.selectorExecute('//body', (elements) => {
+						return !elements[0].classList.contains('no-tips');
+					});
+				}, 2000);
 			})
-			.then((hasNoTipsClass) => assert.isFalse(hasNoTipsClass, 'The body element should not have the .no-tips class when "Show tips" is checked.'))
-			.then(() => app.client.window(windowHandles[1]))
+			.then(() => app.client.windowByIndex(1))
 			.then(() => app.client.leftClick(TIPS_ID))
-			.then(() => app.client.window(windowHandles[0]))
+			.then(() => app.client.windowByIndex(0))
 			.then(() => {
-				return app.client.selectorExecute('//body', (elements) => {
-					return elements[0].classList.contains('no-tips');
-				});
+				return app.client.waitUntil(() => {
+					return app.client.selectorExecute('//body', (elements) => {
+						return elements[0].classList.contains('no-tips');
+					});
+				}, 2000);
 			})
-			.then((hasNoTipsClass) => assert.isTrue(hasNoTipsClass, 'The body element should have the .no-tips class when "Show tips" is checked.'));
 	});
 	
 	// @TODO - Close should be tested here, but because it uses

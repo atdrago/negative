@@ -1,6 +1,6 @@
 {
   "name": "Negative",
-  "version": "0.7.0",
+  "version": "0.8.0",
   "description": "An app for making visual comparisons.",
   "main": "lib/main.js",
   "repository": "https://github.com/atdrago/negative.git",
@@ -8,16 +8,18 @@
   "scripts": {
     "start": "export NODE_ENV=development && export ELECTRON_ENABLE_LOGGING=true && export ELECTRON_ENABLE_STACK_DUMPING=true && electron .",
     "prebuild": "rm -rf dist",
-    "build": "gulp release && mkdir -p ./release/node_modules && npm install --production --prefix ./release/ && grunt",
+    "build": "gulp release && mkdir -p ./release/node_modules && npm install --production --prefix ./release/ && gulp build",
     "lint": "gulp js:lint",
     "test": "mocha --recursive",
     "postinstall": "./node_modules/.bin/electron-rebuild",
     "travis": "npm run build && npm test",
-    "app": "open ./dist/Negative-darwin-x64/Negative.app"
+    "open": "open ./dist/Negative-darwin-x64/Negative.app",
+    "predmg": "npm run build && mkdir -p ./dist/release && mv -f ./dist/Negative-darwin-x64/Negative.app ./dist/release",
+    "dmg": "hdiutil create -srcfolder ./dist/release ./dist/release/Negative.dmg"
   },
   "author": "Adam Drago",
   "dependencies": {
-    "electron-window": "^0.8.0",
+    "electron-window": "^0.8.1",
     "nodobjc": "^2.1.0",
     "simple-undo": "^1.0.1"
   },
@@ -25,10 +27,9 @@
     "chai": "^3.5.0",
     "del": "^2.2.0",
     "devtron": "^1.1.2",
-    "electron-prebuilt": "^1.1.1",
-    "electron-rebuild": "^1.1.3",
-    "grunt": "^1.0.1",
-    "grunt-electron": "^4.0.0",
+    "electron-packager": "^7.0.2",
+    "electron-prebuilt": "1.1.3",
+    "electron-rebuild": "^1.1.5",
     "gulp": "^3.9.1",
     "gulp-changed": "^1.3.0",
     "gulp-clean-css": "^2.0.6",
@@ -38,7 +39,6 @@
     "gulp-uglify": "^1.5.3",
     "gulp-watch": "^4.3.5",
     "gulp-wrap": "^0.11.0",
-    "load-grunt-tasks": "^3.5.0",
     "mocha": "^2.4.5",
     "run-sequence": "^1.1.5",
     "spectron": "^3.1.0",

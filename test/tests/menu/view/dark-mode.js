@@ -1,0 +1,51 @@
+'use strict';
+
+const { Application } = require('spectron');
+const { assert } = require('chai');
+
+const APP_PATH = './dist/Negative-darwin-x64/Negative.app/Contents/MacOS/Negative';
+
+describe('View > Dark Mode', function () {
+	const app = new Application({
+		path: APP_PATH,
+		env: {
+			ELECTRON_ENABLE_LOGGING: true,
+			ELECTRON_ENABLE_STACK_DUMPING: true,
+			NEGATIVE_IGNORE_SETTINGS: true,
+			NEGATIVE_SKIP_RESET_DIALOG: true,
+			NODE_ENV: 'development'
+		}
+	});
+	
+	this.timeout(60000);
+	
+	beforeEach(() => {
+		return app.start();
+	});
+
+	afterEach(() => {
+		if (app && app.isRunning()) {
+			return app.stop();
+		}
+	});
+	
+	it('Should toggle dark mode', () => {
+		return app.client.waitUntilWindowLoaded()
+			.then(() => {
+				return app.client.selectorExecute('//body', (elements) => {
+					return elements[0].classList.contains('light-mode');
+				});
+			})
+			.then((hasNoTipsClass) => assert.isFalse(hasNoTipsClass, 'The body element should not have the .light-mode class when on startup.'))
+			.then(() => app.electron.ipcRenderer.send('test-dark-mode'))
+			.then(() => {
+				return app.client.waitUntil(() => {
+					return app.client.selectorExecute('//body', (elements) => {
+						return elements[0].classList.contains('light-mode');
+					});
+				}, 2000);
+			})
+			.then((hasNoTipsClass) => assert.isTrue(hasNoTipsClass, 'The body element should have the .light-mode class Dark Mode is off.'))
+			
+	});
+});

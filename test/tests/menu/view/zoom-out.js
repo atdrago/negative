@@ -1,7 +1,6 @@
 'use strict';
 
 const { Application } = require('spectron');
-const { assert } = require('chai');
 
 const APP_PATH = './dist/Negative-darwin-x64/Negative.app/Contents/MacOS/Negative';
 const IMAGE_ID = '#negativeImage';
@@ -12,7 +11,7 @@ describe('View > Zoom Out', function () {
 		env: {
 			ELECTRON_ENABLE_LOGGING: true,
 			ELECTRON_ENABLE_STACK_DUMPING: true,
-			NEGATIVE_IGNORE_WINDOW_SETTINGS: false,
+			NEGATIVE_IGNORE_SETTINGS: false,
 			NEGATIVE_SKIP_RESET_DIALOG: true,
 			NEGATIVE_SETTINGS_PATH: '../test/fixtures/two-windows-with-data.json',
 			NODE_ENV: 'development'
@@ -35,22 +34,18 @@ describe('View > Zoom Out', function () {
 		return app.client.waitUntilWindowLoaded()
 			.then(() => app.electron.ipcRenderer.send('test-zoom-out'))
 			.then(() => {
-				return app.client.selectorExecute(IMAGE_ID, (element) => {
-					const zoomLevel = element[0].getAttribute('data-zoom-level');
-					
-					return zoomLevel;
-				});
+				return app.client.waitUntil(() => {
+					return app.client.selectorExecute(IMAGE_ID, (element) => element[0].getAttribute('data-zoom-level'))
+						.then((zoomLevel) => zoomLevel === '0.75');
+				}, 2000);
 			})
-			.then((zoomLevel) => assert.equal(zoomLevel, 0.75))
 			.then(() => app.electron.ipcRenderer.send('test-zoom-out'))
 			.then(() => app.electron.ipcRenderer.send('test-zoom-out'))
 			.then(() => {
-				return app.client.selectorExecute(IMAGE_ID, (element) => {
-					const zoomLevel = element[0].getAttribute('data-zoom-level');
-					
-					return zoomLevel;
-				});
-			})
-			.then((zoomLevel) => assert.equal(zoomLevel, 0.5));
+				return app.client.waitUntil(() => {
+					return app.client.selectorExecute(IMAGE_ID, (element) => element[0].getAttribute('data-zoom-level'))
+						.then((zoomLevel) => zoomLevel === '0.5');
+				}, 2000);
+			});
 	});
 });

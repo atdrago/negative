@@ -17,6 +17,7 @@ describe('File > New Tab', function () {
 			ELECTRON_ENABLE_STACK_DUMPING: true,
 			NEGATIVE_IGNORE_SETTINGS: true,
 			NEGATIVE_SKIP_RESET_DIALOG: true,
+			NEGATIVE_VERBOSE: true,
 			NODE_ENV: 'development'
 		}
 	});
@@ -43,6 +44,21 @@ describe('File > New Tab', function () {
 					return el.children && el.children.length;
 				});
 			})
-			.then((tabCount) => assert.equal(tabCount, 2));
+			.then((tabCount) => assert.equal(tabCount, 2))
+			.catch((err) => {
+				return app.client.getMainProcessLogs()
+					.then((logs) => {
+						console.log('*** MAIN PROCESS LOGS ***');
+						logs.forEach((log) => console.log(log));
+						
+						return app.client.getRenderProcessLogs();
+					})
+					.then((logs) => {
+						console.log('*** RENDER PROCESS LOGS ***');
+						logs.forEach((log) => console.log(log));
+						
+						throw err;
+					});
+			});
 	});
 });

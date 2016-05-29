@@ -14,6 +14,7 @@ describe('Negative > Quit', function () {
 			ELECTRON_ENABLE_STACK_DUMPING: true,
 			NEGATIVE_IGNORE_SETTINGS: true,
 			NEGATIVE_SKIP_RESET_DIALOG: true,
+			NEGATIVE_VERBOSE: true,
 			NODE_ENV: 'development'
 		}
 	});
@@ -36,5 +37,20 @@ describe('Negative > Quit', function () {
 			.then(() => {
 				return app.stop().then(() => assert.isFalse(app.isRunning()))
 			})
+			.catch((err) => {
+				return app.client.getMainProcessLogs()
+					.then((logs) => {
+						console.log('*** MAIN PROCESS LOGS ***');
+						logs.forEach((log) => console.log(log));
+						
+						return app.client.getRenderProcessLogs();
+					})
+					.then((logs) => {
+						console.log('*** RENDER PROCESS LOGS ***');
+						logs.forEach((log) => console.log(log));
+						
+						throw err;
+					});
+			});
 	});
 });

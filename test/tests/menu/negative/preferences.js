@@ -18,6 +18,7 @@ describe('Negative > Preferences', function () {
 			ELECTRON_ENABLE_STACK_DUMPING: true,
 			NEGATIVE_IGNORE_SETTINGS: true,
 			NEGATIVE_SKIP_RESET_DIALOG: true,
+			NEGATIVE_VERBOSE: true,
 			NODE_ENV: 'development'
 		}
 	});
@@ -38,7 +39,23 @@ describe('Negative > Preferences', function () {
 		return app.client.waitUntilWindowLoaded()
 			.then(() => app.electron.ipcRenderer.send('test-preferences'))
 			.then(() => app.client.getWindowCount())
-			.then((count) => assert.strictEqual(count, 2));
+			.then((count) => assert.strictEqual(count, 2))
+			.catch((err) => {
+				return app.client.getMainProcessLogs()
+					.then((logs) => {
+						console.log('*** MAIN PROCESS LOGS ***');
+						logs.forEach((log) => console.log(log));
+						
+						return app.client.getRenderProcessLogs();
+					})
+					.then((logs) => {
+						console.log('*** RENDER PROCESS LOGS ***');
+						logs.forEach((log) => console.log(log));
+						
+						throw err;
+					});
+			})
+			
 	});
 	
 	it('Should toggle tips', () => {
@@ -74,6 +91,21 @@ describe('Negative > Preferences', function () {
 					});
 				}, WAIT_UNTIL_TIMEOUT);
 			})
+			.catch((err) => {
+				return app.client.getMainProcessLogs()
+					.then((logs) => {
+						console.log('*** MAIN PROCESS LOGS ***');
+						logs.forEach((log) => console.log(log));
+						
+						return app.client.getRenderProcessLogs();
+					})
+					.then((logs) => {
+						console.log('*** RENDER PROCESS LOGS ***');
+						logs.forEach((log) => console.log(log));
+						
+						throw err;
+					});
+			});
 	});
 	
 	// @TODO - Close should be tested here, but because it uses

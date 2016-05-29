@@ -18,6 +18,7 @@ describe('Window > Next Tab And Resize', function () {
 			NEGATIVE_IGNORE_SETTINGS: false,
 			NEGATIVE_SKIP_RESET_DIALOG: true,
 			NEGATIVE_SETTINGS_PATH: '../test/fixtures/window-with-two-tabs-of-different-sizes.json',
+			NEGATIVE_VERBOSE: true,
 			NODE_ENV: 'development'
 		}
 	});
@@ -60,6 +61,21 @@ describe('Window > Next Tab And Resize', function () {
 							return firstTabBounds.width === bounds.width && firstTabBounds.height === bounds.height;
 						});
 				}, WAIT_UNTIL_TIMEOUT);
+			})
+			.catch((err) => {
+				return app.client.getMainProcessLogs()
+					.then((logs) => {
+						console.log('*** MAIN PROCESS LOGS ***');
+						logs.forEach((log) => console.log(log));
+						
+						return app.client.getRenderProcessLogs();
+					})
+					.then((logs) => {
+						console.log('*** RENDER PROCESS LOGS ***');
+						logs.forEach((log) => console.log(log));
+						
+						throw err;
+					});
 			});
 	});
 });

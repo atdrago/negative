@@ -2,9 +2,13 @@
 
 const { Application } = require('spectron');
 
-const APP_PATH = './dist/Negative-darwin-x64/Negative.app/Contents/MacOS/Negative';
-const IMAGE_ID = '#negativeImage';
-const REGEX_PNG = /^data:image\/png;base64,/;
+const config    = require('../../../config.json');
+const REGEX_PNG = new RegExp(config.REGEX_PNG);
+const { 
+	APP_PATH,
+	IMAGE_ID,
+	WAIT_UNTIL_TIMEOUT
+} = config;
 
 describe('Edit > Redo', function () {
 	const app = new Application({
@@ -38,7 +42,7 @@ describe('Edit > Redo', function () {
 				return app.client.waitUntil(() => {
 					return app.client.selectorExecute(IMAGE_ID, (element) => element[0].getAttribute('src'))
 						.then((src) => REGEX_PNG.test(src));
-				}, 2000);
+				}, WAIT_UNTIL_TIMEOUT);
 			});
 	});
 });

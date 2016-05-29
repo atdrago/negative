@@ -1,10 +1,14 @@
 'use strict';
 
 const { Application } = require('spectron');
-const { assert } = require('chai');
+const { assert }      = require('chai');
 
-const APP_PATH = './dist/Negative-darwin-x64/Negative.app/Contents/MacOS/Negative';
-const TIPS_ID  = '#shouldShowTips';
+const config = require('../../../config.json');
+const { 
+	APP_PATH,
+	TIPS_ID,
+	WAIT_UNTIL_TIMEOUT
+} = config;
 
 describe('Negative > Preferences', function () {
 	const app = new Application({
@@ -48,7 +52,7 @@ describe('Negative > Preferences', function () {
 					return app.client.selectorExecute(TIPS_ID, (elements) => {
 						return elements[0].checked;
 					});
-				}, 2000);
+				}, WAIT_UNTIL_TIMEOUT);
 			})
 			// Focus the Negative window
 			.then(() => app.client.windowByIndex(0))
@@ -58,7 +62,7 @@ describe('Negative > Preferences', function () {
 					return app.client.selectorExecute('//body', (elements) => {
 						return !elements[0].classList.contains('no-tips');
 					});
-				}, 2000);
+				}, WAIT_UNTIL_TIMEOUT);
 			})
 			.then(() => app.client.windowByIndex(1))
 			.then(() => app.client.leftClick(TIPS_ID))
@@ -68,7 +72,7 @@ describe('Negative > Preferences', function () {
 					return app.client.selectorExecute('//body', (elements) => {
 						return elements[0].classList.contains('no-tips');
 					});
-				}, 2000);
+				}, WAIT_UNTIL_TIMEOUT);
 			})
 	});
 	

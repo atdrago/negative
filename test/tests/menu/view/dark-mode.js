@@ -3,7 +3,11 @@
 const { Application } = require('spectron');
 const { assert } = require('chai');
 
-const APP_PATH = './dist/Negative-darwin-x64/Negative.app/Contents/MacOS/Negative';
+const config = require('../../../config.json');
+const { 
+	APP_PATH,
+	WAIT_UNTIL_TIMEOUT
+} = config;
 
 describe('View > Dark Mode', function () {
 	const app = new Application({
@@ -43,7 +47,7 @@ describe('View > Dark Mode', function () {
 					return app.client.selectorExecute('//body', (elements) => {
 						return elements[0].classList.contains('light-mode');
 					});
-				}, 2000);
+				}, WAIT_UNTIL_TIMEOUT);
 			})
 			.then((hasNoTipsClass) => assert.isTrue(hasNoTipsClass, 'The body element should have the .light-mode class Dark Mode is off.'))
 			

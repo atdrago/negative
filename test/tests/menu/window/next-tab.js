@@ -3,8 +3,12 @@
 const { Application } = require('spectron');
 const { assert } = require('chai');
 
-const APP_PATH = './dist/Negative-darwin-x64/Negative.app/Contents/MacOS/Negative';
-const TABS_ID  = '#tabs';
+const config    = require('../../../config.json');
+const REGEX_PNG = new RegExp(config.REGEX_PNG);
+const { 
+	APP_PATH,
+	TABS_ID
+} = config;
 
 describe('Window > Next Tab', function () {
 	const app = new Application({

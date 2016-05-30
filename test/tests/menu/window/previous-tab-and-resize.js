@@ -2,7 +2,11 @@
 
 const { Application } = require('spectron');
 
-const APP_PATH = './dist/Negative-darwin-x64/Negative.app/Contents/MacOS/Negative';
+const config    = require('../../../config.json');
+const { 
+	APP_PATH,
+	WAIT_UNTIL_TIMEOUT
+} = config;
 
 describe('Window > Previous Tab And Resize', function () {
 	const app = new Application({
@@ -13,6 +17,7 @@ describe('Window > Previous Tab And Resize', function () {
 			NEGATIVE_IGNORE_SETTINGS: false,
 			NEGATIVE_SKIP_RESET_DIALOG: true,
 			NEGATIVE_SETTINGS_PATH: '../test/fixtures/window-with-two-tabs-of-different-sizes.json',
+			NEGATIVE_VERBOSE: true,
 			NODE_ENV: 'development'
 		}
 	});
@@ -45,7 +50,7 @@ describe('Window > Previous Tab And Resize', function () {
 						.then((bounds) => {
 							return firstTabBounds.width !== bounds.width && firstTabBounds.height !== bounds.height;
 						});
-				}, 2000);
+				}, WAIT_UNTIL_TIMEOUT);
 			})
 			.then(() => app.electron.ipcRenderer.send('test-previous-tab-and-resize'))
 			.then(() => {
@@ -54,7 +59,22 @@ describe('Window > Previous Tab And Resize', function () {
 						.then((bounds) => {
 							return firstTabBounds.width === bounds.width && firstTabBounds.height === bounds.height;
 						});
-				}, 2000);
+				}, WAIT_UNTIL_TIMEOUT);
+			})
+			.catch((err) => {
+				return app.client.getMainProcessLogs()
+					.then((logs) => {
+						console.log('*** MAIN PROCESS LOGS ***');
+						logs.forEach((log) => console.log(log));
+						
+						return app.client.getRenderProcessLogs();
+					})
+					.then((logs) => {
+						console.log('*** RENDER PROCESS LOGS ***');
+						logs.forEach((log) => console.log(log));
+						
+						throw err;
+					});
 			});
 	});
 });

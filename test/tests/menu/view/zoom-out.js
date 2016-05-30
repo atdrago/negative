@@ -2,8 +2,12 @@
 
 const { Application } = require('spectron');
 
-const APP_PATH = './dist/Negative-darwin-x64/Negative.app/Contents/MacOS/Negative';
-const IMAGE_ID = '#negativeImage';
+const config = require('../../../config.json');
+const { 
+	APP_PATH,
+	IMAGE_ID,
+	WAIT_UNTIL_TIMEOUT
+} = config;
 
 describe('View > Zoom Out', function () {
 	const app = new Application({
@@ -14,6 +18,7 @@ describe('View > Zoom Out', function () {
 			NEGATIVE_IGNORE_SETTINGS: false,
 			NEGATIVE_SKIP_RESET_DIALOG: true,
 			NEGATIVE_SETTINGS_PATH: '../test/fixtures/two-windows-with-data.json',
+			NEGATIVE_VERBOSE: true,
 			NODE_ENV: 'development'
 		}
 	});
@@ -37,7 +42,7 @@ describe('View > Zoom Out', function () {
 				return app.client.waitUntil(() => {
 					return app.client.selectorExecute(IMAGE_ID, (element) => element[0].getAttribute('data-zoom-level'))
 						.then((zoomLevel) => zoomLevel === '0.75');
-				}, 2000);
+				}, WAIT_UNTIL_TIMEOUT);
 			})
 			.then(() => app.electron.ipcRenderer.send('test-zoom-out'))
 			.then(() => app.electron.ipcRenderer.send('test-zoom-out'))
@@ -45,7 +50,22 @@ describe('View > Zoom Out', function () {
 				return app.client.waitUntil(() => {
 					return app.client.selectorExecute(IMAGE_ID, (element) => element[0].getAttribute('data-zoom-level'))
 						.then((zoomLevel) => zoomLevel === '0.5');
-				}, 2000);
+				}, WAIT_UNTIL_TIMEOUT);
+			})
+			.catch((err) => {
+				return app.client.getMainProcessLogs()
+					.then((logs) => {
+						console.log('*** MAIN PROCESS LOGS ***');
+						logs.forEach((log) => console.log(log));
+						
+						return app.client.getRenderProcessLogs();
+					})
+					.then((logs) => {
+						console.log('*** RENDER PROCESS LOGS ***');
+						logs.forEach((log) => console.log(log));
+						
+						throw err;
+					});
 			});
 	});
 });

@@ -1,9 +1,10 @@
 'use strict';
 
 const { Application } = require('spectron');
-const { assert } = require('chai');
+const { assert }      = require('chai');
 
-const APP_PATH = './dist/Negative-darwin-x64/Negative.app/Contents/MacOS/Negative';
+const config       = require('../../../config.json');
+const { APP_PATH } = config;
 
 describe('Window > Move', function () {
 	const app = new Application({
@@ -13,6 +14,7 @@ describe('Window > Move', function () {
 			ELECTRON_ENABLE_STACK_DUMPING: true,
 			NEGATIVE_IGNORE_SETTINGS: true,
 			NEGATIVE_SKIP_RESET_DIALOG: true,
+			NEGATIVE_VERBOSE: true,
 			NODE_ENV: 'development'
 		}
 	});

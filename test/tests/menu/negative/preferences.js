@@ -1,10 +1,14 @@
 'use strict';
 
 const { Application } = require('spectron');
-const { assert } = require('chai');
+const { assert }      = require('chai');
 
-const APP_PATH = './dist/Negative-darwin-x64/Negative.app/Contents/MacOS/Negative';
-const TIPS_ID  = '#shouldShowTips';
+const config = require('../../../config.json');
+const { 
+	APP_PATH,
+	TIPS_ID,
+	WAIT_UNTIL_TIMEOUT
+} = config;
 
 describe('Negative > Preferences', function () {
 	const app = new Application({
@@ -14,6 +18,7 @@ describe('Negative > Preferences', function () {
 			ELECTRON_ENABLE_STACK_DUMPING: true,
 			NEGATIVE_IGNORE_SETTINGS: true,
 			NEGATIVE_SKIP_RESET_DIALOG: true,
+			NEGATIVE_VERBOSE: true,
 			NODE_ENV: 'development'
 		}
 	});
@@ -34,7 +39,23 @@ describe('Negative > Preferences', function () {
 		return app.client.waitUntilWindowLoaded()
 			.then(() => app.electron.ipcRenderer.send('test-preferences'))
 			.then(() => app.client.getWindowCount())
-			.then((count) => assert.strictEqual(count, 2));
+			.then((count) => assert.strictEqual(count, 2))
+			.catch((err) => {
+				return app.client.getMainProcessLogs()
+					.then((logs) => {
+						console.log('*** MAIN PROCESS LOGS ***');
+						logs.forEach((log) => console.log(log));
+						
+						return app.client.getRenderProcessLogs();
+					})
+					.then((logs) => {
+						console.log('*** RENDER PROCESS LOGS ***');
+						logs.forEach((log) => console.log(log));
+						
+						throw err;
+					});
+			})
+			
 	});
 	
 	it('Should toggle tips', () => {
@@ -48,7 +69,7 @@ describe('Negative > Preferences', function () {
 					return app.client.selectorExecute(TIPS_ID, (elements) => {
 						return elements[0].checked;
 					});
-				}, 2000);
+				}, WAIT_UNTIL_TIMEOUT);
 			})
 			// Focus the Negative window
 			.then(() => app.client.windowByIndex(0))
@@ -58,7 +79,7 @@ describe('Negative > Preferences', function () {
 					return app.client.selectorExecute('//body', (elements) => {
 						return !elements[0].classList.contains('no-tips');
 					});
-				}, 2000);
+				}, WAIT_UNTIL_TIMEOUT);
 			})
 			.then(() => app.client.windowByIndex(1))
 			.then(() => app.client.leftClick(TIPS_ID))
@@ -68,8 +89,23 @@ describe('Negative > Preferences', function () {
 					return app.client.selectorExecute('//body', (elements) => {
 						return elements[0].classList.contains('no-tips');
 					});
-				}, 2000);
+				}, WAIT_UNTIL_TIMEOUT);
 			})
+			.catch((err) => {
+				return app.client.getMainProcessLogs()
+					.then((logs) => {
+						console.log('*** MAIN PROCESS LOGS ***');
+						logs.forEach((log) => console.log(log));
+						
+						return app.client.getRenderProcessLogs();
+					})
+					.then((logs) => {
+						console.log('*** RENDER PROCESS LOGS ***');
+						logs.forEach((log) => console.log(log));
+						
+						throw err;
+					});
+			});
 	});
 	
 	// @TODO - Close should be tested here, but because it uses

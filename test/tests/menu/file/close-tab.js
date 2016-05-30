@@ -1,10 +1,13 @@
 'use strict';
 
 const { Application } = require('spectron');
-const { assert } = require('chai');
+const { assert }      = require('chai');
 
-const APP_PATH = './dist/Negative-darwin-x64/Negative.app/Contents/MacOS/Negative';
-const TABS_ID  = '#tabs';
+const config = require('../../../config.json');
+const { 
+	APP_PATH,
+	TABS_ID
+} = config;
 
 describe('File > Close Tab', function () {
 	const app = new Application({
@@ -15,6 +18,7 @@ describe('File > Close Tab', function () {
 			NEGATIVE_IGNORE_SETTINGS: false,
 			NEGATIVE_SKIP_RESET_DIALOG: true,
 			NEGATIVE_SETTINGS_PATH: '../test/fixtures/window-with-two-tabs.json',
+			NEGATIVE_VERBOSE: true,
 			NODE_ENV: 'development'
 		}
 	});
@@ -41,6 +45,21 @@ describe('File > Close Tab', function () {
 					return el.children && el.children.length;
 				});
 			})
-			.then((tabCount) => assert.equal(tabCount, 1));
+			.then((tabCount) => assert.equal(tabCount, 1))
+			.catch((err) => {
+				return app.client.getMainProcessLogs()
+					.then((logs) => {
+						console.log('*** MAIN PROCESS LOGS ***');
+						logs.forEach((log) => console.log(log));
+						
+						return app.client.getRenderProcessLogs();
+					})
+					.then((logs) => {
+						console.log('*** RENDER PROCESS LOGS ***');
+						logs.forEach((log) => console.log(log));
+						
+						throw err;
+					});
+			});
 	});
 });

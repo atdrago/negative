@@ -14,8 +14,8 @@
     "postinstall": "./node_modules/.bin/electron-rebuild",
     "travis": "npm run build && npm test",
     "open": "open ./dist/Negative-darwin-x64/Negative.app",
-    "predmg": "npm run build && mkdir -p ./dist/release && mv -f ./dist/Negative-darwin-x64/Negative.app ./dist/release",
-    "dmg": "export NEGATIVE_VERSION=$(node -p -e \"require('./package.json').version\") && hdiutil create -srcfolder ./dist/release ./dist/release/Negative-v$NEGATIVE_VERSION.dmg"
+    "preappdmg": "npm run build",
+    "appdmg": "export NEGATIVE_VERSION=$(node -p -e \"require('./package.json').version\") && appdmg ./resources/appdmg.json ./dist/Negative-darwin-x64/Negative-v$NEGATIVE_VERSION.dmg && open ./dist/Negative-darwin-x64/Negative-v$NEGATIVE_VERSION.dmg"
   },
   "author": "Adam Drago",
   "dependencies": {

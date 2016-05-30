@@ -7,7 +7,7 @@
 Follow [@NegativeJS](https://twitter.com/negativejs) on Twitter for important updates.
 
 ## Download
-- [Negative v0.8.0 for Mac OS X ](https://github.com/atdrago/negative/releases/download/v0.8.0/Negative.dmg)
+- [Negative v0.8.1 for Mac OS X ](https://github.com/atdrago/negative/releases/download/v0.8.1/Negative.dmg)
 
 ## User Documentation
 Please check [negative/releases](https://github.com/atdrago/negative/releases) for details on changes between versions.

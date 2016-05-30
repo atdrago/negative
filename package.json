@@ -6,7 +6,7 @@
   "repository": "https://github.com/atdrago/negative.git",
   "license": "MIT",
   "scripts": {
-    "start": "export NODE_ENV=development && export ELECTRON_ENABLE_LOGGING=true && export ELECTRON_ENABLE_STACK_DUMPING=true && electron .",
+    "start": "export NODE_ENV=development && export ELECTRON_ENABLE_LOGGING=true && export ELECTRON_ENABLE_STACK_DUMPING=true && export NEGATIVE_VERBOSE=true && electron .",
     "prebuild": "rm -rf dist",
     "build": "gulp release && mkdir -p ./release/node_modules && npm install --production --prefix ./release/ && gulp build",
     "lint": "gulp js:lint",

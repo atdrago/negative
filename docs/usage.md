@@ -6,7 +6,8 @@ Negative is made for anybody who needs to compare two things on a computer scree
 [Report a Problem](https://github.com/atdrago/negative/issues)
 
 ## Basic Usage
-***To be updated -- old ui***
+Negative is perfect for web developers. Below is an example of how it might be used for getting CSS pixel perfect.
+
 ![Negative - Basic Usage](demo-usage.gif)
 
 ## Capture / Clear

@@ -1,9 +1,13 @@
-# Negative Usage
+# Negative Guide
 
-Negative is made for anybody who needs to compare two things on a computer screen. Whether you're a developer, designer, animator, or even just a normal user, you've probably needed to compare two "mockups", designs, browsers, simulators, or frames. Negative is a simple app that helps you do that. 
+Negative is made for anybody who needs to compare two things on a computer screen. Whether you're a developer, designer, animator, or even just a normal user, you've probably needed to compare two "mockups", designs, browsers, simulators, or frames. Negative is a simple app that helps you do that.
 
 [Download Negative](https://github.com/atdrago/negative/releases/latest)  
 [Report a Problem](https://github.com/atdrago/negative/issues)
+
+## Basic Usage
+***To be updated -- old ui***
+![Negative - Basic Usage](demo-usage.gif)
 
 ## Capture / Clear
 Capture the screen with `Command + G`, or clear the view with `Command + Delete`.

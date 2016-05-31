@@ -11,19 +11,19 @@ Capture the screen with `Command + G`, or clear the view with `Command + Delete`
 ![Negative - Capture and clear](demo-capture-clear.gif)
 
 ## Hide / Show (global)
-If Negative is in your way, you can hide it **from any app** with `Command + Control + H`. When you want to show it, `Command + Control + H` again.
+Hide Negative **from any app** with `Command + Control + H`. Show it again with `Command + Control + H`.
 
 ![Negative - Hide and show](demo-hide.gif)
 
 ## Move
 
 ### Arrow Keys
-Use the arrow keys alone to nudge Negative 1 pixel in any direction. Hold down `Shift` to jump by 10 pixels.
+Use the arrow keys to nudge Negative by 1px in any direction. Hold down `Shift` to jump by 10px.
 
 ![Negative - Move with arrow keys](demo-move-shortcuts.gif)
 
 ### Drag
-Negative can also be moved by clicking and dragging inside the view. Currently, dragging on tabs will only rearrange them.
+Drag inside the view to move the window around. Currently, dragging on tabs will only rearrange them.
 
 ![Negative - Move by dragging](demo-move-drag.gif)
 

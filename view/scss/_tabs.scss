@@ -24,6 +24,7 @@ nav {
 	height: 100%;
 	min-width: 100%;
 	display: flex;
+	-webkit-app-region: drag;
 	
 	&.shift-none {
 		> .tab {
@@ -55,6 +56,7 @@ nav {
 	transform: translateX(0);
 	left: 0;
 	flex: 1;
+	-webkit-app-region: no-drag;
 	
 	body.light-mode & {
 		box-shadow: inset -1px 1px 0 $tab-shadow-color-light-mode;
@@ -97,7 +99,10 @@ nav {
 			}
 		}
 	}
-
+	
+	&:only-child {
+		-webkit-app-region: drag;
+	}
 	&:before {
 		left: -14px;
 		border-top-left-radius: 3px;

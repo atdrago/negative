@@ -124,6 +124,14 @@
 						document.body.classList.remove('transition-colors');
 					}, colorTransitionDuration);
 				}, 0);
+			},
+			
+			setLocked(isLocked) {
+				if (isLocked) {
+					document.body.classList.add('locked');
+				} else {
+					document.body.classList.remove('locked');
+				}
 			}
 		};
 	});

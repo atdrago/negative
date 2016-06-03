@@ -12,6 +12,13 @@ nav {
 	overflow-x: scroll;
 	overflow-y: hidden;
 	height: 50px;
+	position: relative;
+	top: 0;
+	transition: top $nav-locked-transition-duration $nav-locked-transition-easing;
+	
+	body.locked & {
+		top: 26px;
+	}
 	
 	&::-webkit-scrollbar {
 		display: none;
@@ -138,10 +145,6 @@ nav {
 		}
 	}
 
-	&:hover,
-	&:focus {
-	}
-
 	&.selected {
 		background-color: $frame-color-focus-dark-mode;
 		z-index: 9999;
@@ -175,5 +178,17 @@ nav {
 
 	&.shift-left {
 		transform: translateX(-126px);
+	}
+}
+
+.locked-badge {
+	position: absolute;
+	top: 27px;
+	left: 5px;
+	font-size: 14px;
+	transition: top $nav-locked-transition-duration $nav-locked-transition-easing;
+
+	body.locked & {
+		top: 1px;
 	}
 }

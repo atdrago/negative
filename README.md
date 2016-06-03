@@ -2,6 +2,8 @@
 
 > An app for making visual comparisons.
 
+![Negative Usage](docs/demo-usage.gif)
+
 Follow [@NegativeJS](https://twitter.com/negativejs) on Twitter for important updates.
 
 ## Download

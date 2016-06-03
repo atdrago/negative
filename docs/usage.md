@@ -32,6 +32,11 @@ Drag inside the view to move the window around. Currently, dragging on tabs will
 
 ![Negative - Move by dragging](demo-move-drag.gif)
 
+## Locking
+Lock Negative in place so you can click through to elements underneath.
+
+![Negative - Locking](demo-locking.gif)
+
 ## Dark Mode / Light Mode
 Sometimes it's easier to see the edge of your capture against a light-colored background. Use `Command + D` to toggle between Dark and Light modes.
 

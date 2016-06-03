@@ -19,6 +19,7 @@ $disabled-gray:                 #ddd;
 	position: absolute;
 	top: 1px;
 	left: 8px;
+	transition: top $nav-locked-transition-duration $nav-locked-transition-easing;
 
 	body.focus &, &:hover, &:active {
 		> .traffic-light-close {
@@ -56,6 +57,10 @@ $disabled-gray:                 #ddd;
 				visibility: visible;
 			}
 		}
+	}
+	
+	body.locked & {
+		top: 27px;
 	}
 }
 

@@ -12,6 +12,13 @@ nav {
 	overflow-x: scroll;
 	overflow-y: hidden;
 	height: 50px;
+	position: relative;
+	top: 0;
+	transition: top $nav-locked-transition-duration $nav-locked-transition-easing;
+	
+	body.locked & {
+		top: 26px;
+	}
 	
 	&::-webkit-scrollbar {
 		display: none;
@@ -24,6 +31,7 @@ nav {
 	height: 100%;
 	min-width: 100%;
 	display: flex;
+	-webkit-app-region: drag;
 	
 	&.shift-none {
 		> .tab {
@@ -55,6 +63,7 @@ nav {
 	transform: translateX(0);
 	left: 0;
 	flex: 1;
+	-webkit-app-region: no-drag;
 	
 	body.light-mode & {
 		box-shadow: inset -1px 1px 0 $tab-shadow-color-light-mode;
@@ -97,7 +106,10 @@ nav {
 			}
 		}
 	}
-
+	
+	&:only-child {
+		-webkit-app-region: drag;
+	}
 	&:before {
 		left: -14px;
 		border-top-left-radius: 3px;
@@ -133,10 +145,6 @@ nav {
 		}
 	}
 
-	&:hover,
-	&:focus {
-	}
-
 	&.selected {
 		background-color: $frame-color-focus-dark-mode;
 		z-index: 9999;
@@ -170,5 +178,17 @@ nav {
 
 	&.shift-left {
 		transform: translateX(-126px);
+	}
+}
+
+.locked-badge {
+	position: absolute;
+	top: 27px;
+	left: 5px;
+	font-size: 14px;
+	transition: top $nav-locked-transition-duration $nav-locked-transition-easing;
+
+	body.locked & {
+		top: 1px;
 	}
 }

@@ -81,10 +81,15 @@ gulp.task('release:clean', () => {
 
 gulp.task('release:root', () => {
 	return gulp.src([
-		'negative.icns',
 		'package.json',
 		'.npmrc'
 	]).pipe(gulp.dest('release'));
+});
+
+gulp.task('release:resources', () => {
+	return gulp.src([
+		'resources/negative.icns'
+	]).pipe(gulp.dest('release/resources'));
 });
 
 gulp.task('release:view', () => {
@@ -112,7 +117,7 @@ gulp.task('release', () => {
 	return runSequence(
 		'release:clean', 
 		[ 'js:index', 'js:settings', 'sass'], 
-		['release:root', 'release:view', 'release:lib', 'release:test']
+		['release:root', 'release:resources', 'release:view', 'release:lib', 'release:test']
 	);
 });
 
@@ -126,7 +131,7 @@ gulp.task('build', (done) => {
 		arch: 'x64',
 		asar: true,
 		dir: 'release',
-		icon: 'negative.icns',
+		icon: './resources/negative.icns',
 		name: 'Negative',
 		out: 'dist',
 		overwrite: true,

@@ -17,7 +17,10 @@
     "preappdmg": "npm run build",
     "appdmg": "export NEGATIVE_VERSION=$(node -p -e \"require('./package.json').version\") && appdmg ./resources/appdmg.json ./dist/Negative-darwin-x64/Negative-v$NEGATIVE_VERSION.dmg && open ./dist/Negative-darwin-x64/Negative-v$NEGATIVE_VERSION.dmg"
   },
-  "author": "Adam Drago",
+  "author": "Adam Drago <atdrago+negative@gmail.com>",
+  "bugs": {
+    "url": "https://github.com/atdrago/negative/issues"
+  },
   "dependencies": {
     "electron-window": "^0.8.1",
     "nodobjc": "^2.1.0",

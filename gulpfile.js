@@ -152,6 +152,34 @@ gulp.task('build', (done) => {
 	});
 });
 
+gulp.task('bump', (done) => {
+	const argv = require('yargs')
+		.alias('v', 'version')
+		.argv;
+	
+	const config     = JSON.parse(fs.readFileSync('package.json'));
+	const appVersion = config.version;
+	const newVersion = argv.version;
+	
+	config.version = newVersion;
+		
+	fs.writeFile('package.json', JSON.stringify(config, null, 2),  (err) => {
+		if (err) {
+			throw err;
+		}
+		
+		const readme = fs.readFileSync('README.md').toString();
+		
+		fs.writeFile('README.md', readme.replace(new RegExp(appVersion, 'g'), newVersion), (err) => {
+			if (err) {
+				throw err;
+			}
+			
+			done();
+		});
+	});
+});
+
 // Default
 
 gulp.task('default', ['js:index', 'js:settings', 'js:lint', 'sass', 'watch']);

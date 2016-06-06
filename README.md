@@ -2,12 +2,12 @@
 
 > An app for making visual comparisons.
 
-[![build status](https://travis-ci.org/atdrago/negative.svg?branch=develop)](https://travis-ci.org/atdrago/negative)
+![Negative Usage](docs/demo-usage.gif)
 
 Follow [@NegativeJS](https://twitter.com/negativejs) on Twitter for important updates.
 
 ## Download
-- [Negative v0.9.0 for Mac OS X](https://github.com/atdrago/negative/releases/download/v0.9.0/Negative-v0.9.0.dmg)
+- [Negative v0.9.1 for Mac OS X](https://github.com/atdrago/negative/releases/download/v0.9.1/Negative-v0.9.1.dmg)
 
 ## User Documentation
 Please check [negative/releases](https://github.com/atdrago/negative/releases) for details on changes between versions.

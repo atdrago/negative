@@ -1,6 +1,6 @@
 {
   "name": "Negative",
-  "version": "0.9.0",
+  "version": "0.9.1",
   "description": "An app for making visual comparisons.",
   "main": "lib/main.js",
   "repository": "https://github.com/atdrago/negative.git",
@@ -17,7 +17,10 @@
     "preappdmg": "npm run build",
     "appdmg": "export NEGATIVE_VERSION=$(node -p -e \"require('./package.json').version\") && appdmg ./resources/appdmg.json ./dist/Negative-darwin-x64/Negative-v$NEGATIVE_VERSION.dmg && open ./dist/Negative-darwin-x64/Negative-v$NEGATIVE_VERSION.dmg"
   },
-  "author": "Adam Drago",
+  "author": "Adam Drago <atdrago+negative@gmail.com>",
+  "bugs": {
+    "url": "https://github.com/atdrago/negative/issues"
+  },
   "dependencies": {
     "electron-window": "^0.8.1",
     "nodobjc": "^2.1.0",
@@ -41,7 +44,7 @@
     "gulp-wrap": "^0.11.0",
     "mocha": "^2.4.5",
     "run-sequence": "^1.1.5",
-    "spectron": "^3.1.0",
+    "spectron": "^3.2.2",
     "uglify-js": "mishoo/UglifyJS2.git#harmony"
   },
   "engines": {

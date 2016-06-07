@@ -25,6 +25,15 @@ window.NegativeTabs = (function () {
 			return this.tabsContainer.children[this.tabIndex];
 		}
 		
+		set tabIndex(value) {
+			this._tabIndex = value;
+			ipcRenderer.send('set-selected-tab-request', value);
+		}
+		
+		get tabIndex() {
+			return this._tabIndex;
+		}
+		
 		constructor() {
 			this.count         = 0;
 			this.dragOverIndex = null;

@@ -13,9 +13,7 @@
     "test": "mocha --recursive",
     "postinstall": "./node_modules/.bin/electron-rebuild",
     "travis": "npm run build && npm test",
-    "open": "open ./dist/Negative-darwin-x64/Negative.app",
-    "preappdmg": "npm run build",
-    "appdmg": "export NEGATIVE_VERSION=$(node -p -e \"require('./package.json').version\") && appdmg ./resources/appdmg.json ./dist/Negative-darwin-x64/Negative-v$NEGATIVE_VERSION.dmg && open ./dist/Negative-darwin-x64/Negative-v$NEGATIVE_VERSION.dmg"
+    "open": "open ./dist/Negative-darwin-x64/Negative.app"
   },
   "author": "Adam Drago <atdrago+negative@gmail.com>",
   "bugs": {

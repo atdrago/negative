@@ -141,6 +141,7 @@ gulp.task('build', (done) => {
 		'app-bundle-id': 'com.adamdrago.negative',
 		'helper-bundle-id': 'com.adamdrago.negative.helper',
 		'app-version': appVersion,
+		'extend-info': './resources-osx/Info.plist'
 	};
 	
 	packager(options, (err, paths) => {

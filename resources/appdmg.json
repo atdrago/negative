@@ -1,0 +1,9 @@
+{
+	"title": "Negative",
+	"icon-size": 128,
+	"background": "appdmg.png",
+	"contents": [
+		{ "x": 175, "y": 175, "type": "file", "path": "../dist/Negative-darwin-x64/Negative.app" },
+		{ "x": 425, "y": 175, "type": "link", "path": "/Applications" }
+	]
+}

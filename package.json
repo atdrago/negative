@@ -15,7 +15,7 @@
     "travis": "npm run build && npm test",
     "open": "open ./dist/Negative-darwin-x64/Negative.app",
     "predmg": "npm run build && ./scripts/sign-osx.sh",
-    "dmg": "export NEGATIVE_VERSION=$(node -p -e \"require('./package.json').version\") && appdmg ./resources-osx/appdmg.json ./dist/Negative-darwin-x64/Negative-v$NEGATIVE_VERSION.dmg && open ./dist/Negative-darwin-x64/Negative-v$NEGATIVE_VERSION.dmg"
+    "dmg": "./scripts/dmg.sh"
   },
   "author": "Adam Drago <atdrago+negative@gmail.com>",
   "bugs": {

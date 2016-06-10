@@ -5,16 +5,48 @@ window.SettingsForm = (function () {
 
 	class SettingsForm {
 		constructor() {
-			this.shouldShowTips = document.getElementById('shouldShowTips');
+			this.checkForUpdatesButton = document.getElementById('checkForUpdates');
+			this.checkForUpdatesLoadingIndicator = document.getElementById('checkForUpdatesLoadingIndicator');
+			this.shouldAutoUpdateCheckbox = document.getElementById('shouldAutoUpdate');
+			this.shouldShowTipsCheckbox = document.getElementById('shouldShowTips');
 
-			this.shouldShowTips.addEventListener('change', function (evt) {
+			this.initEventListeners();
+			this.initIpcListeners();
+		}
+		
+		initEventListeners() {
+			this.shouldAutoUpdateCheckbox.addEventListener('change', (evt) => {
+				ipcRenderer.send('set-settings-request', { shouldAutoUpdate: evt.target.checked });
+			});
+
+			this.shouldShowTipsCheckbox.addEventListener('change', (evt) => {
 				ipcRenderer.send('set-settings-request', { shouldShowTips: evt.target.checked });
 			});
-
+			
+			this.checkForUpdatesButton.addEventListener('click', (evt) => {
+				evt.preventDefault();
+				this.checkForUpdates();
+			});
+		}
+		
+		initIpcListeners() {
 			ipcRenderer.send('get-settings-request');
 			ipcRenderer.on('get-settings-response', (evt, settings) => {
-				this.shouldShowTips.checked = (settings['shouldShowTips'] !== false);
+				this.shouldShowTipsCheckbox.checked = (settings['shouldShowTips'] !== false);
+				this.shouldAutoUpdateCheckbox.checked = (settings['shouldAutoUpdate'] !== false);
 			});
+		}
+		
+		showLoadingIndicator() {
+			this.checkForUpdatesLoadingIndicator.classList.add('loading-indicator-show');
+		}
+		
+		hideLoadingIndicator() {
+			this.checkForUpdatesLoadingIndicator.classList.remove('loading-indicator-show');
+		}
+		
+		checkForUpdates() {
+			ipcRenderer.send('check-for-updates-request');
 		}
 	}
 	

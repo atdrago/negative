@@ -5,7 +5,7 @@ body {
 }
 
 fieldset {
-	border-bottom: 1px solid #cacaca;
+	border-bottom: 1px solid #d2d2d2;
 	padding-left: 0;
 	padding-bottom: 18px;
 }
@@ -35,4 +35,21 @@ button {
 legend {
 	margin-bottom: 5px;
 	padding-left: 0;
+}
+
+.loading-indicator {
+	width: 16px;
+	height: 16px;
+	vertical-align: middle;
+	display: none;
+	
+	&-show {
+		display: inline;
+	}
+}
+
+.note {
+	display: block;
+	font-size: 11px;
+	margin: 5px 0 0 16px;
 }

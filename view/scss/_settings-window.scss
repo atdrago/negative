@@ -1,8 +1,38 @@
 body {
 	padding: 18px 20px;
 	background-color: #e7e7e7;
+	font-size: 14px;
+}
+
+fieldset {
+	border-bottom: 1px solid #cacaca;
+	padding-left: 0;
+	padding-bottom: 18px;
+}
+
+fieldset:last-child {
+	border: none;
 }
 
 fieldset + fieldset {
-	border-top: 1px solid #cacaca;
+	margin-top: 18px;
+}
+
+.form-group {
+	margin-left: 15px;
+	margin-bottom: 10px;
+}
+
+.form-group:last-child {
+	margin-bottom: 0;
+}
+
+button {
+	font-size: 13px;
+	margin-left: -1px;
+}
+
+legend {
+	margin-bottom: 5px;
+	padding-left: 0;
 }

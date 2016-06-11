@@ -6,6 +6,7 @@ window.SettingsForm = (function () {
 	class SettingsForm {
 		constructor() {
 			this.checkForUpdatesButton = document.getElementById('checkForUpdates');
+			this.checkForUpdatesLabel = document.getElementById('checkForUpdatesLabel');
 			this.checkForUpdatesLoadingIndicator = document.getElementById('checkForUpdatesLoadingIndicator');
 			this.shouldAutoUpdateCheckbox = document.getElementById('shouldAutoUpdate');
 			this.shouldShowTipsCheckbox = document.getElementById('shouldShowTips');
@@ -47,6 +48,18 @@ window.SettingsForm = (function () {
 		
 		checkForUpdates() {
 			ipcRenderer.send('check-for-updates-request');
+		}
+		
+		setUpdatesMessage(message) {
+			this.checkForUpdatesLabel.textContent = message;
+		}
+		
+		disableUpdatesButton() {
+			this.checkForUpdatesButton.disabled = true;
+		}
+		
+		enableUpdatesButton() {
+			this.checkForUpdatesButton.disabled = false;
 		}
 	}
 	

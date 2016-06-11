@@ -30,6 +30,7 @@ fieldset + fieldset {
 button {
 	font-size: 13px;
 	margin-left: -1px;
+	margin-right: 3px;
 }
 
 legend {
@@ -41,10 +42,10 @@ legend {
 	width: 16px;
 	height: 16px;
 	vertical-align: middle;
-	display: none;
+	visibility: hidden;
 	
 	&-show {
-		display: inline;
+		visibility: visible;
 	}
 }
 
@@ -52,4 +53,9 @@ legend {
 	display: block;
 	font-size: 11px;
 	margin: 5px 0 0 16px;
+}
+
+.loading-indicator-label {
+	font-size: 13px;
+	
 }

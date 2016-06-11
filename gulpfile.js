@@ -88,7 +88,7 @@ gulp.task('release:root', () => {
 
 gulp.task('release:resources', () => {
 	return gulp.src([
-		'resources/negative.icns'
+		'resources/**/*'
 	]).pipe(gulp.dest('release/resources'));
 });
 

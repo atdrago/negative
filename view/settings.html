@@ -16,9 +16,12 @@
                 <legend>Updates</legend>
                 <div class="form-group">
                     <label><input type="checkbox" id="shouldAutoUpdate" checked /> Automatically check for updates</label>
+                    <label class="note" for="shouldAutoUpdate">At most, this will happen once per day.</label>
                 </div>
                 <div class="form-group">
-                    <button id="checkForUpdates">Check now</button>
+                    <button id="checkForUpdates" type="button">Check now</button>
+                    <img src="../resources/loading-indicator.gif" class="loading-indicator" id="checkForUpdatesLoadingIndicator" width="16" height="16" />
+                    <label class="loading-indicator-label" for="checkForUpdatesLoadingIndicator" id="checkForUpdatesLabel"></label>
                 </div>
             </fieldset>
         </form>

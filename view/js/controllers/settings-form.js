@@ -1,12 +1,16 @@
 window.SettingsForm = (function () {
 	'use strict';
 	
-	const { ipcRenderer } = require('electron');
+	const { 
+		ipcRenderer,
+		shell
+	} = require('electron');
 
 	class SettingsForm {
 		constructor() {
 			this.checkForUpdatesButton = document.getElementById('checkForUpdates');
 			this.checkForUpdatesLabel = document.getElementById('checkForUpdatesLabel');
+			this.checkForUpdatesLink = document.getElementById('checkForUpdatesLink');
 			this.checkForUpdatesLoadingIndicator = document.getElementById('checkForUpdatesLoadingIndicator');
 			this.shouldAutoUpdateCheckbox = document.getElementById('shouldAutoUpdate');
 			this.shouldShowTipsCheckbox = document.getElementById('shouldShowTips');
@@ -28,6 +32,11 @@ window.SettingsForm = (function () {
 			this.checkForUpdatesButton.addEventListener('click', (evt) => {
 				evt.preventDefault();
 				this.checkForUpdates();
+			});
+			
+			this.checkForUpdatesLink.addEventListener('click', (evt) => {
+				evt.preventDefault();
+				shell.openExternal(evt.target.href);
 			});
 			
 			this.restartAndInstallButton.addEventListener('click', (evt) => {
@@ -68,12 +77,13 @@ window.SettingsForm = (function () {
 			this.setUpdatesMessage('Already up to date.');
 		}
 		
-		handleUpdateDownloaded(releaseName) {
+		handleUpdateDownloaded(releaseMessage, releaseNotesUrl) {
 			this.enableUpdatesButton();
 			this.hideUpdatesButton();
 			this.hideLoadingIndicator();
 			this.showRestartAndInstallButton();
-			this.setUpdatesMessage(releaseName);
+			this.setUpdatesMessage(releaseMessage);
+			this.setUpdatesLink(releaseNotesUrl, 'Release Notes');
 		}
 		
 		showLoadingIndicator() {
@@ -90,6 +100,11 @@ window.SettingsForm = (function () {
 		
 		setUpdatesMessage(message) {
 			this.checkForUpdatesLabel.textContent = message;
+		}
+		
+		setUpdatesLink(url, message) {
+			this.checkForUpdatesLink.href = url;
+			this.checkForUpdatesLink.textContent = message;
 		}
 		
 		disableUpdatesButton() {

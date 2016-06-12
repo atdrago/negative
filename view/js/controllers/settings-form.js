@@ -44,6 +44,38 @@ window.SettingsForm = (function () {
 			});
 		}
 		
+		handleUpdateError(errorMessage) {
+			this.enableUpdatesButton();
+			this.hideLoadingIndicator();
+			this.setUpdatesMessage(errorMessage);
+		}
+		
+		handleCheckingForUpdate() {
+			this.disableUpdatesButton();
+			this.showLoadingIndicator();
+			this.setUpdatesMessage('Checking for update...');
+		}
+		
+		handleUpdateAvailable() {
+			this.disableUpdatesButton();
+			this.showLoadingIndicator();
+			this.setUpdatesMessage('Downloading update...');
+		}
+		
+		handleUpdateNotAvailable() {
+			this.enableUpdatesButton();
+			this.hideLoadingIndicator();
+			this.setUpdatesMessage('Already up to date.');
+		}
+		
+		handleUpdateDownloaded(releaseName) {
+			this.enableUpdatesButton();
+			this.hideUpdatesButton();
+			this.hideLoadingIndicator();
+			this.showRestartAndInstallButton();
+			this.setUpdatesMessage(releaseName);
+		}
+		
 		showLoadingIndicator() {
 			this.checkForUpdatesLoadingIndicator.classList.add('loading-indicator-show');
 		}

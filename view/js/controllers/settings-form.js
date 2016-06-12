@@ -10,6 +10,7 @@ window.SettingsForm = (function () {
 			this.checkForUpdatesLoadingIndicator = document.getElementById('checkForUpdatesLoadingIndicator');
 			this.shouldAutoUpdateCheckbox = document.getElementById('shouldAutoUpdate');
 			this.shouldShowTipsCheckbox = document.getElementById('shouldShowTips');
+			this.restartAndInstallButton = document.getElementById('restartAndInstall');
 
 			this.initEventListeners();
 			this.initIpcListeners();
@@ -27,6 +28,11 @@ window.SettingsForm = (function () {
 			this.checkForUpdatesButton.addEventListener('click', (evt) => {
 				evt.preventDefault();
 				this.checkForUpdates();
+			});
+			
+			this.restartAndInstallButton.addEventListener('click', (evt) => {
+				evt.preventDefault();
+				this.restartAndInstall();
 			});
 		}
 		
@@ -60,6 +66,26 @@ window.SettingsForm = (function () {
 		
 		enableUpdatesButton() {
 			this.checkForUpdatesButton.disabled = false;
+		}
+		
+		hideUpdatesButton() {
+			this.checkForUpdatesButton.classList.add('hide');
+		}
+		
+		showUpdatesButton() {
+			this.checkForUpdatesButton.classList.remove('hide');
+		}
+		
+		restartAndInstall() {
+			ipcRenderer.send('restart-and-install-request');
+		}
+		
+		hideRestartAndInstallButton() {
+			this.restartAndInstallButton.classList.add('hide');
+		}
+		
+		showRestartAndInstallButton() {
+			this.restartAndInstallButton.classList.remove('hide');
 		}
 	}
 	

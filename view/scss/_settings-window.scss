@@ -27,11 +27,7 @@ fieldset + fieldset {
 	margin-bottom: 0;
 }
 
-button {
-	font-size: 13px;
-	margin-left: -1px;
-	margin-right: 3px;
-}
+
 
 legend {
 	margin-bottom: 5px;
@@ -42,10 +38,10 @@ legend {
 	width: 16px;
 	height: 16px;
 	vertical-align: middle;
-	visibility: hidden;
+	display: none;
 	
 	&-show {
-		visibility: visible;
+		display: inline;
 	}
 }
 
@@ -57,5 +53,32 @@ legend {
 
 .loading-indicator-label {
 	font-size: 13px;
-	
+}
+
+.hide {
+	display: none;
+}
+
+button {
+	font-size: 13px;
+	margin-left: -1px;
+	margin-right: 3px;
+	border: 0;
+	border-radius: 4px;
+	padding: 2px 25px 3px;
+	background: #fff;
+	box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.2) inset, 0 0.5px rgba(0, 0, 0, 0.1);
+	outline: none;
+}
+
+button.primary {
+	background: -webkit-linear-gradient(top, #6fb4f7, #1a82fb);
+	color: #fff;
+	box-shadow: 0 0 0 1px rgba(47, 120, 255, 0.5) inset, 0 0.5px rgba(0, 0, 0, 0.1);
+}
+
+button:active {
+	color: #fff;
+	background: -webkit-linear-gradient(top, #509afb, #1469e0);
+	box-shadow: 0 0 0 1px rgba(44, 130, 251, 0.5) inset, 0 0.5px rgba(0, 0, 0, 0.1);
 }

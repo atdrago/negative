@@ -51,12 +51,21 @@ legend {
 	margin: 5px 0 0 16px;
 }
 
-.loading-indicator-label {
+.updates-label {
 	font-size: 13px;
 }
 
 .hide {
 	display: none;
+}
+
+a {
+	color: #08c;
+	text-decoration: none;
+}
+
+a:hover {
+	text-decoration: underline;
 }
 
 button {

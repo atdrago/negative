@@ -2,7 +2,7 @@
 	'use strict';
 	
 	document.addEventListener('DOMContentLoaded', () => {
-		new SettingsForm();
+		window.settingsController = new SettingsForm();
 		
 		const cancelEvent = (evt) => { 
 			evt.preventDefault(); 

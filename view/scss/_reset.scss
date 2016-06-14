@@ -13,8 +13,9 @@ html, body, p, ul {
 }
 
 body {
-	font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+	font-family: 'BlinkMacSystemFont', 'Helvetica Neue', Helvetica, Arial, sans-serif;
 	box-sizing: border-box;
+	-webkit-font-smoothing: antialiased;
 }
 
 ul {

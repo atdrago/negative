@@ -1,6 +1,6 @@
 {
   "name": "Negative",
-  "version": "0.9.1",
+  "version": "0.10.0",
   "description": "An app for making visual comparisons.",
   "main": "lib/main.js",
   "repository": "https://github.com/atdrago/negative.git",
@@ -9,13 +9,14 @@
     "start": "export NODE_ENV=development && export ELECTRON_ENABLE_LOGGING=true && export ELECTRON_ENABLE_STACK_DUMPING=true && export NEGATIVE_VERBOSE=true && electron .",
     "prebuild": "rm -rf dist",
     "build": "gulp release && mkdir -p ./release/node_modules && npm install --production --prefix ./release/ && gulp build",
+    "build-sign": "npm run build && ./scripts/sign-osx.sh",
+    "open": "open ./dist/Negative-darwin-x64/Negative.app",
+    "predmg": "npm run build-sign",
+    "dmg": "./scripts/dmg.sh",
+    "postinstall": "./node_modules/.bin/electron-rebuild",
     "lint": "gulp js:lint",
     "test": "mocha --recursive",
-    "postinstall": "./node_modules/.bin/electron-rebuild",
-    "travis": "npm run build && npm test",
-    "open": "open ./dist/Negative-darwin-x64/Negative.app",
-    "preappdmg": "npm run build",
-    "appdmg": "export NEGATIVE_VERSION=$(node -p -e \"require('./package.json').version\") && appdmg ./resources/appdmg.json ./dist/Negative-darwin-x64/Negative-v$NEGATIVE_VERSION.dmg && open ./dist/Negative-darwin-x64/Negative-v$NEGATIVE_VERSION.dmg"
+    "travis": "npm run build-sign && npm test"
   },
   "author": "Adam Drago <atdrago+negative@gmail.com>",
   "bugs": {
@@ -45,7 +46,8 @@
     "mocha": "^2.4.5",
     "run-sequence": "^1.1.5",
     "spectron": "^3.2.2",
-    "uglify-js": "mishoo/UglifyJS2.git#harmony"
+    "uglify-js": "mishoo/UglifyJS2.git#harmony",
+    "yargs": "^4.7.1"
   },
   "engines": {
     "node": ">=6.x"

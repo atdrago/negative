@@ -9,13 +9,23 @@
             <fieldset>
                 <legend>Tips</legend>
                 <div class="form-group">
-                    <label><input type="checkbox" id="shouldShowTips" checked /> Show tips</label>
+                    <label>
+                        <script>
+                            document.write(`<input type="checkbox" id="shouldShowTips" ${__args__.shouldShowTips ? 'checked' : ''} />`);
+                        </script>
+                        Show tips
+                    </label>
                 </div>
             </fieldset>
             <fieldset>
                 <legend>Updates</legend>
                 <div class="form-group">
-                    <label><input type="checkbox" id="shouldAutoUpdate" checked /> Automatically download and install updates</label>
+                    <label>
+                        <script>
+                            document.write(`<input type="checkbox" id="shouldAutoUpdate" ${__args__.shouldAutoUpdate ? 'checked' : ''} />`);
+                        </script>
+                        Automatically download and install updates
+                    </label>
                     <label class="note" for="shouldAutoUpdate">
                         If checked, updates will automatically be downloaded and installed every 7 days.
                     </label>

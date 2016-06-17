@@ -25,13 +25,6 @@ window.NegativeFrame = (function () {
 			this.currentImage.addEventListener('load', function () {
 				document.body.classList.add('negative-on');
 			}, false);
-
-			ipcRenderer.send('get-settings-request');
-			ipcRenderer.on('get-settings-response', (evt, settings) => {
-				if (settings['shouldShowTips'] === false) {
-					document.body.classList.add('no-tips');
-				}
-			});
 		}
 
 		sendZoomLevelToMain() {

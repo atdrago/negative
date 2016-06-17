@@ -2,9 +2,14 @@
 <html>
 	<head>
 		<title>Negative</title>
+		<link rel="stylesheet" href="index.css" />
 	</head>
 	<script>
-		document.write(`<body${__args__.isDarkMode ? '' : ' class="light-mode"'}>`);
+		const { isDarkMode, shouldShowTips } = __args__;
+		const classes = [];
+		!isDarkMode && classes.push('light-mode');
+		!shouldShowTips && classes.push('no-tips');
+		document.write(`<body class="${classes.join(' ')}"'}>`);
 	</script>
 		<nav>
 			<div class="traffic-lights">
@@ -80,7 +85,6 @@
 				</li>
 			</ul>
 		</main>
-		<link rel="stylesheet" href="index.css" />
 		<script src="index.js"></script>
 	</body>
 </html>

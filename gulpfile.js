@@ -106,6 +106,12 @@ gulp.task('release:lib', () => {
 	]).pipe(gulp.dest('release/lib'));
 });
 
+gulp.task('release:config', () => {
+	return gulp.src([
+		'config/**/*.js'
+	]).pipe(gulp.dest('release/config'));
+});
+
 gulp.task('release:test', () => {
 	return gulp.src([
 		'test/**/*.js',
@@ -117,7 +123,7 @@ gulp.task('release', () => {
 	return runSequence(
 		'release:clean', 
 		[ 'js:index', 'js:settings', 'sass'], 
-		['release:root', 'release:resources', 'release:view', 'release:lib', 'release:test']
+		['release:root', 'release:resources', 'release:view', 'release:lib', 'release:config', 'release:test']
 	);
 });
 

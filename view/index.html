@@ -4,7 +4,13 @@
 		<title>Negative</title>
 		<link rel="stylesheet" href="index.css" />
 	</head>
-	<body>
+	<script>
+		const { isDarkMode, shouldShowTips } = __args__;
+		const classes = [];
+		!isDarkMode && classes.push('light-mode');
+		!shouldShowTips && classes.push('no-tips');
+		document.write(`<body class="${classes.join(' ')}"'}>`);
+	</script>
 		<nav>
 			<div class="traffic-lights">
 				<button class="traffic-light traffic-light-close" id="close"></button>

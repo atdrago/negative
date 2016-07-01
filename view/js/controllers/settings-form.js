@@ -17,7 +17,6 @@ window.SettingsForm = (function () {
 			this.restartAndInstallButton = document.getElementById('restartAndInstall');
 
 			this.initEventListeners();
-			this.initIpcListeners();
 		}
 		
 		initEventListeners() {
@@ -42,14 +41,6 @@ window.SettingsForm = (function () {
 			this.restartAndInstallButton.addEventListener('click', (evt) => {
 				evt.preventDefault();
 				this.restartAndInstall();
-			});
-		}
-		
-		initIpcListeners() {
-			ipcRenderer.send('get-settings-request');
-			ipcRenderer.on('get-settings-response', (evt, settings) => {
-				this.shouldShowTipsCheckbox.checked = (settings['shouldShowTips'] !== false);
-				this.shouldAutoUpdateCheckbox.checked = (settings['shouldAutoUpdate'] !== false);
 			});
 		}
 		

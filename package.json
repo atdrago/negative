@@ -1,6 +1,6 @@
 {
   "name": "Negative",
-  "version": "0.10.0",
+  "version": "0.10.1",
   "description": "An app for making visual comparisons.",
   "main": "lib/main.js",
   "repository": "https://github.com/atdrago/negative.git",

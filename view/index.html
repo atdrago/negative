@@ -5,10 +5,17 @@
 		<link rel="stylesheet" href="index.css" />
 	</head>
 	<script>
-		const { isDarkMode, shouldShowTips } = __args__;
+		const {
+			isDarkMode,
+			isInverted,
+			isTranslucent,
+			shouldShowTips
+		} = __args__;
 		const classes = [];
 		!isDarkMode && classes.push('light-mode');
 		!shouldShowTips && classes.push('no-tips');
+		!isInverted && classes.push('inversion-off');
+		!isTranslucent && classes.push('translucence-off');
 		document.write(`<body class="${classes.join(' ')}"'}>`);
 	</script>
 		<nav>

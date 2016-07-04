@@ -16,19 +16,43 @@ window.NegativeFrame = (function () {
 			return this.zoomLevel > ZOOM_MIN;
 		}
 		
+		set zoomLevel(value) {
+			this._zoomLevel = value;
+			ipcRenderer.send('set-zoom-level-request', value);
+		}
+
+		get zoomLevel() {
+			return this._zoomLevel;
+		}
+
+		set isInverted(value) {
+			this._isInverted = value;
+			ipcRenderer.send('set-inverted-request', value);
+		}
+
+		get isInverted() {
+			return this._isInverted;
+		}
+
+		set isTranslucent(value) {
+			this._isTranslucent = value;
+			ipcRenderer.send('set-translucent-request', value);
+		}
+
+		get isTranslucent() {
+			return this._isTranslucent;
+		}
+
 		constructor() {
-			this.zoomLevel = 1;
-			
+			this.isInverted = __args__.isInverted;
+			this.isTranslucent = __args__.isTranslucent;
+
 			this.currentImage   = document.getElementById('negativeImage');
 			this.imageContainer = document.getElementById('imageContainer');
 
 			this.currentImage.addEventListener('load', function () {
 				document.body.classList.add('negative-on');
 			}, false);
-		}
-
-		sendZoomLevelToMain() {
-			ipcRenderer.send('set-zoom-level-request', this.zoomLevel);
 		}
 
 		setShouldShowTips(shouldShowTips) {
@@ -89,7 +113,31 @@ window.NegativeFrame = (function () {
 		unsetPrimary() {
 			document.body.classList.remove('primary');
 		}
-		
+
+		toggleInversion() {
+			const wasInverted = !document.body.classList.contains('inversion-off');
+
+			if (wasInverted) {
+				document.body.classList.add('inversion-off');
+			} else {
+				document.body.classList.remove('inversion-off');
+			}
+
+			this.isInverted = !wasInverted;
+		}
+
+		toggleTranslucence() {
+			const wasTranslucent = !document.body.classList.contains('translucence-off');
+
+			if (wasTranslucent) {
+				document.body.classList.add('translucence-off');
+			} else {
+				document.body.classList.remove('translucence-off');
+			}
+
+			this.isTranslucent = !wasTranslucent;
+		}
+
 		zoomIn() {
 			this.zoomTo(this.zoomLevel + ZOOM_DELTA);
 		}
@@ -108,8 +156,6 @@ window.NegativeFrame = (function () {
 				
 				this.zoomLevel = zoomLevel;
 				window.negative.refreshMenu();
-				
-				this.sendZoomLevelToMain();
 			}
 		}
 	}

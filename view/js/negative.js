@@ -32,7 +32,9 @@
 				
 				const {
 					canZoomIn,
-					canZoomOut
+					canZoomOut,
+					isInverted,
+					isTranslucent
 				} = this.frameController || {};
 				
 				const isImageEmpty = (typeof state !== 'undefined' ? state.imageSrc === null : true);
@@ -41,6 +43,8 @@
 					canUndo: canUndo,
 					canRedo: canRedo,
 					isImageEmpty: isImageEmpty,
+					isInverted: isInverted,
+					isTranslucent: isTranslucent,
 					canZoomIn: !isImageEmpty && canZoomIn,
 					canZoomOut: !isImageEmpty && canZoomOut
 				});

@@ -50,7 +50,7 @@ describe('View > Dark Mode', function () {
 					});
 				}, WAIT_UNTIL_TIMEOUT);
 			})
-			.then((hasNoTipsClass) => assert.isTrue(hasNoTipsClass, 'The body element should have the .light-mode class Dark Mode is off.'))
+			.then((hasNoTipsClass) => assert.isTrue(hasNoTipsClass, 'The body element should have the .light-mode class when Dark Mode is off.'))
 			.catch((err) => {
 				return app.client.getMainProcessLogs()
 					.then((logs) => {

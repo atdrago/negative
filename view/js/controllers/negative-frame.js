@@ -44,6 +44,7 @@ window.NegativeFrame = (function () {
 		}
 
 		constructor() {
+			this.zoomLevel = 1;
 			this.isInverted = __args__.isInverted;
 			this.isTranslucent = __args__.isTranslucent;
 

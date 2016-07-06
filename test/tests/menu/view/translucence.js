@@ -9,7 +9,7 @@ const {
 	WAIT_UNTIL_TIMEOUT
 } = config;
 
-describe('View > Dark Mode', function () {
+describe('View > Translucence', function () {
 	const app = new Application({
 		path: APP_PATH,
 		env: {
@@ -34,23 +34,23 @@ describe('View > Dark Mode', function () {
 		}
 	});
 	
-	it('Should toggle dark mode', () => {
+	it('Should toggle translucence', () => {
 		return app.client.waitUntilWindowLoaded()
 			.then(() => {
 				return app.client.selectorExecute('//body', (elements) => {
-					return elements[0].classList.contains('light-mode');
+					return elements[0].classList.contains('translucence-off');
 				});
 			})
-			.then((hasNoTipsClass) => assert.isFalse(hasNoTipsClass, 'The body element should not have the .light-mode class when on startup.'))
-			.then(() => app.electron.ipcRenderer.send('test-dark-mode'))
+			.then((hasTranslucenceOffClass) => assert.isFalse(hasTranslucenceOffClass, 'The body element should not have the .translucence-off class when on startup.'))
+			.then(() => app.electron.ipcRenderer.send('test-translucence'))
 			.then(() => {
 				return app.client.waitUntil(() => {
 					return app.client.selectorExecute('//body', (elements) => {
-						return elements[0].classList.contains('light-mode');
+						return elements[0].classList.contains('translucence-off');
 					});
 				}, WAIT_UNTIL_TIMEOUT);
 			})
-			.then((hasNoTipsClass) => assert.isTrue(hasNoTipsClass, 'The body element should have the .light-mode class when Dark Mode is off.'))
+			.then((hasTranslucenceOffClass) => assert.isTrue(hasTranslucenceOffClass, 'The body element should have the .translucence-off class when Translucence is off.'))
 			.catch((err) => {
 				return app.client.getMainProcessLogs()
 					.then((logs) => {

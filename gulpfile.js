@@ -7,11 +7,9 @@ const del           = require('del');
 const eslint        = require('gulp-eslint');
 const fs            = require('fs');
 const gulp          = require('gulp');
-const gulpUglify    = require('gulp-uglify/minifier');
 const packager      = require('electron-packager');
 const runSequence   = require('run-sequence');
 const sass          = require('gulp-sass');
-const uglifyJs      = require('uglify-js');
 const watch         = require('gulp-watch');
 const wrap          = require('gulp-wrap');
 const jsDest        = 'view';
@@ -34,7 +32,6 @@ function compileJs(src, dest, filename) {
 	return gulp.src(src)
 		.pipe(concat(filename))
 		.pipe(wrap("(function (window, document, JSON) { <%= contents %> })(window, document, JSON);"))
-		.pipe(gulpUglify({}, uglifyJs).on('error', (err) => console.log(err)))
 		.pipe(changed(jsDest, {
 			hasChanged: changed.compareSha1Digest
 		}))

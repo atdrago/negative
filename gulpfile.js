@@ -118,8 +118,8 @@ gulp.task('release:test', () => {
 
 gulp.task('release', () => {
 	return runSequence(
-		'release:clean', 
-		[ 'js:index', 'js:settings', 'sass'], 
+		'release:clean',
+		[ 'js:index', 'js:settings', 'sass'],
 		['release:root', 'release:resources', 'release:view', 'release:lib', 'release:config', 'release:test']
 	);
 });
@@ -146,12 +146,12 @@ gulp.task('build', (done) => {
 		'app-version': appVersion,
 		'extend-info': './resources-osx/Info.plist'
 	};
-	
+
 	packager(options, (err, paths) => {
 		if (err) {
 			console.error(err);
 		}
-		
+
 		done();
 	});
 });
@@ -160,25 +160,25 @@ gulp.task('bump', (done) => {
 	const argv = require('yargs')
 		.alias('v', 'version')
 		.argv;
-	
+
 	const config     = JSON.parse(fs.readFileSync('package.json'));
 	const appVersion = config.version;
 	const newVersion = argv.version;
-	
+
 	config.version = newVersion;
-		
+
 	fs.writeFile('package.json', JSON.stringify(config, null, 2),  (err) => {
 		if (err) {
 			throw err;
 		}
-		
+
 		const readme = fs.readFileSync('README.md').toString();
-		
+
 		fs.writeFile('README.md', readme.replace(new RegExp(appVersion, 'g'), newVersion), (err) => {
 			if (err) {
 				throw err;
 			}
-			
+
 			done();
 		});
 	});

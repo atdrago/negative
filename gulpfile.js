@@ -132,7 +132,7 @@ gulp.task('release', () => {
 gulp.task('build', (done) => {
 	const config          = JSON.parse(fs.readFileSync('package.json'));
 	const appVersion      = config.version;
-	const electronVersion = config.devDependencies['electron-prebuilt'].match(/[\d.]+/)[0];
+	const electronVersion = config.devDependencies['electron'].match(/[\d.]+/)[0];
 	const options         = {
 		arch: 'x64',
 		asar: true,

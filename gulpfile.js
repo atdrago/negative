@@ -140,11 +140,11 @@ gulp.task('build', (done) => {
 		overwrite: true,
 		platform: 'darwin',
 		prune: true,
-		version: electronVersion,
-		'app-bundle-id': 'com.adamdrago.negative',
-		'helper-bundle-id': 'com.adamdrago.negative.helper',
-		'app-version': appVersion,
-		'extend-info': './resources-osx/Info.plist'
+		electronVersion: electronVersion,
+		appBundleId: 'com.adamdrago.negative',
+		helperBundleId: 'com.adamdrago.negative.helper',
+		appVersion: appVersion,
+		extendInfo: './resources-osx/Info.plist'
 	};
 
 	packager(options, (err, paths) => {

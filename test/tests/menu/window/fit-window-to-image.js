@@ -10,7 +10,7 @@ const {
 	WAIT_UNTIL_TIMEOUT
 } = config;
 
-describe.only('Window > Fit Window to Image', function () {
+describe('Window > Fit Window to Image', function () {
 	this.timeout(60000);
 
 	beforeEach(function () {

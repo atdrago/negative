@@ -31,7 +31,7 @@
     "chai": "^3.5.0",
     "del": "^2.2.0",
     "devtron": "^1.1.2",
-    "electron": "^1.6.7",
+    "electron": "^1.6.11",
     "electron-packager": "^8.7.0",
     "electron-rebuild": "^1.5.11",
     "gulp": "^3.9.1",

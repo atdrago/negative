@@ -20,7 +20,7 @@ describe('View > Clear', function () {
 				ELECTRON_ENABLE_STACK_DUMPING: true,
 				NEGATIVE_IGNORE_SETTINGS: false,
 				NEGATIVE_SKIP_RESET_DIALOG: true,
-				NEGATIVE_SETTINGS_PATH: '../test/fixtures/two-windows-with-data.json',
+				NEGATIVE_SETTINGS_PATH: '../test/fixtures/one-window-with-data.json',
 				NEGATIVE_VERBOSE: true,
 				NODE_ENV: 'development'
 			}

@@ -24,7 +24,7 @@
   },
   "dependencies": {
     "electron-window": "^0.8.1",
-    "nodobjc": "^2.1.0",
+    "negative-screenshot": "^0.1.0",
     "simple-undo": "^1.0.1"
   },
   "devDependencies": {

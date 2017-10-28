@@ -132,7 +132,7 @@ gulp.task('build', (done) => {
 	const electronVersion = config.devDependencies['electron'].match(/[\d.]+/)[0];
 	const options         = {
 		arch: 'x64',
-		asar: true,
+		asar: false,
 		dir: 'release',
 		icon: './resources/negative.icns',
 		name: 'Negative',

@@ -24,7 +24,7 @@
   },
   "dependencies": {
     "electron-window": "^0.8.1",
-    "negative-screenshot": "^1.0.0",
+    "negative-screenshot": "^2.0.3",
     "simple-undo": "^1.0.1"
   },
   "devDependencies": {

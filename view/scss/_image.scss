@@ -2,6 +2,7 @@
 	width: 780px;
 	height: 602px;
 	visibility: visible;
+	transition: width 200ms ease, height 200ms ease;
 
 	body.negative-on & {
 		background-color: transparent;
@@ -13,12 +14,17 @@
 	opacity: 0.5;
 	-webkit-filter: invert(100%);
 	pointer-events: none;
+	transition: width 200ms ease, height 200ms ease, opacity 200ms ease, -webkit-filter 200ms ease;
 
 	body.negative-on & {
 		display: block;
 	}
-}
-
-#imageContainer, .negative {
-	transition: width 200ms ease, height 200ms ease;
+	
+	body.inversion-off & {
+		-webkit-filter: invert(0);
+	}
+	
+	body.translucence-off & {
+		opacity: 1;
+	}
 }

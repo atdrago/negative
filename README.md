@@ -7,21 +7,20 @@
 Follow [@NegativeJS](https://twitter.com/negativejs) on Twitter for important updates.
 
 ## Download
-**Important Note:** Users running Negative v0.10.0 may experience an application crash when opening the Settings window. Negative v0.10.1 solves this issue. If the update did not download automatically, please download it manually from the link below. If automatic updates were enabled, it is very likely that v0.10.1 was automatically installed after the crash. Please check your version in "Negative > About Negative". If the version is v0.10.1 or higher, no further action is needed on your part. I apologize for any inconvenience this may have caused you. - Adam
-- [Negative v0.10.1 for Mac OS X](https://github.com/atdrago/negative/releases/download/v0.10.1/Negative-v0.10.1.dmg)
+- [Negative v0.10.2 for Mac OS X](https://github.com/atdrago/negative/releases/download/v0.10.2/Negative-v0.10.2.dmg)
 
 ## User Documentation
 Please check [negative/releases](https://github.com/atdrago/negative/releases) for details on changes between versions.
 - [Usage](docs/usage.md)
 
 ## Contributing
-All contributions are welcome!! Please check [negative/issues](https://github.com/atdrago/negative/issues) for things that need attention, or feel free to create your own. Please make sure you create an issue *first*, and then do the work and a submit a PR. 
+All contributions are welcome!! Please check [negative/issues](https://github.com/atdrago/negative/issues) for things that need attention, or feel free to create your own. Please make sure you create an issue *first*, and then do the work and a submit a PR.
 
 ## Build Negative.app
 
 Currently only Mac OS X is supported.
 
-1. [Install Node.js](https://nodejs.org/en/) >= v6
+1. [Install Node.js](https://nodejs.org/en/) >= v8
 2. `git clone https://github.com/atdrago/negative.git`
 3. `cd negative`
 4. `npm install`
@@ -51,7 +50,7 @@ Currently only Mac OS X is supported.
 	3. Runs `npm install --production` in `./release/`
 	4. Builds the app moves it to `./dist/`
 - `npm run lint` - Run ESLint
-- `npm test` - Run Mocha tests 
+- `npm test` - Run Mocha tests
 - `npm run travis`
 	1. Run `build`
 	2. Run `test`

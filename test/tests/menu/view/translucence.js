@@ -1,15 +1,15 @@
 'use strict';
 
 const { Application } = require('spectron');
-const { assert }      = require('chai');
+const { assert } = require('chai');
 
 const config = require('../../../config.json');
 const {
 	APP_PATH,
-	TABS_ID
+	WAIT_UNTIL_TIMEOUT
 } = config;
 
-describe('File > Close Tab', function () {
+describe('View > Translucence', function () {
 	this.timeout(60000);
 
 	beforeEach(function () {
@@ -18,9 +18,8 @@ describe('File > Close Tab', function () {
 			env: {
 				ELECTRON_ENABLE_LOGGING: true,
 				ELECTRON_ENABLE_STACK_DUMPING: true,
-				NEGATIVE_IGNORE_SETTINGS: false,
+				NEGATIVE_IGNORE_SETTINGS: true,
 				NEGATIVE_SKIP_RESET_DIALOG: true,
-				NEGATIVE_SETTINGS_PATH: '../test/fixtures/window-with-two-tabs.json',
 				NEGATIVE_VERBOSE: true,
 				NODE_ENV: 'development'
 			}
@@ -35,17 +34,23 @@ describe('File > Close Tab', function () {
 		}
 	});
 
-	it('Should close a tab', function () {
+	it('Should toggle translucence', function () {
 		return this.app.client.waitUntilWindowLoaded()
-			.then(() => this.app.electron.ipcRenderer.send('test-close-tab'))
 			.then(() => {
-				return this.app.client.selectorExecute(TABS_ID, (element) => {
-					const el = element[0];
-
-					return el.children && el.children.length;
+				return this.app.client.selectorExecute('//body', (elements) => {
+					return elements[0].classList.contains('translucence-off');
 				});
 			})
-			.then((tabCount) => assert.equal(tabCount, 1))
+			.then((hasTranslucenceOffClass) => assert.isFalse(hasTranslucenceOffClass, 'The body element should not have the .translucence-off class when on startup.'))
+			.then(() => this.app.electron.ipcRenderer.send('test-translucence'))
+			.then(() => {
+				return this.app.client.waitUntil(() => {
+					return this.app.client.selectorExecute('//body', (elements) => {
+						return elements[0].classList.contains('translucence-off');
+					});
+				}, WAIT_UNTIL_TIMEOUT);
+			})
+			.then((hasTranslucenceOffClass) => assert.isTrue(hasTranslucenceOffClass, 'The body element should have the .translucence-off class when Translucence is off.'))
 			.catch((err) => {
 				return this.app.client.getMainProcessLogs()
 					.then((logs) => {

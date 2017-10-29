@@ -10,7 +10,8 @@
         "NegativeTabs": true,
         "NegativeTrafficLights": true,
         "SettingsForm": true,
-        "UndoManager": true
+        "UndoManager": true,
+        "__args__": true
     },
     "rules": {
         "block-spacing": [

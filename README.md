@@ -15,13 +15,13 @@ Please check [negative/releases](https://github.com/atdrago/negative/releases) f
 - [Usage](docs/usage.md)
 
 ## Contributing
-All contributions are welcome!! Please check [negative/issues](https://github.com/atdrago/negative/issues) for things that need attention, or feel free to create your own. Please make sure you create an issue *first*, and then do the work and a submit a PR. 
+All contributions are welcome!! Please check [negative/issues](https://github.com/atdrago/negative/issues) for things that need attention, or feel free to create your own. Please make sure you create an issue *first*, and then do the work and a submit a PR.
 
 ## Build Negative.app
 
 Currently only Mac OS X is supported.
 
-1. [Install Node.js](https://nodejs.org/en/) >= v6
+1. [Install Node.js](https://nodejs.org/en/) >= v8
 2. `git clone https://github.com/atdrago/negative.git`
 3. `cd negative`
 4. `npm install`
@@ -51,7 +51,7 @@ Currently only Mac OS X is supported.
 	3. Runs `npm install --production` in `./release/`
 	4. Builds the app moves it to `./dist/`
 - `npm run lint` - Run ESLint
-- `npm test` - Run Mocha tests 
+- `npm test` - Run Mocha tests
 - `npm run travis`
 	1. Run `build`
 	2. Run `test`

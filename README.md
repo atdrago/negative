@@ -7,7 +7,7 @@
 Follow [@NegativeJS](https://twitter.com/negativejs) on Twitter for important updates.
 
 ## Download
-- [Negative v0.10.2 for Mac OS X](https://github.com/atdrago/negative/releases/download/v0.10.2/Negative-v0.10.2.dmg)
+- [Negative v0.10.3 for Mac OS X](https://github.com/atdrago/negative/releases/download/v0.10.3/Negative-v0.10.3.dmg)
 
 ## User Documentation
 Please check [negative/releases](https://github.com/atdrago/negative/releases) for details on changes between versions.
@@ -57,8 +57,8 @@ Currently only Mac OS X is supported.
 - `npm run open` - Starts the app from `dist/Negative-darwin-x64/Negative.app`
 - `npm run build-artifacts`
 	1. Run `build-sign`
-	2. Create `dist/Negative-darwin-x64/Negative-v0.10.2.dmg`
-	3. Create `dist/Negative-darwin-x64/Negative-v0.10.2-mac.zip`
+	2. Create `dist/Negative-darwin-x64/Negative-v0.10.3.dmg`
+	3. Create `dist/Negative-darwin-x64/Negative-v0.10.3-mac.zip`
 
 ## About
 Created by [Adam Drago](http://adamdrago.com). Built on [Electron](http://electron.atom.io/).

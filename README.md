@@ -55,10 +55,10 @@ Currently only Mac OS X is supported.
 	1. Run `build`
 	2. Run `test`
 - `npm run open` - Starts the app from `dist/Negative-darwin-x64/Negative.app`
-- `npm run dmg`
-	1. Run `build`
-	2. Move `dist/Negative-darwin-x64/Negative.app` to `dist/release/Negative.app`
-	3. Create `dist/release/Negative.dmg`
+- `npm run build-artifacts`
+	1. Run `build-sign`
+	2. Create `dist/Negative-darwin-x64/Negative-v0.10.2.dmg`
+	3. Create `dist/Negative-darwin-x64/Negative-v0.10.2-mac.zip`
 
 ## About
 Created by [Adam Drago](http://adamdrago.com). Built on [Electron](http://electron.atom.io/).
